@@ -1,0 +1,7 @@
+[Activity]
+name = FindWords
+bundle_id = org.sugarlabs.FindWords
+icon = activity-helloworld
+exec = sugar-activity-web
+activity_version = 1
+show_launcher = yes

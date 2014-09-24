@@ -1,0 +1,18 @@
+* {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Change url(../activity/activity-helloworld.svg); for set your custom activity icon */
+#main-toolbar #activity-button {
+  background-image: url(../activity/activity-helloworld.svg);
+}
+
+#canvas p {
+  margin-top: 25%;
+  text-align: center;
+}
+
+#canvas {
+  background-color: white;
+}
