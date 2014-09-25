@@ -24,12 +24,12 @@
       <button class="toolbutton pull-right" id="stop-button" title="Stop"></button>
     </div>
     <div id="canvas">
-        <div id='puzzle'></div>
-        <div id='words'></div>
-        <div><button id='solve'>Solve Puzzle</button></div>
-    </div>
-    </div>
+        <canvas id="testCanvas" width="900px" height="900px" style="background-color: white;">
 
+        </canvas>
+        <div id='words'></div>
+    </div>
+    </div>
 
     <script>
 
@@ -43,19 +43,35 @@
                    'cytoplasm', 'organelle', 'diffusion', 'osmosis',
                    'respiration'];
 
-      // start a word find game
-      var gamePuzzle = wordfindgame.create(words, '#puzzle', '#words');
-
-      $('#solve').click( function() {
-        wordfindgame.solve(gamePuzzle, words);
-      });
-
       // create just a puzzle, without filling in the blanks and print to console
       var puzzle = wordfind.newPuzzle(
         words, 
-        {height: 18, width:18, fillBlanks: false}
+        {height: 18, width:18, fillBlanks: true}
       );
-      wordfind.print(puzzle);
+      puzzleString = wordfind.print(puzzle);
+
+      var canvas = document.getElementById("testCanvas");
+      var ctx = canvas.getContext("2d");
+      ctx.font = "20px Arial";
+      ctx.textAlign = "center";
+
+      margin_x = 30;
+      margin_y = 30;
+      cell_size = 30;
+
+      for (var i = 0, height = puzzle.length; i < height; i++) {
+        row = puzzle[i];
+        y = margin_y + cell_size * i;
+
+        for (var j = 0, width = row.length; j < width; j++) {
+            letter = puzzle[i][j];
+            x = margin_x + cell_size * j + cell_size / 2;
+            ctx.fillText(letter, x, y);
+        }
+      }
+
+
+
 
     </script>
 
