@@ -5,7 +5,7 @@
 
 /* Change url(../activity/activity-helloworld.svg); for set your custom activity icon */
 #main-toolbar #activity-button {
-  background-image: url(../activity/activity-helloworld.svg);
+  background-image: url(../activity/icon.svg);
 }
 
 #canvas p {
