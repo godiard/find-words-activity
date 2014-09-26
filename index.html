@@ -13,8 +13,6 @@
     <script data-main="js/loader" src="lib/require.js"></script>
     <script type="text/javascript" src="js/jquery.js" ></script>
 
-    <script type="text/javascript" src="js/wordfind.js"></script>
-    <script type="text/javascript" src="js/wordfindgame.js"></script>
   </head>
   
   <body>
@@ -24,113 +22,12 @@
       <button class="toolbutton pull-right" id="stop-button" title="Stop"></button>
     </div>
     <div id="canvas">
-        <canvas id="testCanvas" width="900px" height="900px" style="background-color: white;">
+        <canvas id="testCanvas" width="900px" height="900px">
 
         </canvas>
         <div id='words'></div>
     </div>
     </div>
-
-    <script>
-
-      var words = ['cows', 'tracks', 'arrived', 'located', 'sir', 'seat',
-                   'division', 'effect', 'underline', 'view', 'annual',
-                   'anniversary', 'centennial', 'millennium', 'perennial',
-                   'artisan', 'apprentice', 'meteorologist', 'blizzard', 'tornado',
-                   'intensify','speed','count','consonant','someone',
-                   'sail','rolled','bear','wonder','smiled','angle', 'absent',
-                   'decadent', 'excellent', 'frequent', 'impatient', 'cell',
-                   'cytoplasm', 'organelle', 'diffusion', 'osmosis',
-                   'respiration'];
-
-      // create just a puzzle, without filling in the blanks and print to console
-      var puzzle = wordfind.newPuzzle(
-        words, 
-        {height: 18, width:18, fillBlanks: true}
-      );
-      puzzleString = wordfind.print(puzzle);
-
-      var canvas = document.getElementById("testCanvas");
-      var ctx = canvas.getContext("2d");
-      ctx.font = "20px Arial";
-      ctx.textAlign = "center";
-
-      margin_x = 20;
-      margin_y = 20;
-      cell_size = 40;
-
-      for (var i = 0, height = puzzle.length; i < height; i++) {
-
-        row = puzzle[i];
-        y = margin_y + cell_size * i;
-
-        ctx.strokeRect(margin_x, y, cell_size * row.length, cell_size);
-        ctx.strokeRect(margin_x + cell_size * i, margin_y, cell_size,
-                       cell_size * puzzle.length);
-
-        for (var j = 0, width = row.length; j < width; j++) {
-            letter = puzzle[i][j];
-            x = margin_x + cell_size * j + cell_size / 2;
-            ctx.fillText(letter, x, y + cell_size / 1.5);
-        }
-      }
-
-      function getMousePos(canvas, evt) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-          x: evt.clientX - rect.left,
-          y: evt.clientY - rect.top
-        };
-      }
-
-      function getCellPos(canvas, x, y) {
-
-
-        var rect = canvas.getBoundingClientRect();
-        return {
-          x: evt.clientX - rect.left,
-          y: evt.clientY - rect.top
-        };
-      }
-
-
-      function showPosition(canvas, cell_x, cell_y) {
-        cell_x = parseInt((x - margin_x) / cell_size);
-        cell_y = parseInt((y - margin_y) / cell_size);
-
-
-      }
-
-      var mouse_down = false;
-
-      canvas.addEventListener('mousedown', function(evt) {
-         mouse_down = true;
-      }, false);
-
-      canvas.addEventListener('mouseup', function(evt) {
-         mouse_down = false;
-      }, false);
-
-
-      canvas.addEventListener('mousemove', function(evt) {
-        if (mouse_down) {
-            var mousePos = getMousePos(canvas, evt);
-            var ctx = canvas.getContext("2d");
-            console.log(cell_x + " " + cell_y);
-
-            ctx.beginPath();
-            ctx.arc(cell_x * cell_size,
-                    cell_y * cell_size,
-                    cell_size / 2, cell_size / 2, 0, 2 * Math.PI);
-            ctx.stroke();
-        }
-      }, false);
-
-
-
-
-    </script>
-
 
   </body>
 

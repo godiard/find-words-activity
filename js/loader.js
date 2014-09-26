@@ -1,7 +1,14 @@
 requirejs.config({
     baseUrl: "lib",
+    shim: {
+        easel: {
+            exports: "createjs"
+        }
+    },
     paths: {
-        activity: "../js"
+        activity: "../js",
+        easel: "../lib/easeljs",
+        wordfind: "../js/wordfind"
     }
 });
 
