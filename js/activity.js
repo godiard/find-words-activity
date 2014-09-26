@@ -75,30 +75,37 @@ define(function (require) {
             margin_y = 20;
             cell_size = 40;
 
+            var container = new createjs.Container();
+            container.x = margin_x;
+            container.y = margin_y;
+
             for (var i = 0, height = puzzle.length; i < height; i++) {
                 row = puzzle[i];
-                y = margin_y + cell_size * i;
+                y = cell_size * i;
 
                 var h_box = new createjs.Shape();
                 h_box.graphics.beginStroke("#000000").drawRect(
-                    margin_x, y, cell_size * row.length, cell_size);
-                stage.addChild(h_box);
+                    0, y, cell_size * row.length, cell_size);
+                container.addChild(h_box);
 
                 var v_box = new createjs.Shape();
                 h_box.graphics.beginStroke("#000000").drawRect(
-                    margin_x + cell_size * i, margin_y, cell_size,
+                    cell_size * i, 0, cell_size,
                     cell_size * puzzle.length);
-                stage.addChild(v_box);
+                container.addChild(v_box);
 
                 for (var j = 0, width = row.length; j < width; j++) {
                     letter = puzzle[i][j];
                     text = new createjs.Text(letter, "20px Arial", "#000000");
-                    text.x = margin_x + cell_size * j + cell_size / 2;
+                    text.x = cell_size * j + cell_size / 2;
                     text.y = y + cell_size / 3;
                     text.textAlign = "center";
-                    stage.addChild(text);
+                    container.addChild(text);
                 }
             }
+            container.cache(0, 0, cell_size * puzzle.length,
+                            cell_size * puzzle.length);
+            stage.addChild(container);
 
             stage.update();
         }
