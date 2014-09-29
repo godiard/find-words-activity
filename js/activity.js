@@ -60,13 +60,24 @@ define(function (require) {
         var puzzle = wordfind.newPuzzle(words,
             {height: 18, width:18, fillBlanks: true});
 
-        puzzleString = wordfind.print(puzzle);
+        // to debug, show the matrix in the console
+        wordfind.print(puzzle);
+
+        var solved = wordfind.solve(puzzle, words);
+        console.log('----------Solved found ' + solved.found.length +
+                    ' not found ' + solved.notFound.lenght);
+        for (var n = 0; n < solved.found.length; n++) {
+            word = solved.found[n];
+            console.log(word);
+        }
+
         var stage;
         var cell_size = 40;
         var margin_x = 20;
         var margin_y = 20;
 
-        var cell_pressed = null;
+        var start_cell = null;
+        var end_cell = null;
         var select_word_line = null;
 
         init();
@@ -139,15 +150,17 @@ define(function (require) {
             cell = get_cell(event.stageX, event.stageY);
             cell_x = cell[0];
             cell_y = cell[1];
-            cell_pressed = [cell_x, cell_y];
+            start_cell = [cell_x, cell_y];
         }
 
         function mouseup_cb(event) {
-            cell_pressed = null;
+            verify_word(start_cell, end_cell);
+            start_cell = null;
+            end_cell = null;
         }
 
         function mouseover_cb(event) {
-            if (cell_pressed == null) {
+            if (start_cell == null) {
                 return;
             }
 
@@ -155,8 +168,8 @@ define(function (require) {
             end_cell_x = end_cell[0];
             end_cell_y = end_cell[1];
 
-            start_cell_x = cell_pressed[0];
-            start_cell_y = cell_pressed[1];
+            start_cell_x = start_cell[0];
+            start_cell_y = start_cell[1];
 
             select_word_line.graphics.clear();
             select_word_line.graphics.beginStroke(
@@ -167,6 +180,38 @@ define(function (require) {
             select_word_line.graphics.lineTo(end_cell_x * cell_size,
                                     end_cell_y * cell_size);
             select_word_line.graphics.endStroke();
+            stage.update();
+        }
+
+        function verify_word(start_cell, end_cell) {
+            // we need decrese by one the cell positions
+
+            for (var n = 0; n < solved.found.length; n++) {
+                word = solved.found[n];
+                if (word.x == (start_cell[0] - 1) &&
+                    word.y == (start_cell[1] - 1)) {
+                    // check the end_cell
+                    var nextFn = wordfind.orientations[word.orientation];
+                    end_word = nextFn(start_cell[0], start_cell[1],
+                                      word.word.length - 1);
+                    if (end_word.x == end_cell[0] &&
+                        end_word.y == end_cell[1]) {
+                        // mark the word as found
+                        found_word_line = new createjs.Shape();
+                        found_word_line.graphics.beginStroke(
+                            createjs.Graphics.getRGB(0xFF0000, 0.5));
+                        found_word_line.graphics.setStrokeStyle(
+                            cell_size, "round");
+                        found_word_line.graphics.moveTo(start_cell_x * cell_size,
+                                                start_cell_y * cell_size);
+                        found_word_line.graphics.lineTo(end_cell_x * cell_size,
+                                                end_cell_y * cell_size);
+                        found_word_line.graphics.endStroke();
+                        stage.addChild(found_word_line);
+                    }
+                }
+            }
+            select_word_line.graphics.clear();
             stage.update();
         }
 
