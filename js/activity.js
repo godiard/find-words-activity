@@ -63,6 +63,9 @@ define(function (require) {
         // to debug, show the matrix in the console
         wordfind.print(puzzle);
 
+        // show the words
+        drawWords("#words", words);
+
         var solved = wordfind.solve(puzzle, words);
         console.log('----------Solved found ' + solved.found.length +
                     ' not found ' + solved.notFound.lenght);
@@ -208,12 +211,34 @@ define(function (require) {
                                                 end_cell_y * cell_size);
                         found_word_line.graphics.endStroke();
                         stage.addChild(found_word_line);
+
+                        $('.' + word.word).addClass('wordFound');
+
                     }
                 }
             }
             select_word_line.graphics.clear();
             stage.update();
         }
+
+        /**
+        * Draws the words by inserting an unordered list into el.
+        *
+        * @param {String} el: The jQuery element to write the words to
+        * @param {[String]} words: The words to draw
+        */
+        function drawWords(el, words) {
+
+          var output = '<ul>';
+          words.sort();
+          for (var i = 0, len = words.length; i < len; i++) {
+            var word = words[i];
+            output += '<li class="word ' + word + '">' + word;
+          }
+          output += '</ul>';
+
+          $(el).html(output);
+        };
 
         //
     });
