@@ -129,6 +129,17 @@ define(function (require) {
             drawWords("#words", wordList);
 
             solved = wordfind.solve(puzzle, wordList);
+
+            for (var n = 0; n < solved.found.length; n++) {
+                word = solved.found[n];
+                // check the last cell postion too
+                var nextFn = wordfind.orientations[word.orientation];
+                word_end = nextFn(word.x, word.y, word.word.length - 1);
+                // store it on the solved structure
+                word.end_x = word_end.x;
+                word.end_y = word_end.y;
+            }
+
             console.log('----------Solved found ' + solved.found.length +
                         ' not found ' + solved.notFound.lenght);
             /*
@@ -249,32 +260,29 @@ define(function (require) {
         function verify_word(start_cell, end_cell) {
             for (var n = 0; n < solved.found.length; n++) {
                 word = solved.found[n];
-                if (word.x == start_cell[0] &&
-                    word.y == start_cell[1]) {
-                    // check the end_cell
-                    var nextFn = wordfind.orientations[word.orientation];
-                    end_word = nextFn(start_cell[0], start_cell[1],
-                                      word.word.length - 1);
-                    if (end_word.x == end_cell[0] &&
-                        end_word.y == end_cell[1]) {
-                        // mark the word as found
-                        found_word_line = new createjs.Shape();
-                        found_word_line.graphics.beginStroke(
-                            createjs.Graphics.getRGB(0xFF0000, 0.5));
-                        found_word_line.graphics.setStrokeStyle(
-                            cell_size, "round");
-                        found_word_line.graphics.moveTo(
-                            margin_x + start_cell_x * cell_size + cell_size / 2,
-                            margin_y + start_cell_y * cell_size + cell_size / 2);
-                        found_word_line.graphics.lineTo(
-                            margin_x + end_cell_x * cell_size + cell_size / 2,
-                            margin_y + end_cell_y * cell_size + cell_size / 2);
-                        found_word_line.graphics.endStroke();
-                        stage.addChild(found_word_line);
+                var nextFn = wordfind.orientations[word.orientation];
+                end_word = nextFn(start_cell[0], start_cell[1],
+                                  word.word.length - 1);
+                if ((word.x == start_cell[0] && word.y == start_cell[1] &&
+                     word.end_x == end_cell[0] && word.end_y == end_cell[1]) ||
+                    (word.end_x == start_cell[0] && word.end_y == start_cell[1] &&
+                     word.x == end_cell[0] && word.y == end_cell[1])) {
+                    // mark the word as found
+                    found_word_line = new createjs.Shape();
+                    found_word_line.graphics.beginStroke(
+                        createjs.Graphics.getRGB(0xFF0000, 0.5));
+                    found_word_line.graphics.setStrokeStyle(
+                        cell_size, "round");
+                    found_word_line.graphics.moveTo(
+                        margin_x + start_cell_x * cell_size + cell_size / 2,
+                        margin_y + start_cell_y * cell_size + cell_size / 2);
+                    found_word_line.graphics.lineTo(
+                        margin_x + end_cell_x * cell_size + cell_size / 2,
+                        margin_y + end_cell_y * cell_size + cell_size / 2);
+                    found_word_line.graphics.endStroke();
+                    stage.addChild(found_word_line);
 
-                        $('.' + word.word).addClass('wordFound');
-
-                    }
+                    $('.' + word.word).addClass('wordFound');
                 }
             }
             select_word_line.graphics.clear();
