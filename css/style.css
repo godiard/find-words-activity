@@ -6,6 +6,33 @@
 *     http://github.com/bunkat/wordfind
 */
 
+#firstPage {
+  align:center;
+  text-align: center;
+  padding-top: 100px;
+  font: 2em sans-serif;
+}
+
+#selectWords {
+  width: 100%;
+  padding-top: 10px;
+  -moz-column-count: 3;
+  -moz-column-gap: 100px;
+  -webkit-column-count: 3;
+  -webkit-column-gap: 100px;
+  column-count: 3;
+  column-gap: 100px;
+}
+
+#selectWords input{
+  margin: 30px 0;
+}
+
+#firstPage button{
+  padding: 5px;
+  font: 1.1em sans-serif;
+}
+
 
 /**
 * Styles for the word list

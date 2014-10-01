@@ -2,11 +2,7 @@ define(function (require) {
     var activity = require("sugar-web/activity/activity");
     var icon = require("sugar-web/graphics/icon");
 
-    var datastore = require("sugar-web/datastore");
-
-    var model = require("activity/model");
-    var view = require("activity/view");
-    var controller = require("activity/controller");
+    var dictstore = require("sugar-web/dictstore");
 
     require("easel");
     require("wordfind");
@@ -17,34 +13,52 @@ define(function (require) {
         // Initialize the activity.
         activity.setup();
 
-        // Colorize the activity icon.
-        var activityButton = document.getElementById("activity-button");
-        activity.getXOColor(function (error, colors) {
-            icon.colorize(activityButton, colors);
-        });
-
-        // Make the activity stop with the stop button.
-        var stopButton = document.getElementById("stop-button");
-        stopButton.addEventListener('click', function (e) {
-            activity.close();
-        });
-
-        activity.write = function (callback) {
-            console.log("writing...");
-            var jsonData = JSON.stringify(todo.model.items);
-            this.getDatastoreObject().setDataAsText(jsonData);
-            this.getDatastoreObject().save(function (error) {
-                if (error === null) {
-                    console.log("write done.");
-                }
-                else {
-                    console.log("write failed.");
-                }
-                callback(error);
-            });
-        };
-
         // HERE GO YOUR CODE
+
+        var wordList = [];
+
+        function onStoreReady() {
+            if (localStorage["word-list"]) {
+                var jsonData = localStorage["word-list"];
+                wordList = JSON.parse(jsonData);
+
+                // show the words in the inputs
+                selectWords = doc.getElementById("selectWords");
+                children = selectWords.childNodes;
+                wordCounter = 0;
+                for (var n = 0; n < children.length; n++) {
+                    child = children[n];
+                    if (child.type == 'text') {
+                        if (wordCounter < wordList.length) {
+                            child.value = wordList[wordCounter++];
+                        }
+                    }
+                }
+
+            }
+        }
+
+        dictstore.init(onStoreReady);
+
+        var nextButton = document.getElementById("next-button");
+        nextButton.addEventListener('click', function (e) {
+            selectWords = doc.getElementById("selectWords");
+            children = selectWords.childNodes;
+            for (var n = 0; n < children.length; n++) {
+                child = children[n];
+                if (child.type == 'text') {
+                    if (child.value.length > 0) {
+                        word = child.value;
+                        if (wordList.indexOf(word) == -1) {
+                            wordList.push(word);
+                        }
+                    }
+                }
+            }
+            // save in the journal
+            localStorage["word-list"] = JSON.stringify(wordList);
+            dictstore.save();
+        });
 
         var words = ['cows', 'tracks', 'arrived', 'located', 'sir', 'seat',
                    'division', 'effect', 'underline', 'view', 'annual',
@@ -64,15 +78,17 @@ define(function (require) {
         wordfind.print(puzzle);
 
         // show the words
-        drawWords("#words", words);
+        //drawWords("#words", words);
 
         var solved = wordfind.solve(puzzle, words);
         console.log('----------Solved found ' + solved.found.length +
                     ' not found ' + solved.notFound.lenght);
+        /*
         for (var n = 0; n < solved.found.length; n++) {
             word = solved.found[n];
             console.log(word);
         }
+        */
 
         var stage;
         var cell_size = 40;
@@ -83,7 +99,7 @@ define(function (require) {
         var end_cell = null;
         var select_word_line = null;
 
-        init();
+        //init_game();
 
         function get_cell(x, y) {
             cell_x = parseInt((x + cell_size / 2) / cell_size);
@@ -91,7 +107,7 @@ define(function (require) {
             return [cell_x, cell_y];
         }
 
-        function init(){
+        function init_game(){
             canvas = doc.getElementById("testCanvas");
             console.log(canvas);
 
