@@ -90,9 +90,9 @@ define(function (require) {
         var solved;
 
         var stage;
-        var cell_size = 40;
-        var margin_x = 20;
-        var margin_y = 20;
+        var cell_size = 60;
+        var margin_x = 50;
+        var margin_y = 50;
 
         var start_cell = null;
         var end_cell = null;
@@ -118,7 +118,7 @@ define(function (require) {
             }
 
             puzzle = wordfind.newPuzzle(wordList,
-                                        {height: 18, width:18,
+                                        {height: 12, width:12,
                                          orientations: orientations,
                                          fillBlanks: true});
 
@@ -142,8 +142,9 @@ define(function (require) {
         }
 
         function get_cell(x, y) {
-            cell_x = parseInt((x + cell_size / 2) / cell_size);
-            cell_y = parseInt((y + cell_size / 2) / cell_size);
+            cell_x = parseInt((x - margin_x) / cell_size);
+            cell_y = parseInt((y - margin_y) / cell_size);
+            console.log('x = '+ x + ' y = ' + y + 'cell = ' + cell_x + ' ' + cell_y);
             return [cell_x, cell_y];
         }
 
@@ -186,7 +187,7 @@ define(function (require) {
 
                 for (var j = 0, width = row.length; j < width; j++) {
                     letter = puzzle[i][j];
-                    text = new createjs.Text(letter, "20px Arial", "#000000");
+                    text = new createjs.Text(letter, "24px Arial", "#000000");
                     text.x = cell_size * j + cell_size / 2;
                     text.y = y + cell_size / 3;
                     text.textAlign = "center";
@@ -234,21 +235,21 @@ define(function (require) {
             select_word_line.graphics.beginStroke(
                 createjs.Graphics.getRGB(0xFF00FF, 0.2));
             select_word_line.graphics.setStrokeStyle(cell_size, "round");
-            select_word_line.graphics.moveTo(start_cell_x * cell_size,
-                                    start_cell_y * cell_size);
-            select_word_line.graphics.lineTo(end_cell_x * cell_size,
-                                    end_cell_y * cell_size);
+            select_word_line.graphics.moveTo(
+                margin_x + start_cell_x * cell_size + cell_size / 2,
+                margin_y + start_cell_y * cell_size + cell_size / 2);
+            select_word_line.graphics.lineTo(
+                margin_x + end_cell_x * cell_size + cell_size / 2,
+                margin_y + end_cell_y * cell_size + cell_size / 2);
             select_word_line.graphics.endStroke();
             stage.update();
         }
 
         function verify_word(start_cell, end_cell) {
-            // we need decrese by one the cell positions
-
             for (var n = 0; n < solved.found.length; n++) {
                 word = solved.found[n];
-                if (word.x == (start_cell[0] - 1) &&
-                    word.y == (start_cell[1] - 1)) {
+                if (word.x == start_cell[0] &&
+                    word.y == start_cell[1]) {
                     // check the end_cell
                     var nextFn = wordfind.orientations[word.orientation];
                     end_word = nextFn(start_cell[0], start_cell[1],
@@ -261,10 +262,12 @@ define(function (require) {
                             createjs.Graphics.getRGB(0xFF0000, 0.5));
                         found_word_line.graphics.setStrokeStyle(
                             cell_size, "round");
-                        found_word_line.graphics.moveTo(start_cell_x * cell_size,
-                                                start_cell_y * cell_size);
-                        found_word_line.graphics.lineTo(end_cell_x * cell_size,
-                                                end_cell_y * cell_size);
+                        found_word_line.graphics.moveTo(
+                            margin_x + start_cell_x * cell_size + cell_size / 2,
+                            margin_y + start_cell_y * cell_size + cell_size / 2);
+                        found_word_line.graphics.lineTo(
+                            margin_x + end_cell_x * cell_size + cell_size / 2,
+                            margin_y + end_cell_y * cell_size + cell_size / 2);
                         found_word_line.graphics.endStroke();
                         stage.addChild(found_word_line);
 
