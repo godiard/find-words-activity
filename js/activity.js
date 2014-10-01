@@ -187,7 +187,8 @@ define(function (require) {
 
                 for (var j = 0, width = row.length; j < width; j++) {
                     letter = puzzle[i][j];
-                    text = new createjs.Text(letter, "24px Arial", "#000000");
+                    text = new createjs.Text(letter.toLowerCase(),
+                                             "24px Arial", "#000000");
                     text.x = cell_size * j + cell_size / 2;
                     text.y = y + cell_size / 3;
                     text.textAlign = "center";
@@ -292,7 +293,7 @@ define(function (require) {
           words.sort();
           for (var i = 0, len = words.length; i < len; i++) {
             var word = words[i];
-            output += '<li class="word ' + word + '">' + word;
+            output += '<li class="word ' + word + '">' + word.toLowerCase();
           }
           output += '</ul>';
 
