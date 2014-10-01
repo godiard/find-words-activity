@@ -40,8 +40,8 @@ define(function (require) {
 
         dictstore.init(onStoreReady);
 
-        var nextButton = document.getElementById("next-button");
-        nextButton.addEventListener('click', function (e) {
+        var saveWordsButton = document.getElementById("save-words-button");
+        saveWordsButton.addEventListener('click', function (e) {
             selectWords = doc.getElementById("selectWords");
             children = selectWords.childNodes;
             for (var n = 0; n < children.length; n++) {
@@ -58,37 +58,36 @@ define(function (require) {
             // save in the journal
             localStorage["word-list"] = JSON.stringify(wordList);
             dictstore.save();
+            // change the page
+            document.getElementById("firstPage").style.display = "none";
+            document.getElementById("secondPage").style.display = "block";
         });
 
-        var words = ['cows', 'tracks', 'arrived', 'located', 'sir', 'seat',
-                   'division', 'effect', 'underline', 'view', 'annual',
-                   'anniversary', 'centennial', 'millennium', 'perennial',
-                   'artisan', 'apprentice', 'meteorologist', 'blizzard', 'tornado',
-                   'intensify','speed','count','consonant','someone',
-                   'sail','rolled','bear','wonder','smiled','angle', 'absent',
-                   'decadent', 'excellent', 'frequent', 'impatient', 'cell',
-                   'cytoplasm', 'organelle', 'diffusion', 'osmosis',
-                   'respiration'];
+        var showWordListButton = document.getElementById(
+            "show-wordlist-button");
+        showWordListButton.addEventListener('click', function (e) {
+            // change the page
+            document.getElementById("secondPage").style.display = "none";
+            document.getElementById("firstPage").style.display = "block";
+        });
 
-        // create just a puzzle, without filling in the blanks and print to console
-        var puzzle = wordfind.newPuzzle(words,
-            {height: 18, width:18, fillBlanks: true});
+        var easyButton = document.getElementById("easy-button");
+        easyButton.addEventListener('click', function (e) {
+            startGame('easy');
+        });
 
-        // to debug, show the matrix in the console
-        wordfind.print(puzzle);
+        var mediumButton = document.getElementById("medium-button");
+        mediumButton.addEventListener('click', function (e) {
+            startGame('medium');
+        });
 
-        // show the words
-        //drawWords("#words", words);
+        var hardButton = document.getElementById("hard-button");
+        hardButton.addEventListener('click', function (e) {
+            startGame('hard');
+        });
 
-        var solved = wordfind.solve(puzzle, words);
-        console.log('----------Solved found ' + solved.found.length +
-                    ' not found ' + solved.notFound.lenght);
-        /*
-        for (var n = 0; n < solved.found.length; n++) {
-            word = solved.found[n];
-            console.log(word);
-        }
-        */
+        var puzzle;
+        var solved;
 
         var stage;
         var cell_size = 40;
@@ -99,7 +98,48 @@ define(function (require) {
         var end_cell = null;
         var select_word_line = null;
 
-        //init_game();
+        function startGame(level) {
+
+            // change the page
+            document.getElementById("secondPage").style.display = "none";
+            document.getElementById("testCanvas").style.display = "block";
+
+            if (level == 'easy') {
+                orientations = ['horizontal', 'vertical'];
+            }
+            if (level == 'medium') {
+                orientations = ['horizontal', 'vertical', 'diagonal'];
+            }
+            if (level == 'hard') {
+                orientations = ['horizontal', 'vertical', 'diagonal',
+                                'horizontalBack', 'verticalUp',
+                                'diagonalUp', 'diagonalBack',
+                                'diagonalUpBack'];
+            }
+
+            puzzle = wordfind.newPuzzle(wordList,
+                                        {height: 18, width:18,
+                                         orientations: orientations,
+                                         fillBlanks: true});
+
+            // to debug, show the matrix in the console
+            wordfind.print(puzzle);
+
+            // show the words
+            drawWords("#words", wordList);
+
+            solved = wordfind.solve(puzzle, wordList);
+            console.log('----------Solved found ' + solved.found.length +
+                        ' not found ' + solved.notFound.lenght);
+            /*
+            for (var n = 0; n < solved.found.length; n++) {
+                word = solved.found[n];
+                console.log(word);
+            }
+            */
+
+            init_game();
+        }
 
         function get_cell(x, y) {
             cell_x = parseInt((x + cell_size / 2) / cell_size);

@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
     <script data-main="js/loader" src="lib/require.js"></script>
+    <script type="text/javascript" src="js/jquery.js" ></script>
 
   </head>
   
@@ -38,9 +39,15 @@
                 <input type="text" name="word11"><br/>
                 <input type="text" name="word12">
             </div>
-            <button id="next-button">Next</button>
+            <button id="save-words-button">Next</button>
         </div>
-
+        <div id="secondPage" style="display:none">
+            <img id="easy-button" src="./images/easy.png"/>
+            <img id="medium-button" src="./images/medium.png"/>
+            <img id="hard-button" src="./images/hard.png"/>
+            <br/><br/>
+            <button id="show-wordlist-button">Previous</button>
+        </div>
         <canvas id="testCanvas" width="900px" height="820px" style="display:none">
 
         </canvas>

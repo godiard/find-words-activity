@@ -33,6 +33,17 @@
   font: 1.1em sans-serif;
 }
 
+#secondPage {
+  align:center;
+  text-align: center;
+  padding-top: 100px;
+  font: 2em sans-serif;
+}
+
+#secondPage button{
+  padding: 5px;
+  font: 1.1em sans-serif;
+}
 
 /**
 * Styles for the word list
