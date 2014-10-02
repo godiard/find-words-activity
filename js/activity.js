@@ -44,6 +44,7 @@ define(function (require) {
         saveWordsButton.addEventListener('click', function (e) {
             selectWords = doc.getElementById("selectWords");
             children = selectWords.childNodes;
+            wordList = [];
             for (var n = 0; n < children.length; n++) {
                 child = children[n];
                 if (child.type == 'text') {
