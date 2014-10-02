@@ -167,7 +167,11 @@ define(function (require) {
 
             // Enable touch interactions if supported on the current device:
             createjs.Touch.enable(stage);
-            stage.enableDOMEvents(true);
+            stage.enableMouseOver(10);
+            stage.addEventListener("mousedown", mousedown_cb);
+            stage.addEventListener("mouseover", mouseover_cb);
+            stage.addEventListener("pressup", mouseup_cb);
+            stage.mouseChildren = false;
 
             select_word_line = new createjs.Shape();
 
@@ -208,9 +212,6 @@ define(function (require) {
             }
             container.cache(0, 0, cell_size * puzzle.length,
                             cell_size * puzzle.length);
-            stage.on("stagemousedown", mousedown_cb);
-            stage.on("stagemousemove", mouseover_cb);
-            stage.on("stagemouseup", mouseup_cb);
             stage.addChild(container);
 
             stage.addChild(select_word_line);
