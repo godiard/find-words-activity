@@ -141,7 +141,7 @@ define(function (require) {
             }
 
             console.log('----------Solved found ' + solved.found.length +
-                        ' not found ' + solved.notFound.lenght);
+                        ' not found ' + solved.notFound.length);
             /*
             for (var n = 0; n < solved.found.length; n++) {
                 word = solved.found[n];
@@ -155,13 +155,12 @@ define(function (require) {
         function get_cell(x, y) {
             cell_x = parseInt((x - margin_x) / cell_size);
             cell_y = parseInt((y - margin_y) / cell_size);
-            console.log('x = '+ x + ' y = ' + y + 'cell = ' + cell_x + ' ' + cell_y);
+            // console.log('x = '+ x + ' y = ' + y + 'cell = ' + cell_x + ' ' + cell_y);
             return [cell_x, cell_y];
         }
 
         function init_game(){
             canvas = doc.getElementById("testCanvas");
-            console.log(canvas);
 
             stage = new createjs.Stage(canvas);
 
