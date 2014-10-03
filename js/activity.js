@@ -6,6 +6,7 @@ define(function (require) {
 
     require("easel");
     require("wordfind");
+    require("tween");
 
     // Manipulate the DOM only when it is ready.
     require(['domReady!'], function (doc) {
@@ -99,6 +100,8 @@ define(function (require) {
         var end_cell = null;
         var select_word_line = null;
 
+        var boxes;
+
         function startGame(level) {
 
             // change the page
@@ -150,7 +153,60 @@ define(function (require) {
             }
             */
 
-            init_game();
+            canvas = doc.getElementById("testCanvas");
+            stage = new createjs.Stage(canvas);
+
+            startup_animation();
+
+        }
+
+        function startup_animation() {
+
+            // create boxes with letters for every row
+            boxes = []
+            for (var i = 0, height = puzzle.length; i < height; i++) {
+                row = puzzle[i];
+                y = 0;
+
+                bar = new createjs.Container();
+                bar.x = margin_x;
+                bar.y = 0;
+
+                for (var j = 0, width = row.length; j < width; j++) {
+                    var v_box = new createjs.Shape();
+                    v_box.graphics.beginStroke("#000000").beginFill(
+                        "#eeeeee").drawRect(cell_size * j, 0, cell_size, cell_size);
+                    bar.addChild(v_box);
+
+                    letter = puzzle[i][j];
+                    text = new createjs.Text(letter.toLowerCase(),
+                                             "24px Arial", "#000000");
+                    text.x = cell_size * j + cell_size / 2;
+                    text.y = y + cell_size / 3;
+                    text.textAlign = "center";
+                    bar.addChild(text);
+                }
+                boxes.push(bar);
+                stage.addChild(bar);
+            }
+
+            createjs.Tween.get(boxes.pop()).to(
+                {y:cell_size * boxes.length + margin_y}, 1000,
+                createjs.Ease.bounceOut).call(animateNextBox);
+
+            createjs.Ticker.setFPS(10);
+            createjs.Ticker.addEventListener("tick", stage);
+        }
+
+        function animateNextBox() {
+            if (boxes.length > 0) {
+                createjs.Tween.get(boxes.pop()).to(
+                    {y:cell_size * boxes.length + margin_y}, 1000,
+                    createjs.Ease.bounceOut).call(animateNextBox);
+            } else {
+                stage.clear();
+                init_game();
+            }
         }
 
         function get_cell(x, y) {
@@ -160,10 +216,7 @@ define(function (require) {
             return [cell_x, cell_y];
         }
 
-        function init_game(){
-            canvas = doc.getElementById("testCanvas");
-
-            stage = new createjs.Stage(canvas);
+        function init_game() {
 
             // Enable touch interactions if supported on the current device:
             createjs.Touch.enable(stage);
