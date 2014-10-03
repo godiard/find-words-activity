@@ -7,6 +7,11 @@ define(function (require) {
     require("easel");
     require("wordfind");
     require("tween");
+    require("sound");
+
+    var soundInstance;
+    var soundLoaded = false;
+
 
     // Manipulate the DOM only when it is ready.
     require(['domReady!'], function (doc) {
@@ -63,6 +68,14 @@ define(function (require) {
             // change the page
             document.getElementById("firstPage").style.display = "none";
             document.getElementById("secondPage").style.display = "block";
+
+            // load the sound
+            soundSrc = "sounds/card.ogg";
+            createjs.Sound.alternateExtensions = ["mp3"];
+            createjs.Sound.addEventListener("fileload", soundReady);
+            createjs.Sound.registerSound(soundSrc);
+            soundInstance = createjs.Sound.createInstance(soundSrc);
+
         });
 
         var showWordListButton = document.getElementById(
@@ -160,6 +173,11 @@ define(function (require) {
 
         }
 
+        function soundReady(event) {
+            console.log('Sound loaded');
+            soundLoaded = true;
+        }
+
         function startup_animation() {
 
             // create boxes with letters for every row
@@ -186,25 +204,35 @@ define(function (require) {
                     text.textAlign = "center";
                     bar.addChild(text);
                 }
+                bar.cache(0, 0, cell_size * row.length, cell_size);
+
                 boxes.push(bar);
                 stage.addChild(bar);
             }
 
-            createjs.Tween.get(boxes.pop()).to(
-                {y:cell_size * boxes.length + margin_y}, 1000,
-                createjs.Ease.bounceOut).call(animateNextBox);
-
             createjs.Ticker.setFPS(10);
             createjs.Ticker.addEventListener("tick", stage);
+
+            soundInstance.play();
+
+            // startup the animation
+            createjs.Tween.get(boxes.pop()).to(
+                {y:cell_size * boxes.length + margin_y}, 1000,
+                createjs.Ease.bounceOut).wait(300).call(animateNextBox);
+
         }
 
         function animateNextBox() {
             if (boxes.length > 0) {
+                soundInstance.stop();
+                soundInstance.play();
                 createjs.Tween.get(boxes.pop()).to(
                     {y:cell_size * boxes.length + margin_y}, 1000,
-                    createjs.Ease.bounceOut).call(animateNextBox);
+                    createjs.Ease.bounceOut).wait(300).call(animateNextBox);
             } else {
+                soundInstance.stop();
                 stage.clear();
+                createjs.Ticker.setPaused(true);
                 init_game();
             }
         }
