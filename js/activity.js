@@ -78,6 +78,27 @@ define(function (require) {
 
         });
 
+        // not allow input special characters, number or spaces in the words
+        var iChars = "0123456789!¡~@#$%^&*()+=-[]\\\';,./{}|\":<>?¿ ";
+        children = doc.getElementById("selectWords").childNodes;
+        for (var n = 0; n < children.length; n++) {
+            child = children[n];
+            if (child.type == 'text') {
+                child.addEventListener('keyup', function(e) {
+                    var str = $.trim(e.target.value);
+                    if ( str != "" ) {
+                        new_str = '';
+                        for (var i = 0; i < str.length; i++) {
+                            if (iChars.indexOf(str.charAt(i)) == -1) {
+                                new_str = new_str + str.charAt(i);
+                            };
+                        };
+                        e.target.value = new_str;
+                    };
+                });
+            };
+        };
+
         var showWordListButton = document.getElementById(
             "show-wordlist-button");
         showWordListButton.addEventListener('click', function (e) {
