@@ -3,6 +3,14 @@
   background-image: url(../activity/icon.svg);
 }
 
+#main-toolbar #upperlower-button {
+  background-image: url(../icons/uppercase.svg);
+}
+
+#main-toolbar #upperlower-button.active {
+  background-image: url(../icons/lowercase.svg);
+}
+
 #canvas p {
   margin-top: 25%;
   text-align: center;

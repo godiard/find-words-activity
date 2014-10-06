@@ -11,7 +11,8 @@ define(function (require) {
 
     var soundInstance;
     var soundLoaded = false;
-
+    var lowercase = false;
+    var gameStarted = false;
 
     // Manipulate the DOM only when it is ready.
     require(['domReady!'], function (doc) {
@@ -21,6 +22,17 @@ define(function (require) {
 
         // HERE GO YOUR CODE
 
+        // toolbar
+        var upperLowerButton = document.getElementById("upperlower-button");
+        upperLowerButton.onclick = function () {
+            this.classList.toggle('active');
+            lowercase = this.classList.contains('active');
+            if (gameStarted) {
+                changeUpperLowerCase();
+            }
+        };
+
+        // datastore
         var wordList = [];
 
         function onStoreReady() {
@@ -135,6 +147,8 @@ define(function (require) {
         var select_word_line = null;
 
         var boxes;
+        var container;
+        var letters;
 
         function startGame(level) {
 
@@ -218,7 +232,12 @@ define(function (require) {
                     bar.addChild(v_box);
 
                     letter = puzzle[i][j];
-                    text = new createjs.Text(letter.toLowerCase(),
+                    if (lowercase) {
+                        letter = letter.toLowerCase();
+                    } else {
+                        letter = letter.toUpperCase();
+                    }
+                    text = new createjs.Text(letter,
                                              "24px Arial", "#000000");
                     text.x = cell_size * j + cell_size / 2;
                     text.y = y + cell_size / 3;
@@ -277,7 +296,7 @@ define(function (require) {
 
             select_word_line = new createjs.Shape();
 
-            var container = new createjs.Container();
+            container = new createjs.Container();
             container.x = margin_x;
             container.y = margin_y;
 
@@ -287,6 +306,7 @@ define(function (require) {
                 0, 0, cell_size * puzzle.length, cell_size * puzzle.length);
             container.addChild(background);
 
+            letters = [];
             for (var i = 0, height = puzzle.length; i < height; i++) {
                 row = puzzle[i];
                 y = cell_size * i;
@@ -304,12 +324,18 @@ define(function (require) {
 
                 for (var j = 0, width = row.length; j < width; j++) {
                     letter = puzzle[i][j];
-                    text = new createjs.Text(letter.toLowerCase(),
+                    if (lowercase) {
+                        letter = letter.toLowerCase();
+                    } else {
+                        letter = letter.toUpperCase();
+                    }
+                    text = new createjs.Text(letter,
                                              "24px Arial", "#000000");
                     text.x = cell_size * j + cell_size / 2;
                     text.y = y + cell_size / 3;
                     text.textAlign = "center";
                     container.addChild(text);
+                    letters.push(text);
                 }
             }
             container.cache(0, 0, cell_size * puzzle.length,
@@ -319,6 +345,21 @@ define(function (require) {
             stage.addChild(select_word_line);
 
             stage.update();
+
+            gameStarted = true;
+        }
+
+        function changeUpperLowerCase() {
+            for (var i = 0; i < letters.length; i++) {
+                letter = letters[i];
+                if (lowercase) {
+                    letter.text = letter.text.toLowerCase();
+                } else {
+                    letter.text = letter.text.toUpperCase();
+                }
+            }
+            container.updateCache();
+            drawWords("#words", wordList);
         }
 
         function mousedown_cb(event) {
@@ -404,7 +445,12 @@ define(function (require) {
           words.sort();
           for (var i = 0, len = words.length; i < len; i++) {
             var word = words[i];
-            output += '<li class="word ' + word + '">' + word.toLowerCase();
+            if (lowercase) {
+                word = word.toLowerCase();
+            } else {
+                word = word.toUpperCase();
+            }
+            output += '<li class="word ' + word + '">' + word;
           }
           output += '</ul>';
 
