@@ -426,7 +426,7 @@ define(function (require) {
                     found_word_line.graphics.endStroke();
                     stage.addChild(found_word_line);
 
-                    $('.' + word.word).addClass('wordFound');
+                    $('.' + word.word.toLowerCase()).addClass('wordFound');
                 }
             }
             select_word_line.graphics.clear();
@@ -450,7 +450,7 @@ define(function (require) {
             } else {
                 word = word.toUpperCase();
             }
-            output += '<li class="word ' + word + '">' + word;
+            output += '<li class="word ' + word.toLowerCase() + '">' + word;
           }
           output += '</ul>';
 
