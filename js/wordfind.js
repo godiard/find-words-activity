@@ -327,7 +327,7 @@
         // copy and sort the words by length, inserting words into the puzzle
         // from longest to shortest works out the best
         wordList = words.slice(0).sort( function (a,b) {
-          return (a.length < b.length) ? 1 : 0;
+          return (a.length < b.length) ? 1 : -1;
         });
         
         // initialize the options
