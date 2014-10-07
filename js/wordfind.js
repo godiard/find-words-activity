@@ -182,7 +182,8 @@
             var overlap = calcOverlap(word, puzzle, x, y, next);
 
             // if the overlap was bigger than previous overlaps that we've seen
-            if (overlap >= maxOverlap || (!options.preferOverlap && overlap > -1)) {
+            if ((!options.avoidFullOverlap || overlap < word.length) &&
+                (overlap >= maxOverlap || (!options.preferOverlap && overlap > -1))) {
               maxOverlap = overlap;
               locations.push({x: x, y: y, orientation: orientation, overlap: overlap});
             }
@@ -337,7 +338,8 @@
           orientations: opts.orientations || allOrientations,
           fillBlanks:   opts.fillBlanks !== undefined ? opts.fillBlanks : true,
           maxAttempts:  opts.maxAttempts || 3,
-          preferOverlap: opts.preferOverlap !== undefined ? opts.preferOverlap : true
+          preferOverlap: opts.preferOverlap !== undefined ? opts.preferOverlap : true,
+          avoidFullOverlap: opts.avoidFullOverlap !== undefined ? opts.avoidFullOverlap : true
         };
 
         // add the words to the puzzle
