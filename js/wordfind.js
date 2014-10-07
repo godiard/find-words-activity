@@ -91,7 +91,7 @@
     * @param {[String]} words: The list of words to fit into the puzzle
     * @param {[Options]} options: The options to use when filling the puzzle
     */
-    var fillPuzzle = function (words, options) {
+    var fillPuzzle = function (words, options, wordLocations) {
 
       var puzzle = [], i, j, len;
 
@@ -105,7 +105,7 @@
 
       // add each word into the puzzle one at a time
       for (i = 0, len = words.length; i < len; i++) {
-        if (!placeWordInPuzzle(puzzle, options, words[i])) {
+        if (!placeWordInPuzzle(puzzle, options, words[i], wordLocations)) {
           // if a word didn't fit in the puzzle, give up
           return null;
         }
@@ -126,7 +126,7 @@
     * @param {[Options]} options: The options to use when filling the puzzle
     * @param {String} word: The word to fit into the puzzle.
     */
-    var placeWordInPuzzle = function (puzzle, options, word) {
+    var placeWordInPuzzle = function (puzzle, options, word, wordLocations) {
 
       // find all of the best locations where this word would fit
       var locations = findBestLocations(puzzle, options, word);
@@ -138,7 +138,8 @@
       // select a location at random and place the word there
       var sel = locations[Math.floor(Math.random() * locations.length)];
       placeWord(puzzle, word, sel.x, sel.y, orientations[sel.orientation]);
-
+      wordLocations.push({word: word, x: sel.x, y: sel.y,
+                          orientation: sel.orientation});
       return true;
     };
 
@@ -325,6 +326,9 @@
       newPuzzle: function(words, settings) {
         var wordList, puzzle, attempts = 0, opts = settings || {};
 
+        // store the position where the word are placed
+        var wordLocations = [];
+
         // copy and sort the words by length, inserting words into the puzzle
         // from longest to shortest works out the best
         wordList = words.slice(0).sort( function (a,b) {
@@ -347,7 +351,7 @@
         // maxAttempts and then increase the puzzle size and try again
         while (!puzzle) {
           while (!puzzle && attempts++ < options.maxAttempts) {
-            puzzle = fillPuzzle(wordList, options);
+            puzzle = fillPuzzle(wordList, options, wordLocations);
           }
 
           if (!puzzle) {
@@ -362,7 +366,7 @@
           this.fillBlanks(puzzle, options);
         }
 
-        return puzzle;
+        return {matrix:puzzle, locations:wordLocations};
       },
 
       /**

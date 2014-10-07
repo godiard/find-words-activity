@@ -135,7 +135,7 @@ define(function (require) {
         });
 
         var puzzle;
-        var solved;
+        var wordLocations;
 
         var stage;
         var cell_size = 60;
@@ -169,10 +169,13 @@ define(function (require) {
                                 'diagonalUpBack'];
             }
 
-            puzzle = wordfind.newPuzzle(wordList,
+            var puzzleGame = wordfind.newPuzzle(wordList,
                                         {height: 12, width:12,
                                          orientations: orientations,
                                          fillBlanks: true});
+
+            puzzle = puzzleGame.matrix;
+            wordLocations = puzzleGame.locations;
 
             // to debug, show the matrix in the console
             wordfind.print(puzzle);
@@ -180,26 +183,15 @@ define(function (require) {
             // show the words
             drawWords("#words", wordList);
 
-            solved = wordfind.solve(puzzle, wordList);
-
-            for (var n = 0; n < solved.found.length; n++) {
-                word = solved.found[n];
-                // check the last cell postion too
+            for (var n = 0; n < wordLocations.length; n++) {
+                word = wordLocations[n];
                 var nextFn = wordfind.orientations[word.orientation];
                 word_end = nextFn(word.x, word.y, word.word.length - 1);
                 // store it on the solved structure
                 word.end_x = word_end.x;
                 word.end_y = word_end.y;
-            }
-
-            console.log('----------Solved found ' + solved.found.length +
-                        ' not found ' + solved.notFound.length);
-            /*
-            for (var n = 0; n < solved.found.length; n++) {
-                word = solved.found[n];
                 console.log(word);
             }
-            */
 
             canvas = doc.getElementById("testCanvas");
             stage = new createjs.Stage(canvas);
@@ -402,8 +394,8 @@ define(function (require) {
         }
 
         function verify_word(start_cell, end_cell) {
-            for (var n = 0; n < solved.found.length; n++) {
-                word = solved.found[n];
+            for (var n = 0; n < wordLocations.length; n++) {
+                word = wordLocations[n];
                 var nextFn = wordfind.orientations[word.orientation];
                 end_word = nextFn(start_cell[0], start_cell[1],
                                   word.word.length - 1);
