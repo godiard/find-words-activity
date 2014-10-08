@@ -158,6 +158,9 @@ define(function (require) {
         var container;
         var letters;
 
+        var end_cell_x;
+        var end_cell_y;
+
         function startGame(level) {
 
             // change the page
@@ -288,10 +291,8 @@ define(function (require) {
 
             // Enable touch interactions if supported on the current device:
             createjs.Touch.enable(stage);
-            stage.enableMouseOver(10);
-            stage.addEventListener("mousedown", mousedown_cb);
-            stage.addEventListener("mouseover", mouseover_cb);
-            stage.addEventListener("pressup", mouseup_cb);
+            stage.addEventListener("pressup", pressup_cb);
+            stage.addEventListener("pressmove", pressmove_cb);
             stage.mouseChildren = false;
 
             select_word_line = new createjs.Shape();
@@ -362,25 +363,26 @@ define(function (require) {
             drawWords("#words", wordList);
         }
 
-        function mousedown_cb(event) {
-            cell = get_cell(event.stageX, event.stageY);
-            cell_x = cell[0];
-            cell_y = cell[1];
-            start_cell = [cell_x, cell_y];
-        }
-
-        function mouseup_cb(event) {
+        function pressup_cb(event) {
             verify_word(start_cell, end_cell);
             start_cell = null;
             end_cell = null;
         }
 
-        function mouseover_cb(event) {
+        function pressmove_cb(event) {
             if (start_cell == null) {
+                cell = get_cell(event.stageX, event.stageY);
+                cell_x = cell[0];
+                cell_y = cell[1];
+                start_cell = [cell_x, cell_y];
+                end_cell = null;
                 return;
             }
 
             end_cell = get_cell(event.stageX, event.stageY);
+            if ((end_cell_x == end_cell[0]) && (end_cell_y == end_cell[1])) {
+                return;
+            }
             end_cell_x = end_cell[0];
             end_cell_y = end_cell[1];
 
@@ -424,6 +426,7 @@ define(function (require) {
                         margin_x + end_cell_x * cell_size + cell_size / 2,
                         margin_y + end_cell_y * cell_size + cell_size / 2);
                     found_word_line.graphics.endStroke();
+                    found_word_line.mouseEnabled = false;
                     stage.addChild(found_word_line);
 
                     $('.' + word.word.toLowerCase()).addClass('wordFound');
