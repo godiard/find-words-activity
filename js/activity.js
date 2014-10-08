@@ -67,6 +67,14 @@ define(function (require) {
                 child = children[n];
                 if (child.type == 'text') {
                     if (child.value.length > 0) {
+                        // check minimal word size
+                        if (child.value.length < 3) {
+                            child.focus();
+                            activity.showAlert('ERROR',
+                                'Words should be at least 3 character long',
+                                null, function() {child.focus();});
+                            return;
+                        }
                         word = child.value;
                         if (wordList.indexOf(word) == -1) {
                             wordList.push(word);
