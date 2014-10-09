@@ -29,37 +29,32 @@
       </button>
     </div>
     <div id="canvas">
-        <div id="firstPage">
-            What are your words?
-            <div id="selectWords">
-                <input type="text" name="word1" maxlength="12"><br/>
-                <input type="text" name="word2" maxlength="12"><br/>
-                <input type="text" name="word3" maxlength="12"><br/>
-                <input type="text" name="word4" maxlength="12"><br/>
-                <input type="text" name="word5" maxlength="12"><br/>
-                <input type="text" name="word6" maxlength="12"><br/>
-                <input type="text" name="word7" maxlength="12"><br/>
-                <input type="text" name="word8" maxlength="12"><br/>
-                <input type="text" name="word9" maxlength="12"><br/>
-                <input type="text" name="word10" maxlength="12"><br/>
-                <input type="text" name="word11" maxlength="12"><br/>
-                <input type="text" name="word12" maxlength="12">
-            </div>
-            <button id="save-words-button">Next</button>
-        </div>
-        <div id="secondPage" style="display:none">
-            <img id="easy-button" src="./images/easy.png"/>
-            <img id="medium-button" src="./images/medium.png"/>
-            <img id="hard-button" src="./images/hard.png"/>
-            <br/><br/>
-            <button id="show-wordlist-button">Previous</button>
-        </div>
-        <canvas id="testCanvas" width="900px" height="820px" style="display:none">
+        <table width="100%">
+            <tr>
+                <td id="wordList">
+                    <canvas id="wordListCanvas">
+                    </canvas>
+                </td>
+                <td align="center">
+                    <div id="firstPage">
+                        Select Difficult<br/><br/>
+                        <img src="./icons/difficult.jpg" width="200"/><br/><br/>
+                        Add Word<br/><br/>
+                        <input type="text" name="word" maxlength="12">
+                        <button id="add-word-button"></button>
+                        <br/><br/>
+                        <button id="save-words-button"
+                        style="background-color:#03a9f4">Start
+                        <img src="./icons/loupe.svg" height="30" style="vertical-align:middle"/>
+                        </button>
+                    </div>
 
-        </canvas>
-        <div id='words'>
-        </div>
-    </div>
+                    <canvas id="testCanvas" width="900px" height="820px" style="display:none">
+
+                    </canvas>
+                </td>
+            </tr>
+        <table>
     </div>
 
   </body>

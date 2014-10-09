@@ -32,6 +32,17 @@ define(function (require) {
             }
         };
 
+        var is_xo = ((window.innerWidth == 1200) && (window.innerHeight == 900));
+        console.log('IS_XO ' + is_xo);
+        var cell_size = 75;
+        if (!is_xo) {
+            toolbar_height = 55;
+        } 
+
+        document.getElementById("wordListCanvas").height = window.innerHeight - cell_size;
+        document.getElementById("wordListCanvas").width = window.innerWidth / 3;
+        console.log(window.innerWidth / 3);
+
         // datastore
         var wordList = [];
 
@@ -41,6 +52,7 @@ define(function (require) {
                 wordList = JSON.parse(jsonData);
 
                 // show the words in the inputs
+                /*
                 selectWords = doc.getElementById("selectWords");
                 children = selectWords.childNodes;
                 wordCounter = 0;
@@ -52,7 +64,7 @@ define(function (require) {
                         }
                     }
                 }
-
+                */
             }
         }
 
@@ -100,6 +112,7 @@ define(function (require) {
 
         // not allow input special characters, number or spaces in the words
         var iChars = "0123456789!¡~@#$%^&*()+=-[]\\\';,./{}|\":<>?¿ ";
+        /*
         children = doc.getElementById("selectWords").childNodes;
         for (var n = 0; n < children.length; n++) {
             child = children[n];
@@ -118,7 +131,9 @@ define(function (require) {
                 });
             };
         };
+        */
 
+        /*
         var showWordListButton = document.getElementById(
             "show-wordlist-button");
         showWordListButton.addEventListener('click', function (e) {
@@ -141,6 +156,8 @@ define(function (require) {
         hardButton.addEventListener('click', function (e) {
             startGame('hard');
         });
+        */
+
 
         var puzzle;
         var wordLocations;
