@@ -34,6 +34,18 @@ define(function (require) {
 
         var gameCanvas = document.getElementById("gameCanvas");
 
+        // load the sound
+        soundSrc = "sounds/card.ogg";
+        createjs.Sound.alternateExtensions = ["mp3"];
+        createjs.Sound.addEventListener("fileload", soundReady);
+        createjs.Sound.registerSound(soundSrc);
+        soundInstance = createjs.Sound.createInstance(soundSrc);
+
+        function soundReady(event) {
+            console.log('Sound loaded');
+            soundLoaded = true;
+        }
+
         // game logic
 
         function Game(wordListCanvas, gameCanvas) {
@@ -245,7 +257,9 @@ define(function (require) {
                 createjs.Ticker.setFPS(10);
                 createjs.Ticker.addEventListener("tick", this.stage);
 
-                //soundInstance.play();
+                if (soundLoaded) {
+                    soundInstance.play();
+                }
 
                 // startup the animation
                 createjs.Tween.get(this.boxes.pop()).to(
@@ -257,14 +271,18 @@ define(function (require) {
 
             this.animateNextBox = function () {
                 if (this.boxes.length > 0) {
-                    //soundInstance.stop();
-                    //soundInstance.play();
+                    if (soundLoaded) {
+                        soundInstance.stop();
+                        soundInstance.play();
+                    };
                     createjs.Tween.get(this.boxes.pop()).to(
                         {y:this.cell_size * this.boxes.length + this.margin_y}, 1000,
                         createjs.Ease.bounceOut).wait(300).call(
                         this.animateNextBox, [], this);
                 } else {
-                    //soundInstance.stop();
+                    if (soundLoaded) {
+                        soundInstance.stop();
+                    };
                     this.stage.clear();
                     createjs.Ticker.setPaused(true);
                     this.startGame();
@@ -452,52 +470,12 @@ define(function (require) {
 
         dictstore.init(onStoreReady);
 
-        /*
-        var saveWordsButton = document.getElementById("save-words-button");
-        saveWordsButton.addEventListener('click', function (e) {
-            selectWords = doc.getElementById("selectWords");
-            children = selectWords.childNodes;
-            wordList = [];
-            for (var n = 0; n < children.length; n++) {
-                child = children[n];
-                if (child.type == 'text') {
-                    if (child.value.length > 0) {
-                        // check minimal word size
-                        if (child.value.length < 3) {
-                            child.focus();
-                            activity.showAlert('ERROR',
-                                'Words should be at least 3 character long',
-                                null, function() {child.focus();});
-                            return;
-                        }
-                        word = child.value;
-                        if (wordList.indexOf(word) == -1) {
-                            wordList.push(word);
-                        }
-                    }
-                }
-            }
-            // save in the journal
-            localStorage["word-list"] = JSON.stringify(wordList);
-            dictstore.save();
-
-            // load the sound
-            soundSrc = "sounds/card.ogg";
-            createjs.Sound.alternateExtensions = ["mp3"];
-            createjs.Sound.addEventListener("fileload", soundReady);
-            createjs.Sound.registerSound(soundSrc);
-            soundInstance = createjs.Sound.createInstance(soundSrc);
-
-        });
-        */
-
         var startGameButton = document.getElementById("start-game-button");
         startGameButton.addEventListener('click', function (e) {
             document.getElementById("firstPage").style.display = "none";
             document.getElementById("gameCanvas").style.display = "block";
             game.matrixView.init();
         });
-
 
         // not allow input special characters, number or spaces in the words
         var iChars = "0123456789!¡~@#$%^&*()+=-[]\\\';,./{}|\":<>?¿ ";
@@ -594,11 +572,6 @@ define(function (require) {
             startGame('hard');
         });
         */
-
-        function soundReady(event) {
-            console.log('Sound loaded');
-            soundLoaded = true;
-        }
 
         //
     });
