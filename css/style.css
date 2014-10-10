@@ -5,6 +5,9 @@
 * For all details and documentation:
 *     http://github.com/bunkat/wordfind
 */
+table td {
+  padding: 0px;
+}
 
 #firstPage {
   align:center;
@@ -32,6 +35,16 @@
   padding: 5px;
   font: 1.1em sans-serif;
   background-color: #03a9f4;
+}
+
+#validation-error-msg {
+  position: absolute;
+  padding: 10px;
+  font: 0.5em sans-serif;
+  background-color: #c13333;
+  color: white;
+  border-radius: 5px;
+  /* left: 1200px; */
 }
 
 /**

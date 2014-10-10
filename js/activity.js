@@ -501,37 +501,74 @@ define(function (require) {
 
         // not allow input special characters, number or spaces in the words
         var iChars = "0123456789!¡~@#$%^&*()+=-[]\\\';,./{}|\":<>?¿ ";
-        /*
-        children = doc.getElementById("selectWords").childNodes;
-        for (var n = 0; n < children.length; n++) {
-            child = children[n];
-            if (child.type == 'text') {
-                child.addEventListener('keyup', function(e) {
-                    var str = $.trim(e.target.value);
-                    if ( str != "" ) {
-                        new_str = '';
-                        for (var i = 0; i < str.length; i++) {
-                            if (iChars.indexOf(str.charAt(i)) == -1) {
-                                new_str = new_str + str.charAt(i);
-                            };
-                        };
-                        e.target.value = new_str;
-                    };
-                });
-            };
-        };
-        */
 
+        var wordInput = document.getElementById("word-input");
+        var errorArea = document.getElementById("validation-error-msg");
         var addWordButton = document.getElementById("add-word-button");
+
         addWordButton.addEventListener('click', function (e) {
-            var wordInput = document.getElementById("word-input");
+            addWord();
+        });
+
+        wordInput.addEventListener('keypress', function (e) {
+            if (e.which == 13) {
+                addWord();
+            };
+        });
+
+        function validateWord(word) {
+            if (word.length < 3) {
+                showError('Must be at least 3 letters');
+                return false;
+            };
+            for (var i = 0; i < word.length; i++) {
+                if (iChars.indexOf(word.charAt(i)) > -1) {
+                    showError('Remove all punctuation');
+                    return false;
+                };
+            };
+            return true;
+        }
+
+        function showError(msg) {
+            buttonPos = findPosition(addWordButton);
+            console.log('POSITION ' + buttonPos.left + ' ' + buttonPos.top);
+            errorArea.innerHTML = msg;
+            errorArea.style.left = buttonPos.left;
+            errorArea.style.top = buttonPos.top;
+            errorArea.style.display = "block";
+        };
+
+        function findPosition(obj) {
+            var left = 0;
+            var top = 0;
+            if (obj.offsetParent) {
+                while(1) {
+                    left += obj.offsetLeft;
+                    top += obj.offsetTop;
+                    if(!obj.offsetParent)
+                        break;
+                    obj = obj.offsetParent;
+                }
+            } else
+                if(obj.x) {
+                    left += obj.x;
+                    top += obj.y;
+                    }
+            return {left:left, top: top};
+        };
+
+        function addWord() {
+            if (!validateWord(wordInput.value)) {
+                return;
+            }
             game.addWords([wordInput.value]);
             wordInput.value = '';
             wordInput.focus();
             // save in the journal
             localStorage["word-list"] = JSON.stringify(game.words);
             dictstore.save();
-        });
+        };
 
         /*
         var showWordListButton = document.getElementById(
