@@ -557,22 +557,22 @@ define(function (require) {
             document.getElementById("secondPage").style.display = "none";
             document.getElementById("firstPage").style.display = "block";
         });
+        */
 
         var easyButton = document.getElementById("easy-button");
         easyButton.addEventListener('click', function (e) {
-            startGame('easy');
+            game.level = 'easy';
         });
 
         var mediumButton = document.getElementById("medium-button");
         mediumButton.addEventListener('click', function (e) {
-            startGame('medium');
+            game.level = 'medium';
         });
 
         var hardButton = document.getElementById("hard-button");
         hardButton.addEventListener('click', function (e) {
-            startGame('hard');
+            game.level = 'hard';
         });
-        */
 
         //
     });

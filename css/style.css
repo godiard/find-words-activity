@@ -20,6 +20,28 @@ table td {
   width: 300px; /* screen / 4 ?? */
 }
 
+.level-button {
+  background-size: 100%;
+  height: 66px;  /* 8 * @subcell-size;  */
+  width: 66px;
+  border-radius: 0;
+  border: 0px;
+  padding: 11px; /* @subcell-size;  */
+  margin: 22px;
+}
+
+#easy-button {
+  background-image: url('../icons/easy.png');
+}
+
+#medium-button {
+  background-image: url('../icons/medium.png');
+}
+
+#hard-button {
+  background-image: url('../icons/hard.png');
+}
+
 #add-word-button {
   background-image: url('../icons/add_word.png');
   background-size: 100%;
@@ -28,7 +50,6 @@ table td {
   border-radius: 0;
   border: 0px;
   padding: 11px; /* @subcell-size;  */
-  
 }
 
 #start-game-button {
