@@ -489,6 +489,7 @@ define(function (require) {
         });
 
         wordInput.addEventListener('keypress', function (e) {
+            hideError();
             if (e.which == 13) {
                 addWord();
             };
@@ -505,6 +506,7 @@ define(function (require) {
                     return false;
                 };
             };
+            hideError();
             return true;
         }
 
@@ -516,6 +518,10 @@ define(function (require) {
             errorArea.style.left = buttonPos.left + 'px';
             errorArea.style.top = buttonPos.top + 'px';
             errorArea.style.display = "block";
+        };
+
+        function hideError() {
+            errorArea.style.display = "none";
         };
 
         function findPosition(obj) {
