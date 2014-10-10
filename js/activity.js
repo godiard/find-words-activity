@@ -169,8 +169,7 @@ define(function (require) {
             this.stage.mouseChildren = false;
 
             this.cell_size = 60;
-            this.margin_x = 50;
-            this.margin_y = 50;
+            this.margin_y = 40;
 
             this.start_cell = null;
             this.end_cell = null;
@@ -225,7 +224,7 @@ define(function (require) {
                     y = 0;
 
                     bar = new createjs.Container();
-                    bar.x = this.margin_x;
+                    bar.x = 0;
                     bar.y = 0;
 
                     for (var j = 0, width = row.length; j < width; j++) {
@@ -290,7 +289,7 @@ define(function (require) {
             }
 
             this.getCell = function (x, y) {
-                cell_x = parseInt((x - this.margin_x) / this.cell_size);
+                cell_x = parseInt(x / this.cell_size);
                 cell_y = parseInt((y - this.margin_y) / this.cell_size);
                 // console.log('x = '+ x + ' y = ' + y + 'cell = ' + cell_x + ' ' + cell_y);
                 return [cell_x, cell_y];
@@ -303,7 +302,7 @@ define(function (require) {
                 this.select_word_line = new createjs.Shape();
 
                 this.container = new createjs.Container();
-                this.container.x = this.margin_x;
+                this.container.x = 0;
                 this.container.y = this.margin_y;
 
                 var background = new createjs.Shape();
@@ -401,10 +400,10 @@ define(function (require) {
                     createjs.Graphics.getRGB(0xFF00FF, 0.2));
                 this.select_word_line.graphics.setStrokeStyle(this.cell_size, "round");
                 this.select_word_line.graphics.moveTo(
-                    this.margin_x + start_cell_x * this.cell_size + this.cell_size / 2,
+                    start_cell_x * this.cell_size + this.cell_size / 2,
                     this.margin_y + start_cell_y * this.cell_size + this.cell_size / 2);
                 this.select_word_line.graphics.lineTo(
-                    this.margin_x + end_cell_x * this.cell_size + this.cell_size / 2,
+                    end_cell_x * this.cell_size + this.cell_size / 2,
                     this.margin_y + end_cell_y * this.cell_size + this.cell_size / 2);
                 this.select_word_line.graphics.endStroke();
                 this.stage.update();
@@ -427,10 +426,10 @@ define(function (require) {
                         found_word_line.graphics.setStrokeStyle(
                             this.cell_size, "round");
                         found_word_line.graphics.moveTo(
-                            this.margin_x + start_cell[0] * this.cell_size + this.cell_size / 2,
+                            start_cell[0] * this.cell_size + this.cell_size / 2,
                             this.margin_y + start_cell[1] * this.cell_size + this.cell_size / 2);
                         found_word_line.graphics.lineTo(
-                            this.margin_x + end_cell[0] * this.cell_size + this.cell_size / 2,
+                            end_cell[0] * this.cell_size + this.cell_size / 2,
                             this.margin_y + end_cell[1] * this.cell_size + this.cell_size / 2);
                         found_word_line.graphics.endStroke();
                         found_word_line.mouseEnabled = false;
