@@ -37,10 +37,15 @@ table td {
   background-color: #03a9f4;
 }
 
-#validation-error-msg {
+#validation-error {
   position: absolute;
+  background-image: url('../icons/red_pin.png');
+  background-repeat: no-repeat;
+}
+
+#validation-error-msg {
+  margin-top: 15px;
   padding: 10px;
-  font: 0.5em sans-serif;
   background-color: #c13333;
   color: white;
   border-radius: 5px;

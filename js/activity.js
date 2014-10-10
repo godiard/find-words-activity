@@ -481,7 +481,7 @@ define(function (require) {
         var iChars = "0123456789!¡~@#$%^&*()+=-[]\\\';,./{}|\":<>?¿ ";
 
         var wordInput = document.getElementById("word-input");
-        var errorArea = document.getElementById("validation-error-msg");
+        var errorArea = document.getElementById("validation-error");
         var addWordButton = document.getElementById("add-word-button");
 
         addWordButton.addEventListener('click', function (e) {
@@ -511,9 +511,10 @@ define(function (require) {
         function showError(msg) {
             buttonPos = findPosition(addWordButton);
             console.log('POSITION ' + buttonPos.left + ' ' + buttonPos.top);
-            errorArea.innerHTML = msg;
-            errorArea.style.left = buttonPos.left;
-            errorArea.style.top = buttonPos.top;
+            errorArea.innerHTML = '<div id="validation-error-msg">' + msg +
+                '</div>';
+            errorArea.style.left = buttonPos.left + 'px';
+            errorArea.style.top = buttonPos.top + 'px';
             errorArea.style.display = "block";
         };
 
