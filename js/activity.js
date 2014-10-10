@@ -61,10 +61,16 @@ define(function (require) {
                 */
             }
 
-            this.setWords = function (words) {
-                console.log('setWords ' + words.toString());
-                this.words = words;
-                this.wordListView.addWords(words.slice());
+            this.addWords = function (words) {
+                console.log('addWords ' + words.toString());
+                var wordsAdded = [];
+                for (var n = 0; n < words.length; n++) {
+                    if (this.words.indexOf(words[n]) == -1) {
+                        this.words.push(words[n]);
+                        wordsAdded.push(words[n]);
+                    }
+                }
+                this.wordListView.addWords(wordsAdded);
             }
         }
 
@@ -159,7 +165,7 @@ define(function (require) {
             if (localStorage["word-list"]) {
                 var jsonData = localStorage["word-list"];
                 wordList = JSON.parse(jsonData);
-                game.setWords(wordList);
+                game.addWords(wordList);
             }
         }
 
@@ -227,6 +233,14 @@ define(function (require) {
             };
         };
         */
+
+        var addWordButton = document.getElementById("add-word-button");
+        addWordButton.addEventListener('click', function (e) {
+            var wordInput = document.getElementById("word-input");
+            game.addWords([wordInput.value]);
+            wordInput.value = '';
+            wordInput.focus();
+        });
 
         /*
         var showWordListButton = document.getElementById(
