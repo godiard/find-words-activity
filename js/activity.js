@@ -22,26 +22,135 @@ define(function (require) {
 
         // HERE GO YOUR CODE
 
+        // initialize canvas size
+
+        var is_xo = ((window.innerWidth == 1200) && (window.innerHeight == 900));
+        var cell_size = 75;
+        if (!is_xo) {
+            toolbar_height = 55;
+        }
+
+        var wordListCanvas = document.getElementById("wordListCanvas");
+        wordListCanvas.height = window.innerHeight - cell_size;
+        wordListCanvas.width = window.innerWidth / 3;
+
+        // game logic
+
+        function Game(wordListCanvas) {
+
+            this.words = [];
+            this.level = 'easy';
+            this.found = [];
+            this.started = false;
+            this.lowerCase = false;
+            this.colors = ['#e51c23', '#e91e63', '#9c27b0', '#673ab7',
+                           '#3f51b5', '#5677fc', '#03a9f4', '#00bcd4',
+                           '#009688', '#259b24', '#8bc34a', '#cddc39',
+                           '#ffc107', '#ff9800', '#ff5722'];
+
+            this.wordListView = new WordListView(wordListCanvas, this);
+
+            this.setLowerCase = function (lowerCase) {
+                this.lowerCase = lowerCase;
+                this.wordListView.changeCase();
+                /*
+                if (this.started) {
+                    // change the matrix
+                    changeUpperLowerCase();
+                }
+                */
+            }
+
+            this.setWords = function (words) {
+                console.log('setWords ' + words.toString());
+                this.words = words;
+                this.wordListView.addWords(words.slice());
+            }
+        }
+
+        function WordListView(canvas, game) {
+
+            this.canvas = canvas;
+            this.game = game;
+
+            this.stage = new createjs.Stage(this.canvas);
+            createjs.Ticker.setFPS(10);
+            createjs.Ticker.addEventListener("tick", this.stage);
+
+            this.wordHeight = 50;
+
+            // the stage elements displaying every word in the word list
+            this.wordElements = [];
+
+            this.addWords = function (words) {
+                if (words.length == 0) {
+                    return;
+                }
+                word = words.pop();
+                console.log('addWords ' + word);
+                cont = new createjs.Container();
+                cont.x = 20; // margin_x;
+                cont.y = 0;
+                padding = 10;
+
+                var label;
+                if (this.game.lowerCase) {
+                    label = word.toLowerCase();
+                } else {
+                    label = word.toUpperCase();
+                }
+                text = new createjs.Text(label, "24px Arial", "#000000");
+                text.x = text.getMeasuredWidth() / 2 + padding;
+                text.y = padding;
+                text.textAlign = "center";
+
+                box = new createjs.Shape();
+                box.graphics.beginFill(this.game.colors[this.game.words.indexOf(word)]
+                    ).drawRoundRect(0, 0,
+                               text.getMeasuredWidth() + padding * 2,
+                               text.getMeasuredHeight()+ padding * 2, 20);
+                cont.addChild(box);
+                cont.addChild(text);
+
+                cont.cache(0, 0,
+                               text.getMeasuredWidth() + padding * 2,
+                               text.getMeasuredHeight()+ padding * 2);
+                this.stage.addChild(cont);
+
+                this.wordElements.push(text);
+
+                // startup the animation
+                y_final_position = this.canvas.height - this.wordHeight *
+                    this.wordElements.length;
+                createjs.Tween.get(cont).to(
+                    {y:y_final_position}, 1000,
+                    createjs.Ease.bounceOut).wait(300).call(
+                    this.addWords, [words], this);
+            }
+
+            this.changeCase = function () {
+                for (var i = 0; i < this.wordElements.length; i++) {
+                    word = this.wordElements[i];
+                    if (this.game.lowerCase) {
+                        word.text = word.text.toLowerCase();
+                    } else {
+                        word.text = word.text.toUpperCase();
+                    }
+                    word.parent.updateCache();
+                }
+            }
+
+        }
+
+        var game = new Game(wordListCanvas);
+
         // toolbar
         var upperLowerButton = document.getElementById("upperlower-button");
         upperLowerButton.onclick = function () {
             this.classList.toggle('active');
             lowercase = this.classList.contains('active');
-            if (gameStarted) {
-                changeUpperLowerCase();
-            }
+            game.setLowerCase(lowercase);
         };
-
-        var is_xo = ((window.innerWidth == 1200) && (window.innerHeight == 900));
-        console.log('IS_XO ' + is_xo);
-        var cell_size = 75;
-        if (!is_xo) {
-            toolbar_height = 55;
-        } 
-
-        document.getElementById("wordListCanvas").height = window.innerHeight - cell_size;
-        document.getElementById("wordListCanvas").width = window.innerWidth / 3;
-        console.log(window.innerWidth / 3);
 
         // datastore
         var wordList = [];
@@ -50,21 +159,7 @@ define(function (require) {
             if (localStorage["word-list"]) {
                 var jsonData = localStorage["word-list"];
                 wordList = JSON.parse(jsonData);
-
-                // show the words in the inputs
-                /*
-                selectWords = doc.getElementById("selectWords");
-                children = selectWords.childNodes;
-                wordCounter = 0;
-                for (var n = 0; n < children.length; n++) {
-                    child = children[n];
-                    if (child.type == 'text') {
-                        if (wordCounter < wordList.length) {
-                            child.value = wordList[wordCounter++];
-                        }
-                    }
-                }
-                */
+                game.setWords(wordList);
             }
         }
 
