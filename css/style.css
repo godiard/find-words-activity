@@ -51,30 +51,3 @@ table td {
   border-radius: 5px;
   /* left: 1200px; */
 }
-
-/**
-* Styles for the word list
-*/
-#words {
-  position: absolute;
-  right: 20px;
-  top:80px;
-  padding-top: 20px;
-  width: 400px;
-}
-
-#words ul {
-  list-style-type: none;
-}
-
-#words li {
-  padding: 3px 0;
-  font: 1.5em sans-serif;
-}
-
-/* indicates that the word has been found */
-#words .wordFound {
-  text-decoration: line-through;
-  color: gray;
-}
-
