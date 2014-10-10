@@ -24,13 +24,14 @@
   width: 33px;
   border-radius: 0;
   border: 0px;
-  padding: 11px; /* @cell-size;  */
+  padding: 11px; /* @subcell-size;  */
   
 }
 
-#save-words-button{
+#start-game-button {
   padding: 5px;
   font: 1.1em sans-serif;
+  background-color: #03a9f4;
 }
 
 /**
