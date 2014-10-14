@@ -21,7 +21,9 @@ table td {
 }
 
 .level-button {
+  vertical-align:middle;
   background-size: 100%;
+  background-color: transparent;
   height: 66px;  /* 8 * @subcell-size;  */
   width: 66px;
   border-radius: 0;
@@ -30,16 +32,25 @@ table td {
   margin: 22px;
 }
 
+.level-button:active, .level-button.active {
+  height: 99px;  /* 8 * @subcell-size;  */
+  width: 99px;
+}
+
+.level-button:hover {
+  background-color: transparent;
+}
+
 #easy-button {
-  background-image: url('../icons/easy.png');
+  background-image: url('../icons/easy.svg');
 }
 
 #medium-button {
-  background-image: url('../icons/medium.png');
+  background-image: url('../icons/medium.svg');
 }
 
 #hard-button {
-  background-image: url('../icons/hard.png');
+  background-image: url('../icons/hard.svg');
 }
 
 #add-word-button {

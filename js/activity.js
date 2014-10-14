@@ -564,20 +564,40 @@ define(function (require) {
         });
         */
 
+
         var easyButton = document.getElementById("easy-button");
-        easyButton.addEventListener('click', function (e) {
-            game.level = 'easy';
-        });
-
         var mediumButton = document.getElementById("medium-button");
-        mediumButton.addEventListener('click', function (e) {
-            game.level = 'medium';
+        var hardButton = document.getElementById("hard-button");
+
+        function setLevel(level) {
+            easyButton.classList.remove('active');
+            mediumButton.classList.remove('active');
+            hardButton.classList.remove('active');
+            game.level = level;
+            if (level == 'easy') {
+                easyButton.classList.toggle('active');
+            }
+            if (level == 'medium') {
+                mediumButton.classList.toggle('active');
+            }
+            if (level == 'hard') {
+                hardButton.classList.toggle('active');
+            }
+
+        }
+
+        easyButton.addEventListener('click', function (e) {
+            setLevel('easy');
         });
 
-        var hardButton = document.getElementById("hard-button");
-        hardButton.addEventListener('click', function (e) {
-            game.level = 'hard';
+        mediumButton.addEventListener('click', function (e) {
+            setLevel('medium');
         });
+
+        hardButton.addEventListener('click', function (e) {
+            setLevel('hard');
+        });
+
 
         //
     });
