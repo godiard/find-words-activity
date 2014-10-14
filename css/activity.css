@@ -4,11 +4,7 @@
 }
 
 #main-toolbar #upperlower-button {
-  background-image: url(../icons/uppercase.svg);
-}
-
-#main-toolbar #upperlower-button.active {
-  background-image: url(../icons/lowercase.svg);
+  background-image: url(../icons/uppercase-lowercase.svg);
 }
 
 #canvas p {
