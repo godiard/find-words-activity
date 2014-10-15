@@ -395,6 +395,10 @@ define(function (require) {
             }, this);
 
             this.stage.on("pressmove", function (event) {
+                if (!this.game.started) {
+                    return;
+                }
+
                 if (this.start_cell == null) {
                     cell = this.getCell(event.stageX, event.stageY);
                     this.start_cell = [cell[0], cell[1]];
