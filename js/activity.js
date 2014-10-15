@@ -351,7 +351,7 @@ define(function (require) {
                     if (soundLoaded && this.game.audioEnabled) {
                         soundInstance.stop();
                     };
-                    this.stage.clear();
+                    this.stage.removeAllChildren();
                     this.startGame();
                 }
             }
@@ -447,6 +447,14 @@ define(function (require) {
                 this.verifyWord(this.start_cell, this.end_cell);
                 this.start_cell = null;
                 this.end_cell = null;
+            }, this);
+
+            this.stage.on('click', function (event) {
+                if (this.animation_runnning) {
+                    // empty the list with the falling blocks
+                    // to end the animation
+                    this.boxes = [];
+                }
             }, this);
 
             this.stage.on("pressmove", function (event) {
