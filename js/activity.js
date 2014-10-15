@@ -44,7 +44,7 @@ define(function (require) {
         function soundReady(event) {
             console.log('Sound loaded');
             soundLoaded = true;
-        }
+        };
 
         // game logic
 
@@ -70,12 +70,12 @@ define(function (require) {
                 if (this.started) {
                     // change the matrix
                     this.matrixView.changeCase();
-                }
-            }
+                };
+            };
 
             this.enableAudio = function (enable) {
                 this.audioEnabled = enable;
-            }
+            };
 
             this.addWords = function (words) {
                 console.log('addWords ' + words.toString());
@@ -84,10 +84,20 @@ define(function (require) {
                     if (this.words.indexOf(words[n]) == -1) {
                         this.words.push(words[n]);
                         wordsAdded.push(words[n]);
-                    }
-                }
+                    };
+                };
                 this.wordListView.addWords(wordsAdded);
-            }
+            };
+
+            this.addFoundWord = function (word) {
+                this.found.push(word);
+                this.wordListView.markFound(word);
+            };
+
+            this.restartWordList = function() {
+                this.wordListView.unmarkAll();
+            };
+
         }
 
         function WordListView(canvas, game) {
@@ -109,33 +119,12 @@ define(function (require) {
                     return;
                 }
                 word = words.pop();
-                cont = new createjs.Container();
+                var cont = new createjs.Container();
                 cont.x = 20; // margin_x;
                 cont.y = 0;
-                padding = 10;
 
-                var label;
-                if (this.game.lowerCase) {
-                    label = word.toLowerCase();
-                } else {
-                    label = word.toUpperCase();
-                }
-                text = new createjs.Text(label, "24px Arial", "#000000");
-                text.x = text.getMeasuredWidth() / 2 + padding;
-                text.y = padding;
-                text.textAlign = "center";
+                var text = this.addRoundedLabel(cont, word, 1.0);
 
-                box = new createjs.Shape();
-                box.graphics.beginFill(this.game.colors[this.game.words.indexOf(word)]
-                    ).drawRoundRect(0, 0,
-                               text.getMeasuredWidth() + padding * 2,
-                               text.getMeasuredHeight()+ padding * 2, 20);
-                cont.addChild(box);
-                cont.addChild(text);
-
-                cont.cache(0, 0,
-                               text.getMeasuredWidth() + padding * 2,
-                               text.getMeasuredHeight()+ padding * 2);
                 this.stage.addChild(cont);
 
                 this.wordElements.push(text);
@@ -149,6 +138,44 @@ define(function (require) {
                     this.addWords, [words], this);
             }
 
+            this.addRoundedLabel = function(cont, word, alpha) {
+                var padding = 10;
+                var label;
+                if (this.game.lowerCase) {
+                    label = word.toLowerCase();
+                } else {
+                    label = word.toUpperCase();
+                }
+                var text = new createjs.Text(label, "24px Arial", "#000000");
+                text.x = text.getMeasuredWidth() / 2 + padding;
+                text.y = padding;
+                text.textAlign = "center";
+
+                var box = new createjs.Shape();
+                box.graphics.beginFill(this.getWordColor(word, alpha)
+                    ).drawRoundRect(0, 0,
+                               text.getMeasuredWidth() + padding * 2,
+                               text.getMeasuredHeight()+ padding * 2, 20);
+                cont.addChild(box);
+                cont.addChild(text);
+
+                cont.cache(0, 0,
+                               text.getMeasuredWidth() + padding * 2,
+                               text.getMeasuredHeight()+ padding * 2);
+                return text;
+            }
+
+            this.getWordColor = function(word, alpha) {
+                index = this.game.words.indexOf(word);
+                if (index < this.game.colors.length) {
+                    hexa_color = this.game.colors[index];
+                    r = parseInt(hexa_color.substr(1, 2), 16);
+                    g = parseInt(hexa_color.substr(3, 2), 16);
+                    b = parseInt(hexa_color.substr(5, 2), 16);
+                    return createjs.Graphics.getRGB(r, g, b, alpha);
+                };
+            };
+
             this.changeCase = function () {
                 for (var i = 0; i < this.wordElements.length; i++) {
                     word = this.wordElements[i];
@@ -156,12 +183,40 @@ define(function (require) {
                         word.text = word.text.toLowerCase();
                     } else {
                         word.text = word.text.toUpperCase();
-                    }
+                    };
                     word.parent.updateCache();
-                }
-            }
+                };
+            };
 
-        }
+            this.markFound = function (foundWord) {
+                for (var i = 0; i < this.wordElements.length; i++) {
+                    word = this.wordElements[i];
+                    if (word.text.toUpperCase() == foundWord) {
+                        console.log('markFound ' + foundWord);
+                        cont = word.parent;
+                        cont.removeAllChildren();
+                        text = this.addRoundedLabel(cont, foundWord, 0.25);
+                        // update the reference in wordList
+                        this.wordElements[i] = text;
+                        this.stage.update();
+                        break;
+                    };
+                };
+            };
+
+            this.unmarkAll = function () {
+                for (var i = 0; i < this.wordElements.length; i++) {
+                    word = this.wordElements[i];
+                    text = word.text;
+                    cont = word.parent;
+                    cont.removeAllChildren();
+                    // update the reference in wordList
+                    this.wordElements[i] = this.addRoundedLabel(cont, text, 1);
+                };
+                this.stage.update();
+            };
+
+        };
 
         function MatrixView(canvas, game) {
 
@@ -373,6 +428,7 @@ define(function (require) {
                     // stop the animation
                     this.animation_runnning = false;
                 }
+                this.game.restartWordList();
             }
 
             this.changeCase = function () {
@@ -465,8 +521,9 @@ define(function (require) {
                         found_word_line.mouseEnabled = false;
                         this.stage.addChild(found_word_line);
 
-                        // TODO: show in the word list
-                        //$('.' + word.word.toLowerCase()).addClass('wordFound');
+                        // show in the word list
+                        this.game.addFoundWord(word.word);
+
                     };
                 };
                 this.select_word_line.graphics.clear();
