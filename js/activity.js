@@ -59,6 +59,7 @@ define(function (require) {
                            '#3f51b5', '#5677fc', '#03a9f4', '#00bcd4',
                            '#009688', '#259b24', '#8bc34a', '#cddc39',
                            '#ffc107', '#ff9800', '#ff5722'];
+            this.audioEnabled = true;
 
             this.wordListView = new WordListView(wordListCanvas, this);
             this.matrixView = new MatrixView(gameCanvas, this);
@@ -70,6 +71,10 @@ define(function (require) {
                     // change the matrix
                     this.matrixView.changeCase();
                 }
+            }
+
+            this.enableAudio = function (enable) {
+                this.audioEnabled = enable;
             }
 
             this.addWords = function (words) {
@@ -260,7 +265,7 @@ define(function (require) {
                 createjs.Ticker.setFPS(10);
                 createjs.Ticker.addEventListener("tick", this.stage);
 
-                if (soundLoaded) {
+                if (soundLoaded && this.game.audioEnabled) {
                     soundInstance.play();
                 }
 
@@ -279,7 +284,7 @@ define(function (require) {
                     return;
                 }
                 if (this.boxes.length > 0) {
-                    if (soundLoaded) {
+                    if (soundLoaded && this.game.audioEnabled) {
                         soundInstance.stop();
                         soundInstance.play();
                     };
@@ -289,7 +294,7 @@ define(function (require) {
                         createjs.Ease.bounceOut).wait(300).call(
                         this.animateNextBox, [], this);
                 } else {
-                    if (soundLoaded) {
+                    if (soundLoaded && this.game.audioEnabled) {
                         soundInstance.stop();
                     };
                     this.stage.clear();
@@ -480,6 +485,13 @@ define(function (require) {
             document.getElementById("gameCanvas").style.display = "none";
             game.matrixView.stop();
         });
+
+        var audioButton = document.getElementById("audio-button");
+        audioButton.onclick = function () {
+            this.classList.toggle('active');
+            enable = !this.classList.contains('active');
+            game.enableAudio(enable);
+        };
 
         // datastore
         var wordList = [];

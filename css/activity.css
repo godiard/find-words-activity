@@ -11,6 +11,10 @@
   background-image: url(../icons/arrow.svg);
 }
 
+#main-toolbar #audio-button {
+  background-image: url(../icons/audio.svg);
+}
+
 #canvas p {
   margin-top: 25%;
   text-align: center;
