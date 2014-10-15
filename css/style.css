@@ -54,13 +54,18 @@ table td {
 }
 
 #add-word-button {
-  background-image: url('../icons/add_word.png');
+  background-image: url('../icons/plus.svg');
   background-size: 100%;
+  background-color: transparent;
   height: 33px;  /* 4 * @subcell-size;  */
   width: 33px;
   border-radius: 0;
   border: 0px;
   padding: 11px; /* @subcell-size;  */
+}
+
+#add-word-button:hover {
+  background-color: transparent;
 }
 
 #start-game-button {
