@@ -109,7 +109,6 @@ define(function (require) {
                     return;
                 }
                 word = words.pop();
-                console.log('addWords ' + word);
                 cont = new createjs.Container();
                 cont.x = 20; // margin_x;
                 cont.y = 0;
@@ -498,6 +497,8 @@ define(function (require) {
             this.classList.toggle('active');
             enable = !this.classList.contains('active');
             game.enableAudio(enable);
+            localStorage["audio-enabled"] = enable;
+            dictstore.save();
         };
 
         // datastore
@@ -508,8 +509,13 @@ define(function (require) {
                 var jsonData = localStorage["word-list"];
                 wordList = JSON.parse(jsonData);
                 game.addWords(wordList);
-            }
-        }
+                setLevel(localStorage["level"]);
+                game.enableAudio(localStorage["audio-enabled"] == 'true');
+                if (!game.audioEnabled){
+                    audioButton.classList.toggle('active');
+                };
+            };
+        };
 
         dictstore.init(onStoreReady);
 
@@ -615,6 +621,10 @@ define(function (require) {
             } else if (level == 'hard') {
                 hardButton.classList.toggle('active');
             };
+            if (localStorage["level"] != level) {
+                localStorage["level"] = level;
+                dictstore.save();
+            }
         };
 
         easyButton.addEventListener('click', function (e) {
