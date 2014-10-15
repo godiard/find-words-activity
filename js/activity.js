@@ -503,6 +503,10 @@ define(function (require) {
                         (word.end_x == start_cell[0] &&
                          word.end_y == start_cell[1] &&
                          word.x == end_cell[0] && word.y == end_cell[1])) {
+                        // verify if was already marked
+                        if (this.game.found.indexOf(word.word) > -1) {
+                            continue;
+                        };
                         // mark the word as found
                         found_word_line = new createjs.Shape();
                         found_word_line.graphics.beginStroke(
