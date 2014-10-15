@@ -170,6 +170,7 @@ define(function (require) {
             this.game = game;
 
             this.stage = new createjs.Stage(canvas);
+            // Enable touch interactions if supported on the current device
             createjs.Touch.enable(this.stage);
             this.stage.mouseChildren = false;
 
@@ -216,7 +217,6 @@ define(function (require) {
                     word_end = nextFn(word.x, word.y, word.word.length - 1);
                     word.end_x = word_end.x;
                     word.end_y = word_end.y;
-                    console.log(word);
                 }
                 // clean objects if the canvas was already used
                 this.stage.removeAllChildren();
@@ -305,13 +305,10 @@ define(function (require) {
             this.getCell = function (x, y) {
                 cell_x = parseInt(x / this.cell_size);
                 cell_y = parseInt((y - this.margin_y) / this.cell_size);
-                // console.log('x = '+ x + ' y = ' + y + 'cell = ' + cell_x + ' ' + cell_y);
                 return [cell_x, cell_y];
             }
 
             this.startGame = function() {
-
-                // Enable touch interactions if supported on the current device:
 
                 this.select_word_line = new createjs.Shape();
 
@@ -421,13 +418,16 @@ define(function (require) {
                 this.select_word_line.graphics.clear();
                 this.select_word_line.graphics.beginStroke(
                     createjs.Graphics.getRGB(0xFF00FF, 0.2));
-                this.select_word_line.graphics.setStrokeStyle(this.cell_size, "round");
+                this.select_word_line.graphics.setStrokeStyle(this.cell_size,
+                                                              "round");
                 this.select_word_line.graphics.moveTo(
                     start_cell_x * this.cell_size + this.cell_size / 2,
-                    this.margin_y + start_cell_y * this.cell_size + this.cell_size / 2);
+                    this.margin_y + start_cell_y * this.cell_size +
+                    this.cell_size / 2);
                 this.select_word_line.graphics.lineTo(
                     end_cell_x * this.cell_size + this.cell_size / 2,
-                    this.margin_y + end_cell_y * this.cell_size + this.cell_size / 2);
+                    this.margin_y + end_cell_y * this.cell_size +
+                    this.cell_size / 2);
                 this.select_word_line.graphics.endStroke();
                 this.stage.update();
             }, this);
@@ -439,8 +439,10 @@ define(function (require) {
                     end_word = nextFn(start_cell[0], start_cell[1],
                                       word.word.length - 1);
                     if ((word.x == start_cell[0] && word.y == start_cell[1] &&
-                         word.end_x == end_cell[0] && word.end_y == end_cell[1]) ||
-                        (word.end_x == start_cell[0] && word.end_y == start_cell[1] &&
+                         word.end_x == end_cell[0] &&
+                         word.end_y == end_cell[1]) ||
+                        (word.end_x == start_cell[0] &&
+                         word.end_y == start_cell[1] &&
                          word.x == end_cell[0] && word.y == end_cell[1])) {
                         // mark the word as found
                         found_word_line = new createjs.Shape();
@@ -450,24 +452,25 @@ define(function (require) {
                             this.cell_size, "round");
                         found_word_line.graphics.moveTo(
                             start_cell[0] * this.cell_size + this.cell_size / 2,
-                            this.margin_y + start_cell[1] * this.cell_size + this.cell_size / 2);
+                            this.margin_y + start_cell[1] * this.cell_size +
+                            this.cell_size / 2);
                         found_word_line.graphics.lineTo(
                             end_cell[0] * this.cell_size + this.cell_size / 2,
-                            this.margin_y + end_cell[1] * this.cell_size + this.cell_size / 2);
+                            this.margin_y + end_cell[1] * this.cell_size +
+                            this.cell_size / 2);
                         found_word_line.graphics.endStroke();
                         found_word_line.mouseEnabled = false;
                         this.stage.addChild(found_word_line);
 
                         // TODO: show in the word list
                         //$('.' + word.word.toLowerCase()).addClass('wordFound');
-                    }
-                }
+                    };
+                };
                 this.select_word_line.graphics.clear();
                 this.stage.update();
-            }
+            };
 
-        }
-
+        };
 
         var game = new Game(wordListCanvas, gameCanvas);
 
@@ -544,7 +547,7 @@ define(function (require) {
             };
             hideError();
             return true;
-        }
+        };
 
         function showError(msg) {
             buttonPos = findPosition(addWordButton);
@@ -591,17 +594,7 @@ define(function (require) {
             dictstore.save();
         };
 
-        /*
-        var showWordListButton = document.getElementById(
-            "show-wordlist-button");
-        showWordListButton.addEventListener('click', function (e) {
-            // change the page
-            document.getElementById("secondPage").style.display = "none";
-            document.getElementById("firstPage").style.display = "block";
-        });
-        */
-
-
+        // level buttons
         var easyButton = document.getElementById("easy-button");
         var mediumButton = document.getElementById("medium-button");
         var hardButton = document.getElementById("hard-button");
@@ -613,15 +606,12 @@ define(function (require) {
             game.level = level;
             if (level == 'easy') {
                 easyButton.classList.toggle('active');
-            }
-            if (level == 'medium') {
+            } else if (level == 'medium') {
                 mediumButton.classList.toggle('active');
-            }
-            if (level == 'hard') {
+            } else if (level == 'hard') {
                 hardButton.classList.toggle('active');
-            }
-
-        }
+            };
+        };
 
         easyButton.addEventListener('click', function (e) {
             setLevel('easy');
@@ -635,8 +625,6 @@ define(function (require) {
             setLevel('hard');
         });
 
-
-        //
     });
 
 });
