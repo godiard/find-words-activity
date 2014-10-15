@@ -177,6 +177,7 @@ define(function (require) {
 
             this.container;
             this.letters = [];
+            this.animation_runnning = false;
 
             this.init = function () {
                 if (this.game.level == 'easy') {
@@ -212,11 +213,14 @@ define(function (require) {
                     word.end_y = word_end.y;
                     console.log(word);
                 }
+                // clean objects if the canvas was already used
+                this.stage.removeAllChildren();
+                this.stage.update();
                 this.startup_animation();
             }
 
             this.startup_animation = function () {
-
+                this.animation_runnning = true;
                 // create boxes with letters for every row
                 this.boxes = []
                 for (var i = 0, height = this.puzzle.length; i < height; i++) {
@@ -269,13 +273,19 @@ define(function (require) {
             }
 
             this.animateNextBox = function () {
+                if (!this.animation_runnning) {
+                    this.stage.removeAllChildren();
+                    this.stage.update();
+                    return;
+                }
                 if (this.boxes.length > 0) {
                     if (soundLoaded) {
                         soundInstance.stop();
                         soundInstance.play();
                     };
                     createjs.Tween.get(this.boxes.pop()).to(
-                        {y:this.cell_size * this.boxes.length + this.margin_y}, 1000,
+                        {y:this.cell_size * this.boxes.length + this.margin_y},
+                        1000,
                         createjs.Ease.bounceOut).wait(300).call(
                         this.animateNextBox, [], this);
                 } else {
@@ -283,7 +293,6 @@ define(function (require) {
                         soundInstance.stop();
                     };
                     this.stage.clear();
-                    createjs.Ticker.setPaused(true);
                     this.startGame();
                 }
             }
@@ -354,6 +363,15 @@ define(function (require) {
                 this.stage.update();
 
                 this.game.started = true;
+            }
+
+            this.stop = function() {
+                if (this.game.started) {
+                    this.game.started = false;
+                } else {
+                    // stop the animation
+                    this.animation_runnning = false;
+                }
             }
 
             this.changeCase = function () {
@@ -455,6 +473,13 @@ define(function (require) {
             lowercase = this.classList.contains('active');
             game.setLowerCase(lowercase);
         };
+
+        var backButton = document.getElementById("back-button");
+        backButton.addEventListener('click', function (e) {
+            document.getElementById("firstPage").style.display = "block";
+            document.getElementById("gameCanvas").style.display = "none";
+            game.matrixView.stop();
+        });
 
         // datastore
         var wordList = [];

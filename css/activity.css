@@ -7,6 +7,10 @@
   background-image: url(../icons/uppercase-lowercase.svg);
 }
 
+#main-toolbar #back-button {
+  background-image: url(../icons/arrow.svg);
+}
+
 #canvas p {
   margin-top: 25%;
   text-align: center;
