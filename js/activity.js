@@ -147,7 +147,11 @@ define(function (require) {
                 cont.x = 20; // margin_x;
                 cont.y = 0;
 
-                var text = this.addRoundedLabel(cont, word, 1.0);
+                var alpha = 1.0;
+                if (this.game.found.indexOf(word.toUpperCase()) > -1) {
+                    alpha = 0.25;
+                }
+                var text = this.addRoundedLabel(cont, word, alpha);
 
                 this.stage.addChild(cont);
 
