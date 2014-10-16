@@ -111,6 +111,17 @@ define(function (require) {
                 return color;
             };
 
+            this.stop = function() {
+                if (this.started) {
+                    this.started = false;
+                } else {
+                    // stop the animation
+                    this.matrixView.stop();
+                }
+                this.found = [];
+                this.restartWordList();
+            };
+
         }
 
         function WordListView(canvas, game) {
@@ -424,13 +435,8 @@ define(function (require) {
             }
 
             this.stop = function() {
-                if (this.game.started) {
-                    this.game.started = false;
-                } else {
-                    // stop the animation
-                    this.animation_runnning = false;
-                }
-                this.game.restartWordList();
+                // stop the animation
+                this.animation_runnning = false;
             }
 
             this.changeCase = function () {
@@ -588,7 +594,7 @@ define(function (require) {
         backButton.addEventListener('click', function (e) {
             document.getElementById("firstPage").style.display = "block";
             document.getElementById("gameCanvas").style.display = "none";
-            game.matrixView.stop();
+            game.stop();
         });
 
         var audioButton = document.getElementById("audio-button");
