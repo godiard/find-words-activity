@@ -98,6 +98,19 @@ define(function (require) {
                 this.wordListView.unmarkAll();
             };
 
+            this.getWordColor = function(word, alpha) {
+                var color = createjs.Graphics.getRGB(0xcccccc, alpha);
+                index = this.words.indexOf(word);
+                if (index < this.colors.length) {
+                    hexa_color = this.colors[index];
+                    r = parseInt(hexa_color.substr(1, 2), 16);
+                    g = parseInt(hexa_color.substr(3, 2), 16);
+                    b = parseInt(hexa_color.substr(5, 2), 16);
+                    color = createjs.Graphics.getRGB(r, g, b, alpha);
+                };
+                return color;
+            };
+
         }
 
         function WordListView(canvas, game) {
@@ -152,7 +165,7 @@ define(function (require) {
                 text.textAlign = "center";
 
                 var box = new createjs.Shape();
-                box.graphics.beginFill(this.getWordColor(word, alpha)
+                box.graphics.beginFill(this.game.getWordColor(word, alpha)
                     ).drawRoundRect(0, 0,
                                text.getMeasuredWidth() + padding * 2,
                                text.getMeasuredHeight()+ padding * 2, 20);
@@ -164,17 +177,6 @@ define(function (require) {
                                text.getMeasuredHeight()+ padding * 2);
                 return text;
             }
-
-            this.getWordColor = function(word, alpha) {
-                index = this.game.words.indexOf(word);
-                if (index < this.game.colors.length) {
-                    hexa_color = this.game.colors[index];
-                    r = parseInt(hexa_color.substr(1, 2), 16);
-                    g = parseInt(hexa_color.substr(3, 2), 16);
-                    b = parseInt(hexa_color.substr(5, 2), 16);
-                    return createjs.Graphics.getRGB(r, g, b, alpha);
-                };
-            };
 
             this.changeCase = function () {
                 for (var i = 0; i < this.wordElements.length; i++) {
@@ -476,26 +478,18 @@ define(function (require) {
                     return;
                 }
                 this.end_cell = end_cell;
-                end_cell_x = this.end_cell[0];
-                end_cell_y = this.end_cell[1];
-
-                start_cell_x = this.start_cell[0];
-                start_cell_y = this.start_cell[1];
-
                 this.select_word_line.graphics.clear();
-                this.select_word_line.graphics.beginStroke(
-                    createjs.Graphics.getRGB(0xFF00FF, 0.2));
-                this.select_word_line.graphics.setStrokeStyle(this.cell_size,
-                                                              "round");
-                this.select_word_line.graphics.moveTo(
-                    start_cell_x * this.cell_size + this.cell_size / 2,
-                    this.margin_y + start_cell_y * this.cell_size +
-                    this.cell_size / 2);
-                this.select_word_line.graphics.lineTo(
-                    end_cell_x * this.cell_size + this.cell_size / 2,
-                    this.margin_y + end_cell_y * this.cell_size +
-                    this.cell_size / 2);
-                this.select_word_line.graphics.endStroke();
+                color = createjs.Graphics.getRGB(0xFF0000, 0.5);
+                this.markWord(this.start_cell, this.end_cell,
+                              this.select_word_line, color);
+
+                // move the select word line to the top
+                topIndex = this.stage.getNumChildren() - 1;
+                selectWordIndex = this.stage.getChildIndex(
+                    this.select_word_line);
+                if (topIndex != selectWordIndex) {
+                    this.stage.swapChildrenAt(topIndex, selectWordIndex);
+                }
                 this.stage.update();
             }, this);
 
@@ -515,21 +509,12 @@ define(function (require) {
                         if (this.game.found.indexOf(word.word) > -1) {
                             continue;
                         };
-                        // mark the word as found
-                        found_word_line = new createjs.Shape();
-                        found_word_line.graphics.beginStroke(
-                            createjs.Graphics.getRGB(0xFF0000, 0.5));
-                        found_word_line.graphics.setStrokeStyle(
-                            this.cell_size, "round");
-                        found_word_line.graphics.moveTo(
-                            start_cell[0] * this.cell_size + this.cell_size / 2,
-                            this.margin_y + start_cell[1] * this.cell_size +
-                            this.cell_size / 2);
-                        found_word_line.graphics.lineTo(
-                            end_cell[0] * this.cell_size + this.cell_size / 2,
-                            this.margin_y + end_cell[1] * this.cell_size +
-                            this.cell_size / 2);
-                        found_word_line.graphics.endStroke();
+
+                        color = this.game.getWordColor(word.word, 1);
+                        var found_word_line = new createjs.Shape();
+                        this.markWord(start_cell, end_cell,
+                                      found_word_line, color);
+
                         found_word_line.mouseEnabled = false;
                         this.stage.addChild(found_word_line);
 
@@ -540,6 +525,51 @@ define(function (require) {
                 };
                 this.select_word_line.graphics.clear();
                 this.stage.update();
+            };
+
+            /*
+            Draw a rounded rectangle over shape
+            star_cell, end_cell = array of integer
+            shape = createjs.Shape
+            color = createjs.Graphics.getRGB
+            */
+            this.markWord = function(start_cell, end_cell, shape, color) {
+
+                start_cell_x = start_cell[0];
+                start_cell_y = start_cell[1];
+
+                end_cell_x = end_cell[0];
+                end_cell_y = end_cell[1];
+
+                var x1 = start_cell_x * this.cell_size + this.cell_size / 2;
+                var y1 = this.margin_y + start_cell_y * this.cell_size +
+                    this.cell_size / 2;
+                var x2 = end_cell_x * this.cell_size + this.cell_size / 2;
+                var y2 = this.margin_y + end_cell_y * this.cell_size +
+                    this.cell_size / 2;
+
+                diff_x = x2 - x1;
+                diff_y = y2 - y1;
+                angle_rad = Math.atan2(diff_y, diff_x);
+                angle_deg = angle_rad * 180 / Math.PI;
+                distance = diff_x / Math.cos(angle_rad);
+                if (Math.abs(angle_deg) == 90) {
+                    distance = Math.abs(diff_y);
+                };
+
+                line_width = this.cell_size / 10;
+                shape.graphics.setStrokeStyle(line_width, "round");
+                shape.graphics.beginStroke(color);
+                shape.graphics.drawRoundRect(
+                    -(this.cell_size - line_width) / 2,
+                    -(this.cell_size - line_width) / 2,
+                    distance + this.cell_size - line_width,
+                    this.cell_size - line_width,
+                    this.cell_size / 2);
+                shape.graphics.endStroke();
+                shape.rotation = angle_deg;
+                shape.x = x1;
+                shape.y = y1;
             };
 
         };
