@@ -257,6 +257,7 @@ define(function (require) {
             this.animation_runnning = false;
 
             this.init = function () {
+                var orientations;
                 if (this.game.level == 'easy') {
                     orientations = ['horizontal', 'vertical'];
                 }
@@ -504,11 +505,14 @@ define(function (require) {
             }, this);
 
             this.verifyWord = function(start_cell, end_cell) {
+                if ((start_cell == null) || (end_cell == null)) {
+                    return;
+                }
                 for (var n = 0; n < this.wordLocations.length; n++) {
                     word = this.wordLocations[n];
                     var nextFn = wordfind.orientations[word.orientation];
-                    end_word = nextFn(start_cell[0], start_cell[1],
-                                      word.word.length - 1);
+                    var end_word = nextFn(start_cell[0], start_cell[1],
+                                          word.word.length - 1);
                     if ((word.x == start_cell[0] && word.y == start_cell[1] &&
                          word.end_x == end_cell[0] &&
                          word.end_y == end_cell[1]) ||
@@ -520,7 +524,7 @@ define(function (require) {
                             continue;
                         };
 
-                        color = this.game.getWordColor(word.word, 1);
+                        var color = this.game.getWordColor(word.word, 1);
                         var found_word_line = new createjs.Shape();
                         this.markWord(start_cell, end_cell,
                                       found_word_line, color);
@@ -705,7 +709,7 @@ define(function (require) {
             if (!validateWord(wordInput.value)) {
                 return;
             }
-            game.addWords([wordInput.value]);
+            game.addWords([wordInput.value.toUpperCase()]);
             wordInput.value = '';
             wordInput.focus();
             // save in the journal
