@@ -139,6 +139,13 @@ define(function (require) {
             createjs.Ticker.setFPS(10);
             createjs.Ticker.addEventListener("tick", this.stage);
 
+            // add a background
+            this.background =  new createjs.Shape();
+            this.background.graphics.beginFill(
+                createjs.Graphics.getRGB(0xe0e0e0)
+                ).drawRect(0, 0, this.canvas.width, this.canvas.height);
+            this.stage.addChild(this.background);
+
             this.wordHeight = 50;
 
             this.deleteButton =  new createjs.Container();
@@ -146,6 +153,16 @@ define(function (require) {
             this.deleteButton.visible = false;
             this.deleteButton.addChild(this.deleteButtonImg);
             this.stage.addChild(this.deleteButton);
+
+            this.stage.on('click', function (event) {
+                if (this.game.started) {
+                    return;
+                };
+
+                if (event.target == this.background) {
+                    this.deleteButton.visible = false;
+                };
+            }, this);
 
             // the stage elements displaying every word in the word list
             this.wordElements = [];
@@ -216,7 +233,6 @@ define(function (require) {
                         cont = event.target;
                         this.selectedWord = cont;
                         // set the position of deleteButton and make visible
-                        console.log('target ' + event.target + ' cont x ' + cont.x + ' y ' + cont.y);
                         this.deleteButton.y = cont.y;
                         this.deleteButton.x = cont.x + cont.width + padding;
 
