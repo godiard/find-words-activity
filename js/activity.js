@@ -142,6 +142,7 @@ define(function (require) {
             this.canvas = canvas;
             this.game = game;
             this.selectedWord = null;
+            this.onAnimation = false;
 
             this.stage = new createjs.Stage(this.canvas);
             createjs.Ticker.setFPS(10);
@@ -213,8 +214,10 @@ define(function (require) {
 
             this.addWords = function (words) {
                 if (words.length == 0) {
+                    this.onAnimation = false;
                     return;
                 }
+                this.onAnimation = true;
                 word = words.pop();
                 var cont = new createjs.Container();
                 cont.x = 20; // margin_x;
@@ -269,8 +272,9 @@ define(function (require) {
                 cont.height = text.getMeasuredHeight()+ padding * 2;
 
                 cont.on('click', function (event) {
-                    // if the game already started, do nothing
-                    if (this.game.started) {
+                    // if the game already started or the words are falling,
+                    // do nothing
+                    if (this.game.started || this.onAnimation) {
                         return;
                     };
 
