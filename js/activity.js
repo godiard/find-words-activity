@@ -127,6 +127,14 @@ define(function (require) {
                 this.restartWordList();
             };
 
+            this.removeWord = function(word) {
+                if (this.words.indexOf(word) > -1) {
+                    this.words.splice(this.words.indexOf(word), 1);
+                    localStorage["word-list"] = JSON.stringify(this.words);
+                    dictstore.save();
+                }
+            };
+
         }
 
         function WordListView(canvas, game) {
@@ -140,7 +148,7 @@ define(function (require) {
             createjs.Ticker.addEventListener("tick", this.stage);
 
             // add a background
-            this.background =  new createjs.Shape();
+            this.background = new createjs.Shape();
             this.background.graphics.beginFill(
                 createjs.Graphics.getRGB(0xe0e0e0)
                 ).drawRect(0, 0, this.canvas.width, this.canvas.height);
@@ -148,7 +156,7 @@ define(function (require) {
 
             this.wordHeight = 50;
 
-            this.deleteButton =  new createjs.Container();
+            this.deleteButton = new createjs.Container();
             this.deleteButtonImg = new createjs.Bitmap("icons/minus.svg");
             this.deleteButton.visible = false;
             this.deleteButton.addChild(this.deleteButtonImg);
@@ -161,6 +169,42 @@ define(function (require) {
 
                 if (event.target == this.background) {
                     this.deleteButton.visible = false;
+                    this.selectedWord = null;
+                };
+            }, this);
+
+            this.deleteButton.on('click', function (event) {
+                if (this.game.started) {
+                    return;
+                };
+
+                if (this.selectedWord != null) {
+                    this.game.removeWord(this.selectedWord.word);
+
+                    this.stage.removeChild(this.selectedWord);
+                    this.deleteButton.visible = false;
+
+                    var found = false;
+                    // animate the pending blocks
+                    delay = 100;
+                    for (var n = 0; n < this.wordElements.length; n++) {
+                        textElement = this.wordElements[n];
+                        if (textElement.text.toUpperCase() ==
+                            this.selectedWord.word) {
+                            found = true;
+                        }
+                        if (found) {
+                            var cont = textElement.parent;
+                            var y_final_position = cont.y + this.wordHeight;
+                            createjs.Tween.get(cont).wait(delay).to(
+                                {y:y_final_position}, 1000,
+                                createjs.Ease.bounceOut);
+                            delay = delay + 100;
+                        }
+                    };
+
+                    this.selectedWord = null;
+
                 };
             }, this);
 
@@ -182,6 +226,7 @@ define(function (require) {
                     alpha = 0.25;
                 }
                 var text = this.addRoundedLabel(cont, word, alpha);
+                cont.word = word.toUpperCase();
 
                 this.stage.addChild(cont);
 
