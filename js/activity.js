@@ -111,6 +111,11 @@ define(function (require) {
                 return color;
             };
 
+            this.start = function() {
+                this.started = true;
+                this.wordListView.gameStarted();
+            };
+
             this.stop = function() {
                 if (this.started) {
                     this.started = false;
@@ -128,12 +133,19 @@ define(function (require) {
 
             this.canvas = canvas;
             this.game = game;
+            this.selectedWord = null;
 
             this.stage = new createjs.Stage(this.canvas);
             createjs.Ticker.setFPS(10);
             createjs.Ticker.addEventListener("tick", this.stage);
 
             this.wordHeight = 50;
+
+            this.deleteButton =  new createjs.Container();
+            this.deleteButtonImg = new createjs.Bitmap("icons/minus.svg");
+            this.deleteButton.visible = false;
+            this.deleteButton.addChild(this.deleteButtonImg);
+            this.stage.addChild(this.deleteButton);
 
             // the stage elements displaying every word in the word list
             this.wordElements = [];
@@ -146,6 +158,7 @@ define(function (require) {
                 var cont = new createjs.Container();
                 cont.x = 20; // margin_x;
                 cont.y = 0;
+                cont.mouseChildren = false;
 
                 var alpha = 1.0;
                 if (this.game.found.indexOf(word.toUpperCase()) > -1) {
@@ -190,6 +203,32 @@ define(function (require) {
                 cont.cache(0, 0,
                                text.getMeasuredWidth() + padding * 2,
                                text.getMeasuredHeight()+ padding * 2);
+                cont.width = text.getMeasuredWidth() + padding * 2;
+                cont.height = text.getMeasuredHeight()+ padding * 2;
+
+                cont.on('click', function (event) {
+                    // if the game already started, do nothing
+                    if (this.game.started) {
+                        return;
+                    };
+
+                    if (event.target != this.selectedWord) {
+                        cont = event.target;
+                        this.selectedWord = cont;
+                        // set the position of deleteButton and make visible
+                        console.log('target ' + event.target + ' cont x ' + cont.x + ' y ' + cont.y);
+                        this.deleteButton.y = cont.y;
+                        this.deleteButton.x = cont.x + cont.width + padding;
+
+                        rect = this.deleteButtonImg.getBounds();
+                        scale = cont.height / rect.height;
+                        this.deleteButtonImg.scaleX = scale;
+                        this.deleteButtonImg.scaleY = scale;
+
+                        this.deleteButton.visible = true;
+                    };
+                }, this);
+
                 return text;
             }
 
@@ -231,6 +270,10 @@ define(function (require) {
                     this.wordElements[i] = this.addRoundedLabel(cont, text, 1);
                 };
                 this.stage.update();
+            };
+
+            this.gameStarted = function() {
+                this.deleteButton.visible = false;
             };
 
         };
@@ -436,7 +479,7 @@ define(function (require) {
 
                 this.stage.update();
 
-                this.game.started = true;
+                this.game.start();
             }
 
             this.stop = function() {
