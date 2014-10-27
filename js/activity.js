@@ -7,6 +7,7 @@ define(function (require) {
     require("easel");
     require("wordfind");
     require("tween");
+    require("CSSPlugin");
     require("sound");
 
     var soundInstance;
@@ -754,6 +755,9 @@ define(function (require) {
         var errorArea = document.getElementById("validation-error");
         var addWordButton = document.getElementById("add-word-button");
 
+        createjs.CSSPlugin.install(createjs.Tween);
+        createjs.Ticker.setFPS(10);
+
         addWordButton.addEventListener('click', function (e) {
             addWord();
         });
@@ -787,7 +791,12 @@ define(function (require) {
                 '</div>';
             errorArea.style.left = buttonPos.left + 'px';
             errorArea.style.top = buttonPos.top + 'px';
+            errorArea.style.opacity = "0.1";
             errorArea.style.display = "block";
+
+            createjs.Tween.get(errorArea).set({opacity:"1.0"},
+                               errorArea.style, 3000);
+
         };
 
         function hideError() {
