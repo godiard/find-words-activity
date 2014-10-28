@@ -240,8 +240,8 @@ define(function (require) {
                 y_final_position = this.canvas.height - this.wordHeight *
                     this.wordElements.length;
                 createjs.Tween.get(cont).to(
-                    {y:y_final_position}, 1000,
-                    createjs.Ease.bounceOut).wait(300).call(
+                    {y:y_final_position}, 800,
+                    createjs.Ease.bounceOut).wait(100).call(
                     this.addWords, [words], this);
             }
 
