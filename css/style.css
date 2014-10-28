@@ -68,9 +68,17 @@ table td {
 }
 
 #start-game-button {
-  padding: 5px;
-  font: 1.1em sans-serif;
+  padding: 10px;
+  font: 1.2em sans-serif;
   background-color: #03a9f4;
+}
+
+#start-game-button:disabled {
+  background-color: #7c7c7c;
+}
+
+#start-game-button:hover {
+  border-color: transparent;
 }
 
 #validation-error {

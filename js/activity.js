@@ -49,7 +49,7 @@ define(function (require) {
 
         // game logic
 
-        function Game(wordListCanvas, gameCanvas) {
+        function Game(wordListCanvas, gameCanvas, startGameButton) {
 
             this.words = [];
             this.level = 'easy';
@@ -64,6 +64,7 @@ define(function (require) {
 
             this.wordListView = new WordListView(wordListCanvas, this);
             this.matrixView = new MatrixView(gameCanvas, this);
+            this.startGameButton = startGameButton;
 
             this.setLowerCase = function (lowerCase) {
                 this.lowerCase = lowerCase;
@@ -88,6 +89,7 @@ define(function (require) {
                     };
                 };
                 this.wordListView.addWords(wordsAdded);
+                this.startGameButton.disabled = false;
             };
 
             this.addFoundWord = function (word) {
@@ -133,6 +135,9 @@ define(function (require) {
                     this.words.splice(this.words.indexOf(word), 1);
                     localStorage["word-list"] = JSON.stringify(this.words);
                     dictstore.save();
+                }
+                if (this.words.length == 0) {
+                    this.startGameButton.disabled = true;
                 }
             };
 
@@ -702,7 +707,8 @@ define(function (require) {
 
         };
 
-        var game = new Game(wordListCanvas, gameCanvas);
+        var startGameButton = document.getElementById("start-game-button");
+        var game = new Game(wordListCanvas, gameCanvas, startGameButton);
 
         // toolbar
         var upperLowerButton = document.getElementById("upperlower-button");
@@ -746,7 +752,6 @@ define(function (require) {
 
         dictstore.init(onStoreReady);
 
-        var startGameButton = document.getElementById("start-game-button");
         startGameButton.addEventListener('click', function (e) {
             document.getElementById("firstPage").style.display = "none";
             document.getElementById("gameCanvas").style.display = "block";
