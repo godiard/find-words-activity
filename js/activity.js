@@ -27,7 +27,7 @@ define(function (require) {
         var sugarCellSize = 75;
         if (!is_xo) {
             sugarCellSize = 55;
-        }
+        };
 
         var wordListCanvas = document.getElementById("wordListCanvas");
         wordListCanvas.height = window.innerHeight - sugarCellSize;
@@ -125,7 +125,7 @@ define(function (require) {
                 } else {
                     // stop the animation
                     this.matrixView.stop();
-                }
+                };
                 this.found = [];
                 this.restartWordList();
             };
@@ -135,13 +135,13 @@ define(function (require) {
                     this.words.splice(this.words.indexOf(word), 1);
                     localStorage["word-list"] = JSON.stringify(this.words);
                     dictstore.save();
-                }
+                };
                 if (this.words.length == 0) {
                     this.startGameButton.disabled = true;
-                }
+                };
             };
 
-        }
+        };
 
         function WordListView(canvas, game) {
 
@@ -212,7 +212,7 @@ define(function (require) {
                             this.selectedWord.word) {
                             found = true;
                             wordElementIndex = n;
-                        }
+                        };
                         if (found) {
                             var cont = textElement.parent;
                             var y_final_position = cont.y + this.wordHeight;
@@ -220,11 +220,11 @@ define(function (require) {
                                 {y:y_final_position}, 1000,
                                 createjs.Ease.bounceOut);
                             delay = delay + 100;
-                        }
+                        };
                     };
                     if (wordElementIndex > -1) {
                         this.wordElements.splice(wordElementIndex, 1);
-                    }
+                    };
                     this.selectedWord = null;
 
                 };
@@ -237,7 +237,7 @@ define(function (require) {
                 if (words.length == 0) {
                     this.onAnimation = false;
                     return;
-                }
+                };
                 this.onAnimation = true;
                 var word = words.pop();
                 var cont = new createjs.Container();
@@ -248,7 +248,7 @@ define(function (require) {
                 var alpha = 1.0;
                 if (this.game.found.indexOf(word.toUpperCase()) > -1) {
                     alpha = 0.25;
-                }
+                };
                 var text = this.addRoundedLabel(cont, word, alpha);
                 cont.word = word.toUpperCase();
 
@@ -263,7 +263,7 @@ define(function (require) {
                     {y:y_final_position}, 800,
                     createjs.Ease.bounceOut).wait(100).call(
                     this.addWords, [words], this);
-            }
+            };
 
             this.addRoundedLabel = function(cont, word, alpha) {
                 var padding = 10;
@@ -272,7 +272,7 @@ define(function (require) {
                     label = word.toLowerCase();
                 } else {
                     label = word.toUpperCase();
-                }
+                };
                 var text = new createjs.Text(label, "24px Arial", "#000000");
                 text.x = text.getMeasuredWidth() / 2 + padding;
                 text.y = padding;
@@ -389,16 +389,16 @@ define(function (require) {
                 var orientations;
                 if (this.game.level == 'easy') {
                     orientations = ['horizontal', 'vertical'];
-                }
+                };
                 if (this.game.level == 'medium') {
                     orientations = ['horizontal', 'vertical', 'diagonal'];
-                }
+                };
                 if (this.game.level == 'hard') {
                     orientations = ['horizontal', 'vertical', 'diagonal',
                                     'horizontalBack', 'verticalUp',
                                     'diagonalUp', 'diagonalBack',
                                     'diagonalUpBack'];
-                }
+                };
 
                 this.puzzleGame = wordfind.newPuzzle(this.game.words,
                                             {height: 12, width:12,
@@ -418,12 +418,12 @@ define(function (require) {
                     var word_end = nextFn(word.x, word.y, word.word.length - 1);
                     word.end_x = word_end.x;
                     word.end_y = word_end.y;
-                }
+                };
                 // clean objects if the canvas was already used
                 this.stage.removeAllChildren();
                 this.stage.update();
                 this.startup_animation();
-            }
+            };
 
             this.startup_animation = function () {
                 this.animation_runnning = true;
@@ -449,26 +449,26 @@ define(function (require) {
                             letter = letter.toLowerCase();
                         } else {
                             letter = letter.toUpperCase();
-                        }
+                        };
                         var text = new createjs.Text(letter,
                                                  "24px Arial", "#000000");
                         text.x = this.cell_size * j + this.cell_size / 2;
                         text.y = y + this.cell_size / 3;
                         text.textAlign = "center";
                         bar.addChild(text);
-                    }
+                    };
                     bar.cache(0, 0, this.cell_size * row.length, this.cell_size);
 
                     this.boxes.push(bar);
                     this.stage.addChild(bar);
-                }
+                };
 
                 createjs.Ticker.setFPS(10);
                 createjs.Ticker.addEventListener("tick", this.stage);
 
                 if (soundLoaded && this.game.audioEnabled) {
                     soundInstance.play();
-                }
+                };
 
                 // startup the animation
                 createjs.Tween.get(this.boxes.pop()).to(
@@ -476,14 +476,14 @@ define(function (require) {
                     createjs.Ease.bounceOut).wait(300).call(
                     this.animateNextBox, [], this);
 
-            }
+            };
 
             this.animateNextBox = function () {
                 if (!this.animation_runnning) {
                     this.stage.removeAllChildren();
                     this.stage.update();
                     return;
-                }
+                };
                 if (this.boxes.length > 0) {
                     if (soundLoaded && this.game.audioEnabled) {
                         soundInstance.stop();
@@ -500,14 +500,14 @@ define(function (require) {
                     };
                     this.stage.removeAllChildren();
                     this.startGame();
-                }
-            }
+                };
+            };
 
             this.getCell = function (x, y) {
                 var cell_x = parseInt(x / this.cell_size);
                 var cell_y = parseInt((y - this.margin_y) / this.cell_size);
                 return [cell_x, cell_y];
-            }
+            };
 
             this.startGame = function() {
 
@@ -537,7 +537,7 @@ define(function (require) {
                             letter = letter.toLowerCase();
                         } else {
                             letter = letter.toUpperCase();
-                        }
+                        };
                         var text = new createjs.Text(letter,
                                                  "24px Arial", "#000000");
                         text.x = this.cell_size * j + this.cell_size / 2;
@@ -545,8 +545,8 @@ define(function (require) {
                         text.textAlign = "center";
                         this.container.addChild(text);
                         this.letters.push(text);
-                    }
-                }
+                    };
+                };
                 this.container.cache(0, 0, this.cell_size * this.puzzle.length,
                                 this.cell_size * this.puzzle.length);
                 this.stage.addChild(this.container);
@@ -556,12 +556,12 @@ define(function (require) {
                 this.stage.update();
 
                 this.game.start();
-            }
+            };
 
             this.stop = function() {
                 // stop the animation
                 this.animation_runnning = false;
-            }
+            };
 
             this.changeCase = function () {
                 for (var i = 0; i < this.letters.length; i++) {
@@ -570,10 +570,10 @@ define(function (require) {
                         letter.text = letter.text.toLowerCase();
                     } else {
                         letter.text = letter.text.toUpperCase();
-                    }
-                }
+                    };
+                };
                 this.container.updateCache();
-            }
+            };
 
             this.stage.on("pressup", function (event) {
                 this.verifyWord(this.start_cell, this.end_cell);
@@ -586,27 +586,27 @@ define(function (require) {
                     // empty the list with the falling blocks
                     // to end the animation
                     this.boxes = [];
-                }
+                };
             }, this);
 
             this.stage.on("pressmove", function (event) {
                 if (!this.game.started) {
                     return;
-                }
+                };
 
                 if (this.start_cell == null) {
                     var cell = this.getCell(event.stageX, event.stageY);
                     this.start_cell = [cell[0], cell[1]];
                     this.end_cell = null;
                     return;
-                }
+                };
 
                 var end_cell = this.getCell(event.stageX, event.stageY);
                 if (this.end_cell != null &&
                     (end_cell[0] == this.end_cell[0]) &&
                     (end_cell[1] == this.end_cell[1])) {
                     return;
-                }
+                };
                 this.end_cell = end_cell;
                 this.select_word_line.graphics.clear();
                 var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
@@ -619,14 +619,14 @@ define(function (require) {
                     this.select_word_line);
                 if (topIndex != selectWordIndex) {
                     this.stage.swapChildrenAt(topIndex, selectWordIndex);
-                }
+                };
                 this.stage.update();
             }, this);
 
             this.verifyWord = function(start_cell, end_cell) {
                 if ((start_cell == null) || (end_cell == null)) {
                     return;
-                }
+                };
                 for (var n = 0; n < this.wordLocations.length; n++) {
                     var word = this.wordLocations[n];
                     var nextFn = wordfind.orientations[word.orientation];
@@ -823,19 +823,18 @@ define(function (require) {
                     if(!obj.offsetParent)
                         break;
                     obj = obj.offsetParent;
-                }
-            } else
-                if(obj.x) {
-                    left += obj.x;
-                    top += obj.y;
-                    }
+                };
+            } else if(obj.x) {
+                left += obj.x;
+                top += obj.y;
+            };
             return {left:left, top: top};
         };
 
         function addWord() {
             if (!validateWord(wordInput.value)) {
                 return;
-            }
+            };
             game.addWords([wordInput.value.toUpperCase()]);
             wordInput.value = '';
             wordInput.focus();
@@ -864,7 +863,7 @@ define(function (require) {
             if (localStorage["level"] != level) {
                 localStorage["level"] = level;
                 dictstore.save();
-            }
+            };
         };
 
         easyButton.addEventListener('click', function (e) {
