@@ -24,13 +24,13 @@ define(function (require) {
         // initialize canvas size
 
         var is_xo = ((window.innerWidth == 1200) && (window.innerHeight == 900));
-        var cell_size = 75;
+        var sugarCellSize = 75;
         if (!is_xo) {
-            toolbar_height = 55;
+            sugarCellSize = 55;
         }
 
         var wordListCanvas = document.getElementById("wordListCanvas");
-        wordListCanvas.height = window.innerHeight - cell_size;
+        wordListCanvas.height = window.innerHeight - sugarCellSize;
         wordListCanvas.width = window.innerWidth / 3;
 
         var gameCanvas = document.getElementById("gameCanvas");
