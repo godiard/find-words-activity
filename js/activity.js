@@ -149,12 +149,23 @@ define(function (require) {
             createjs.Ticker.setFPS(10);
             createjs.Ticker.addEventListener("tick", this.stage);
 
+            shadow_width = 10
             // add a background
             this.background = new createjs.Shape();
             this.background.graphics.beginFill(
                 createjs.Graphics.getRGB(0xe0e0e0)
-                ).drawRect(0, 0, this.canvas.width, this.canvas.height);
+                ).drawRect(
+                0, 0, this.canvas.width - shadow_width, this.canvas.height);
             this.stage.addChild(this.background);
+
+            this.rightBorder = new createjs.Shape();
+            this.rightBorder.graphics.beginLinearGradientFill(
+                ["#aaaaaa", "#ffffff"], [0, 1],
+                this.canvas.width - shadow_width, 0,
+                this.canvas.width, 0).drawRect(
+                this.canvas.width - shadow_width, 0,
+                this.canvas.width, this.canvas.height);
+            this.stage.addChild(this.rightBorder);
 
             this.wordHeight = 50;
 
