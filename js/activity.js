@@ -189,11 +189,13 @@ define(function (require) {
                     var found = false;
                     // animate the pending blocks
                     delay = 100;
+                    var wordElementIndex = -1;
                     for (var n = 0; n < this.wordElements.length; n++) {
                         textElement = this.wordElements[n];
                         if (textElement.text.toUpperCase() ==
                             this.selectedWord.word) {
                             found = true;
+                            wordElementIndex = n;
                         }
                         if (found) {
                             var cont = textElement.parent;
@@ -204,7 +206,9 @@ define(function (require) {
                             delay = delay + 100;
                         }
                     };
-
+                    if (wordElementIndex > -1) {
+                        this.wordElements.splice(wordElementIndex, 1);
+                    }
                     this.selectedWord = null;
 
                 };
