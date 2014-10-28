@@ -501,9 +501,10 @@ define(function (require) {
                 this.container.x = 0;
                 this.container.y = this.margin_y;
 
+                // need a white background to receive the mouse events
                 var background = new createjs.Shape();
                 background.graphics.beginFill(
-                    "#eeeeee").drawRect(
+                    "#ffffff").drawRect(
                     0, 0,
                     this.cell_size * this.puzzle.length,
                     this.cell_size * this.puzzle.length);
@@ -513,17 +514,6 @@ define(function (require) {
                 for (var i = 0, height = this.puzzle.length; i < height; i++) {
                     row = this.puzzle[i];
                     y = this.cell_size * i;
-
-                    var h_box = new createjs.Shape();
-                    h_box.graphics.beginStroke("#000000").drawRect(
-                        0, y, this.cell_size * row.length, this.cell_size);
-                    this.container.addChild(h_box);
-
-                    var v_box = new createjs.Shape();
-                    h_box.graphics.beginStroke("#000000").drawRect(
-                        this.cell_size * i, 0, this.cell_size,
-                        this.cell_size * this.puzzle.length);
-                    this.container.addChild(v_box);
 
                     for (var j = 0, width = row.length; j < width; j++) {
                         letter = this.puzzle[i][j];
