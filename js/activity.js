@@ -36,7 +36,7 @@ define(function (require) {
         var gameCanvas = document.getElementById("gameCanvas");
 
         // load the sound
-        soundSrc = "sounds/card.ogg";
+        var soundSrc = "sounds/card.ogg";
         createjs.Sound.alternateExtensions = ["mp3"];
         createjs.Sound.addEventListener("fileload", soundReady);
         createjs.Sound.registerSound(soundSrc);
@@ -103,9 +103,9 @@ define(function (require) {
 
             this.getWordColor = function(word, alpha) {
                 var color = createjs.Graphics.getRGB(0xcccccc, alpha);
-                index = this.words.indexOf(word);
+                var index = this.words.indexOf(word);
                 if (index < this.colors.length) {
-                    hexa_color = this.colors[index];
+                    var hexa_color = this.colors[index];
                     r = parseInt(hexa_color.substr(1, 2), 16);
                     g = parseInt(hexa_color.substr(3, 2), 16);
                     b = parseInt(hexa_color.substr(5, 2), 16);
@@ -154,7 +154,7 @@ define(function (require) {
             createjs.Ticker.setFPS(10);
             createjs.Ticker.addEventListener("tick", this.stage);
 
-            shadow_width = 10
+            var shadow_width = 10
             // add a background
             this.background = new createjs.Shape();
             this.background.graphics.beginFill(
@@ -204,10 +204,10 @@ define(function (require) {
 
                     var found = false;
                     // animate the pending blocks
-                    delay = 100;
+                    var delay = 100;
                     var wordElementIndex = -1;
                     for (var n = 0; n < this.wordElements.length; n++) {
-                        textElement = this.wordElements[n];
+                        var textElement = this.wordElements[n];
                         if (textElement.text.toUpperCase() ==
                             this.selectedWord.word) {
                             found = true;
@@ -239,7 +239,7 @@ define(function (require) {
                     return;
                 }
                 this.onAnimation = true;
-                word = words.pop();
+                var word = words.pop();
                 var cont = new createjs.Container();
                 cont.x = 20; // margin_x;
                 cont.y = 0;
@@ -257,7 +257,7 @@ define(function (require) {
                 this.wordElements.push(text);
 
                 // startup the animation
-                y_final_position = this.canvas.height - this.wordHeight *
+                var y_final_position = this.canvas.height - this.wordHeight *
                     this.wordElements.length;
                 createjs.Tween.get(cont).to(
                     {y:y_final_position}, 800,
@@ -320,7 +320,7 @@ define(function (require) {
 
             this.changeCase = function () {
                 for (var i = 0; i < this.wordElements.length; i++) {
-                    word = this.wordElements[i];
+                    var word = this.wordElements[i];
                     if (this.game.lowerCase) {
                         word.text = word.text.toLowerCase();
                     } else {
@@ -332,12 +332,12 @@ define(function (require) {
 
             this.markFound = function (foundWord) {
                 for (var i = 0; i < this.wordElements.length; i++) {
-                    word = this.wordElements[i];
+                    var word = this.wordElements[i];
                     if (word.text.toUpperCase() == foundWord) {
                         console.log('markFound ' + foundWord);
-                        cont = word.parent;
+                        var cont = word.parent;
                         cont.removeAllChildren();
-                        text = this.addRoundedLabel(cont, foundWord, 0.25);
+                        var text = this.addRoundedLabel(cont, foundWord, 0.25);
                         // update the reference in wordList
                         this.wordElements[i] = text;
                         this.stage.update();
@@ -348,9 +348,9 @@ define(function (require) {
 
             this.unmarkAll = function () {
                 for (var i = 0; i < this.wordElements.length; i++) {
-                    word = this.wordElements[i];
-                    text = word.text;
-                    cont = word.parent;
+                    var word = this.wordElements[i];
+                    var text = word.text;
+                    var cont = word.parent;
                     cont.removeAllChildren();
                     // update the reference in wordList
                     this.wordElements[i] = this.addRoundedLabel(cont, text, 1);
@@ -413,9 +413,9 @@ define(function (require) {
 
                 // calculate the end of every word
                 for (var n = 0; n < this.wordLocations.length; n++) {
-                    word = this.wordLocations[n];
+                    var word = this.wordLocations[n];
                     var nextFn = wordfind.orientations[word.orientation];
-                    word_end = nextFn(word.x, word.y, word.word.length - 1);
+                    var word_end = nextFn(word.x, word.y, word.word.length - 1);
                     word.end_x = word_end.x;
                     word.end_y = word_end.y;
                 }
@@ -430,10 +430,10 @@ define(function (require) {
                 // create boxes with letters for every row
                 this.boxes = []
                 for (var i = 0, height = this.puzzle.length; i < height; i++) {
-                    row = this.puzzle[i];
-                    y = 0;
+                    var row = this.puzzle[i];
+                    var y = 0;
 
-                    bar = new createjs.Container();
+                    var bar = new createjs.Container();
                     bar.x = 0;
                     bar.y = 0;
 
@@ -444,13 +444,13 @@ define(function (require) {
                                                 this.cell_size, this.cell_size);
                         bar.addChild(v_box);
 
-                        letter = this.puzzle[i][j];
+                        var letter = this.puzzle[i][j];
                         if (this.game.lowerCase) {
                             letter = letter.toLowerCase();
                         } else {
                             letter = letter.toUpperCase();
                         }
-                        text = new createjs.Text(letter,
+                        var text = new createjs.Text(letter,
                                                  "24px Arial", "#000000");
                         text.x = this.cell_size * j + this.cell_size / 2;
                         text.y = y + this.cell_size / 3;
@@ -504,8 +504,8 @@ define(function (require) {
             }
 
             this.getCell = function (x, y) {
-                cell_x = parseInt(x / this.cell_size);
-                cell_y = parseInt((y - this.margin_y) / this.cell_size);
+                var cell_x = parseInt(x / this.cell_size);
+                var cell_y = parseInt((y - this.margin_y) / this.cell_size);
                 return [cell_x, cell_y];
             }
 
@@ -526,19 +526,19 @@ define(function (require) {
                     this.cell_size * this.puzzle.length);
                 this.container.addChild(background);
 
-                letters = [];
+                var letters = [];
                 for (var i = 0, height = this.puzzle.length; i < height; i++) {
-                    row = this.puzzle[i];
-                    y = this.cell_size * i;
+                    var row = this.puzzle[i];
+                    var y = this.cell_size * i;
 
                     for (var j = 0, width = row.length; j < width; j++) {
-                        letter = this.puzzle[i][j];
+                        var letter = this.puzzle[i][j];
                         if (this.game.lowerCase) {
                             letter = letter.toLowerCase();
                         } else {
                             letter = letter.toUpperCase();
                         }
-                        text = new createjs.Text(letter,
+                        var text = new createjs.Text(letter,
                                                  "24px Arial", "#000000");
                         text.x = this.cell_size * j + this.cell_size / 2;
                         text.y = y + this.cell_size / 3;
@@ -565,7 +565,7 @@ define(function (require) {
 
             this.changeCase = function () {
                 for (var i = 0; i < this.letters.length; i++) {
-                    letter = this.letters[i];
+                    var letter = this.letters[i];
                     if (this.game.lowerCase) {
                         letter.text = letter.text.toLowerCase();
                     } else {
@@ -595,13 +595,13 @@ define(function (require) {
                 }
 
                 if (this.start_cell == null) {
-                    cell = this.getCell(event.stageX, event.stageY);
+                    var cell = this.getCell(event.stageX, event.stageY);
                     this.start_cell = [cell[0], cell[1]];
                     this.end_cell = null;
                     return;
                 }
 
-                end_cell = this.getCell(event.stageX, event.stageY);
+                var end_cell = this.getCell(event.stageX, event.stageY);
                 if (this.end_cell != null &&
                     (end_cell[0] == this.end_cell[0]) &&
                     (end_cell[1] == this.end_cell[1])) {
@@ -609,13 +609,13 @@ define(function (require) {
                 }
                 this.end_cell = end_cell;
                 this.select_word_line.graphics.clear();
-                color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
+                var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
                 this.markWord(this.start_cell, this.end_cell,
                               this.select_word_line, color);
 
                 // move the select word line to the top
-                topIndex = this.stage.getNumChildren() - 1;
-                selectWordIndex = this.stage.getChildIndex(
+                var topIndex = this.stage.getNumChildren() - 1;
+                var selectWordIndex = this.stage.getChildIndex(
                     this.select_word_line);
                 if (topIndex != selectWordIndex) {
                     this.stage.swapChildrenAt(topIndex, selectWordIndex);
@@ -628,7 +628,7 @@ define(function (require) {
                     return;
                 }
                 for (var n = 0; n < this.wordLocations.length; n++) {
-                    word = this.wordLocations[n];
+                    var word = this.wordLocations[n];
                     var nextFn = wordfind.orientations[word.orientation];
                     var end_word = nextFn(start_cell[0], start_cell[1],
                                           word.word.length - 1);
@@ -668,11 +668,11 @@ define(function (require) {
             */
             this.markWord = function(start_cell, end_cell, shape, color) {
 
-                start_cell_x = start_cell[0];
-                start_cell_y = start_cell[1];
+                var start_cell_x = start_cell[0];
+                var start_cell_y = start_cell[1];
 
-                end_cell_x = end_cell[0];
-                end_cell_y = end_cell[1];
+                var end_cell_x = end_cell[0];
+                var end_cell_y = end_cell[1];
 
                 var x1 = start_cell_x * this.cell_size + this.cell_size / 2;
                 var y1 = this.margin_y + start_cell_y * this.cell_size +
@@ -681,16 +681,16 @@ define(function (require) {
                 var y2 = this.margin_y + end_cell_y * this.cell_size +
                     this.cell_size / 2;
 
-                diff_x = x2 - x1;
-                diff_y = y2 - y1;
-                angle_rad = Math.atan2(diff_y, diff_x);
-                angle_deg = angle_rad * 180 / Math.PI;
-                distance = diff_x / Math.cos(angle_rad);
+                var diff_x = x2 - x1;
+                var diff_y = y2 - y1;
+                var angle_rad = Math.atan2(diff_y, diff_x);
+                var angle_deg = angle_rad * 180 / Math.PI;
+                var distance = diff_x / Math.cos(angle_rad);
                 if (Math.abs(angle_deg) == 90) {
                     distance = Math.abs(diff_y);
                 };
 
-                line_width = this.cell_size / 10;
+                var line_width = this.cell_size / 10;
                 shape.graphics.setStrokeStyle(line_width, "round");
                 shape.graphics.beginStroke(color);
                 shape.graphics.drawRoundRect(
@@ -714,7 +714,7 @@ define(function (require) {
         var upperLowerButton = document.getElementById("upperlower-button");
         upperLowerButton.onclick = function () {
             this.classList.toggle('active');
-            lowercase = this.classList.contains('active');
+            var lowercase = this.classList.contains('active');
             game.setLowerCase(lowercase);
         };
 
@@ -728,7 +728,7 @@ define(function (require) {
         var audioButton = document.getElementById("audio-button");
         audioButton.onclick = function () {
             this.classList.toggle('active');
-            enable = !this.classList.contains('active');
+            var enable = !this.classList.contains('active');
             game.enableAudio(enable);
             localStorage["audio-enabled"] = enable;
             dictstore.save();
@@ -740,7 +740,7 @@ define(function (require) {
         function onStoreReady() {
             if (localStorage["word-list"]) {
                 var jsonData = localStorage["word-list"];
-                wordList = JSON.parse(jsonData);
+                var wordList = JSON.parse(jsonData);
                 game.addWords(wordList);
                 setLevel(localStorage["level"]);
                 game.enableAudio(localStorage["audio-enabled"] == 'true');
@@ -795,7 +795,7 @@ define(function (require) {
         };
 
         function showError(msg) {
-            buttonPos = findPosition(addWordButton);
+            var buttonPos = findPosition(addWordButton);
             console.log('POSITION ' + buttonPos.left + ' ' + buttonPos.top);
             errorArea.innerHTML = '<div id="validation-error-msg">' + msg +
                 '</div>';
