@@ -593,7 +593,7 @@ define(function (require) {
                 }
                 this.end_cell = end_cell;
                 this.select_word_line.graphics.clear();
-                color = createjs.Graphics.getRGB(0xFF0000, 0.5);
+                color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
                 this.markWord(this.start_cell, this.end_cell,
                               this.select_word_line, color);
 
