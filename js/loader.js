@@ -20,7 +20,8 @@ requirejs.config({
         CSSPlugin: "../lib/CSSPlugin",
         sound: "../lib/soundjs",
         wordfind: "../js/wordfind",
-        wordlist: "../js/wordlist"
+        wordlist: "../js/wordlist",
+        wordmatrix: "../js/wordmatrix"
     }
 });
 
