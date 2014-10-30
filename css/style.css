@@ -23,17 +23,12 @@ table td {
   vertical-align:middle;
   background-size: 100%;
   background-color: transparent;
-  height: 66px;  /* 8 * @subcell-size;  */
+  height: 66px;  /* 6 * @subcell-size;  */
   width: 66px;
   border-radius: 0;
   border: 0px;
   padding: 11px; /* @subcell-size;  */
   margin: 22px;
-}
-
-.level-button:active, .level-button.active {
-  height: 99px;  /* 8 * @subcell-size;  */
-  width: 99px;
 }
 
 .level-button:hover {

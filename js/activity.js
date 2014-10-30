@@ -25,8 +25,10 @@ define(function (require) {
 
         var is_xo = ((window.innerWidth == 1200) && (window.innerHeight == 900));
         var sugarCellSize = 75;
+        var sugarSubCellSize = 15;
         if (!is_xo) {
             sugarCellSize = 55;
+            sugarSubCellSize = 11;
         };
 
         var wordListCanvas = document.getElementById("wordListCanvas");
@@ -766,7 +768,7 @@ define(function (require) {
         var addWordButton = document.getElementById("add-word-button");
 
         createjs.CSSPlugin.install(createjs.Tween);
-        createjs.Ticker.setFPS(10);
+        createjs.Ticker.setFPS(20);
 
         addWordButton.addEventListener('click', function (e) {
             addWord();
@@ -848,22 +850,48 @@ define(function (require) {
         var mediumButton = document.getElementById("medium-button");
         var hardButton = document.getElementById("hard-button");
 
-        function setLevel(level) {
-            easyButton.classList.remove('active');
-            mediumButton.classList.remove('active');
-            hardButton.classList.remove('active');
-            game.level = level;
+        function getButton(level) {
+            var button;
             if (level == 'easy') {
-                easyButton.classList.toggle('active');
+                console.log('LEVEL EASY');
+                button = easyButton;
             } else if (level == 'medium') {
-                mediumButton.classList.toggle('active');
+                console.log('LEVEL MEDIUM');
+                button = mediumButton;
             } else if (level == 'hard') {
-                hardButton.classList.toggle('active');
+                console.log('LEVEL HARD');
+                button = hardButton;
             };
+            return button;
+        }
+
+        function setLevel(level) {
+
+            console.log('setLevel ' + game.level + ' new level ' + level);
+            var originalButton = getButton(game.level);
+            var button = getButton(level);
+            game.level = level;
+
             if (localStorage["level"] != level) {
                 localStorage["level"] = level;
                 dictstore.save();
             };
+
+            var initSize = sugarSubCellSize * 6;
+            console.log('button ' + button + ' width ' + initSize);
+            createjs.Tween.get(button).set(
+                {webkitTransform: "rotate(30deg)"}, button.style, 500).wait(100).set(
+                {webkitTransform: "rotate(0deg)"}, button.style, 500).wait(100).set(
+                {webkitTransform: "rotate(-30deg)"}, button.style, 500).wait(100).set(
+                {webkitTransform: "rotate(0deg)"}, button.style, 500).wait(100).set(
+                {width: String(initSize * 1.5) +"px",
+                 height: String(initSize * 1.5) +"px"}, button.style, 1500).wait(200).set(
+                {width: String(initSize * 1.25) +"px",
+                 height: String(initSize * 1.25) +"px"}, button.style, 1000);
+
+            createjs.Tween.get(originalButton).set(
+                {width: String(initSize) +"px",
+                 height: String(initSize) +"px"}, originalButton.style, 1000);
         };
 
         easyButton.addEventListener('click', function (e) {
