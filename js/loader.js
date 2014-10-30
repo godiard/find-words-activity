@@ -19,7 +19,8 @@ requirejs.config({
         tween: "../lib/tweenjs",
         CSSPlugin: "../lib/CSSPlugin",
         sound: "../lib/soundjs",
-        wordfind: "../js/wordfind"
+        wordfind: "../js/wordfind",
+        wordlist: "../js/wordlist"
     }
 });
 
