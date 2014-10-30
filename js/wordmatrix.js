@@ -183,10 +183,10 @@ define(function (require) {
                 this.cell_size * this.puzzle.length);
             this.container.addChild(background);
 
-            var letters = [];
             for (var i = 0, height = this.puzzle.length; i < height; i++) {
                 var row = this.puzzle[i];
                 var y = this.cell_size * i;
+                var lettersRow = [];
 
                 for (var j = 0, width = row.length; j < width; j++) {
                     var letter = this.puzzle[i][j];
@@ -201,8 +201,9 @@ define(function (require) {
                     text.y = y + this.cell_size / 3;
                     text.textAlign = "center";
                     this.container.addChild(text);
-                    this.letters.push(text);
+                    lettersRow.push(text);
                 };
+                this.letters.push(lettersRow);
             };
             this.container.cache(0, 0, this.cell_size * this.puzzle.length,
                             this.cell_size * this.puzzle.length);
@@ -222,11 +223,14 @@ define(function (require) {
 
         this.changeCase = function () {
             for (var i = 0; i < this.letters.length; i++) {
-                var letter = this.letters[i];
-                if (this.game.lowerCase) {
-                    letter.text = letter.text.toLowerCase();
-                } else {
-                    letter.text = letter.text.toUpperCase();
+                var lettersRow = this.letters[i];
+                for (var j = 0; j < lettersRow.length; j++) {
+                    var letter = this.letters[i][j];
+                    if (this.game.lowerCase) {
+                        letter.text = letter.text.toLowerCase();
+                    } else {
+                        letter.text = letter.text.toUpperCase();
+                    };
                 };
             };
             this.container.updateCache();
