@@ -239,6 +239,7 @@ define(function (require) {
         };
 
         this.stage.on("pressup", function (event) {
+            this.restoreAnimatedWord();
             this.verifyWord(this.start_cell, this.end_cell);
             this.start_cell = null;
             this.end_cell = null;
@@ -274,7 +275,7 @@ define(function (require) {
             this.select_word_line.graphics.clear();
             var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
             this.markWord(this.start_cell, this.end_cell,
-                          this.select_word_line, color);
+                          this.select_word_line, color, true);
             this.animateWord(this.start_cell, this.end_cell);
 
             // move the select word line to the top
@@ -310,7 +311,7 @@ define(function (require) {
                     var color = this.game.getWordColor(word.word, 1);
                     var found_word_line = new createjs.Shape();
                     this.markWord(start_cell, end_cell,
-                                  found_word_line, color);
+                                  found_word_line, color, false);
 
                     found_word_line.mouseEnabled = false;
                     this.stage.addChild(found_word_line);
@@ -330,7 +331,7 @@ define(function (require) {
         shape = createjs.Shape
         color = createjs.Graphics.getRGB
         */
-        this.markWord = function(start_cell, end_cell, shape, color) {
+        this.markWord = function(start_cell, end_cell, shape, color, fill) {
 
             var start_cell_x = start_cell[0];
             var start_cell_y = start_cell[1];
@@ -356,7 +357,11 @@ define(function (require) {
 
             var line_width = this.cell_size / 10;
             shape.graphics.setStrokeStyle(line_width, "round");
-            shape.graphics.beginStroke(color);
+            if (fill) {
+                shape.graphics.beginFill(color);
+            } else {
+                shape.graphics.beginStroke(color);
+            };
             shape.graphics.drawRoundRect(
                 -(this.cell_size - line_width) / 2,
                 -(this.cell_size - line_width) / 2,
@@ -369,13 +374,17 @@ define(function (require) {
             shape.y = y1;
         };
 
-        this.animateWord = function(start_cell, end_cell) {
-
+        this.restoreAnimatedWord = function() {
             // restore the letters modified the last time
             for (var i = 0; i < this.animatedLetters.length; i++) {
                 this.animatedLetters[i].visible = true;
             }
             this.animatedLetters = []
+            this.container.updateCache();
+        };
+
+        this.animateWord = function(start_cell, end_cell) {
+            this.restoreAnimatedWord();
 
             var start_cell_x = start_cell[0];
             var start_cell_y = start_cell[1];
