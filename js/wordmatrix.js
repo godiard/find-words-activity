@@ -40,6 +40,8 @@ define(function (require) {
 
         this.container;
         this.letters = [];
+        this.animatedLetters = [];
+
         this.animation_runnning = false;
 
         this.init = function () {
@@ -273,6 +275,7 @@ define(function (require) {
             var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
             this.markWord(this.start_cell, this.end_cell,
                           this.select_word_line, color);
+            this.animateWord(this.start_cell, this.end_cell);
 
             // move the select word line to the top
             var topIndex = this.stage.getNumChildren() - 1;
@@ -365,6 +368,59 @@ define(function (require) {
             shape.x = x1;
             shape.y = y1;
         };
+
+        this.animateWord = function(start_cell, end_cell) {
+
+            // restore the letters modified the last time
+            for (var i = 0; i < this.animatedLetters.length; i++) {
+                this.animatedLetters[i].visible = true;
+            }
+            this.animatedLetters = []
+
+            var start_cell_x = start_cell[0];
+            var start_cell_y = start_cell[1];
+
+            var end_cell_x = end_cell[0];
+            var end_cell_y = end_cell[1];
+
+            if (start_cell_x != end_cell_x) {
+                var inclination = (end_cell_y - start_cell_y) /
+                                  (end_cell_x - start_cell_x);
+                var start = start_cell_x;
+                var end = end_cell_x;
+                if (start_cell_x > end_cell_x) {
+                    start = end_cell_x;
+                    end = start_cell_x;
+                }
+
+                for (var x = start; x <= end; x++) {
+                    y = Math.round(start_cell_y + inclination *
+                                   (x - start_cell_x));
+                    if (y == NaN) {
+                        y = start_cell_y;
+                    }
+                    this.animatedLetters.push(this.letters[y][x]);
+                }
+            } else {
+                var start = start_cell_y;
+                var end = end_cell_y;
+                if (start_cell_y > end_cell_y) {
+                    start = end_cell_y;
+                    end = start_cell_y;
+                }
+
+                for (var y = start; y <= end; y++) {
+                    this.animatedLetters.push(this.letters[y][start_cell_x]);
+                }
+            }
+
+            // apply the effect over the selected letters
+            for (var i = 0; i < this.animatedLetters.length; i++) {
+                this.animatedLetters[i].visible = false;
+            }
+            this.container.updateCache();
+
+        }
 
     };
 
