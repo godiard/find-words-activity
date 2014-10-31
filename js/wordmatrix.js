@@ -41,6 +41,7 @@ define(function (require) {
         this.container;
         this.letters = [];
         this.animatedLetters = [];
+        this.animationContainer = null;
 
         this.animation_runnning = false;
 
@@ -82,6 +83,10 @@ define(function (require) {
             this.stage.removeAllChildren();
             this.stage.update();
             this.startup_animation();
+
+            this.letters = [];
+            this.animatedLetters = [];
+
         };
 
         this.startup_animation = function () {
@@ -171,6 +176,13 @@ define(function (require) {
         this.startGame = function() {
 
             this.select_word_line = new createjs.Shape();
+            this.animationContainer = new createjs.Container();
+            this.animationContainer.x = 0;
+            this.animationContainer.y = this.margin_y;
+
+            this.wordsFoundcontainer = new createjs.Container();
+            this.wordsFoundcontainer.x = 0;
+            this.wordsFoundcontainer.y = 0;
 
             this.container = new createjs.Container();
             this.container.x = 0;
@@ -211,7 +223,9 @@ define(function (require) {
                             this.cell_size * this.puzzle.length);
             this.stage.addChild(this.container);
 
+            this.stage.addChild(this.wordsFoundcontainer);
             this.stage.addChild(this.select_word_line);
+            this.stage.addChild(this.animationContainer);
 
             this.stage.update();
 
@@ -240,6 +254,7 @@ define(function (require) {
 
         this.stage.on("pressup", function (event) {
             this.restoreAnimatedWord();
+            this.hideDancingLetters();
             this.verifyWord(this.start_cell, this.end_cell);
             this.start_cell = null;
             this.end_cell = null;
@@ -276,15 +291,18 @@ define(function (require) {
             var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
             this.markWord(this.start_cell, this.end_cell,
                           this.select_word_line, color, true);
-            this.animateWord(this.start_cell, this.end_cell);
+            this.prepareWordAnimation(this.start_cell, this.end_cell);
+            this.showDancingLetters();
 
             // move the select word line to the top
+            /*
             var topIndex = this.stage.getNumChildren() - 1;
             var selectWordIndex = this.stage.getChildIndex(
                 this.select_word_line);
             if (topIndex != selectWordIndex) {
                 this.stage.swapChildrenAt(topIndex, selectWordIndex);
             };
+            */
             this.stage.update();
         }, this);
 
@@ -314,7 +332,7 @@ define(function (require) {
                                   found_word_line, color, false);
 
                     found_word_line.mouseEnabled = false;
-                    this.stage.addChild(found_word_line);
+                    this.wordsFoundcontainer.addChild(found_word_line);
 
                     // show in the word list
                     this.game.addFoundWord(word.word);
@@ -381,9 +399,10 @@ define(function (require) {
             }
             this.animatedLetters = []
             this.container.updateCache();
+            this.animationContainer.removeAllChildren();
         };
 
-        this.animateWord = function(start_cell, end_cell) {
+        this.prepareWordAnimation = function(start_cell, end_cell) {
             this.restoreAnimatedWord();
 
             var start_cell_x = start_cell[0];
@@ -400,36 +419,63 @@ define(function (require) {
                 if (start_cell_x > end_cell_x) {
                     start = end_cell_x;
                     end = start_cell_x;
-                }
+                };
 
                 for (var x = start; x <= end; x++) {
                     y = Math.round(start_cell_y + inclination *
                                    (x - start_cell_x));
                     if (y == NaN) {
                         y = start_cell_y;
-                    }
+                    };
                     this.animatedLetters.push(this.letters[y][x]);
-                }
+                };
             } else {
                 var start = start_cell_y;
                 var end = end_cell_y;
                 if (start_cell_y > end_cell_y) {
                     start = end_cell_y;
                     end = start_cell_y;
-                }
+                };
 
                 for (var y = start; y <= end; y++) {
                     this.animatedLetters.push(this.letters[y][start_cell_x]);
-                }
-            }
+                };
+            };
 
             // apply the effect over the selected letters
             for (var i = 0; i < this.animatedLetters.length; i++) {
                 this.animatedLetters[i].visible = false;
-            }
+            };
             this.container.updateCache();
+        };
 
-        }
+        this.showDancingLetters = function() {
+            // apply the effect over the selected letters
+            for (var i = 0; i < this.animatedLetters.length; i++) {
+                matrixLetter = this.animatedLetters[i];
+                // add another letter to animate
+                var text = new createjs.Text(matrixLetter.text,
+                                         "24px Arial", "#FFFFFF");
+                text.x = matrixLetter.x;
+                text.y = matrixLetter.y + text.getMeasuredHeight() / 2;
+                text.textAlign = "center";
+                // this is needed to set the rotation center
+                text.regY = text.getMeasuredHeight() / 2;
+                text.scaleX = 1.5;
+                text.scaleY = 1.5;
+
+                createjs.Tween.get(text, {loop:true}).to(
+                    {rotation:45}, 300).to(
+                    {rotation:-90}, 600).to(
+                    {rotation:45}, 300);
+
+                this.animationContainer.addChild(text);
+            };
+        };
+
+        this.hideDancingLetters = function() {
+            this.animationContainer.removeAllChildren();
+        };
 
     };
 
