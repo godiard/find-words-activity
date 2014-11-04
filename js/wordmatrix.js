@@ -3,16 +3,17 @@ define(function (require) {
     require("easel");
     require("tween");
     require("sound");
+    require("preload");
 
-    var soundInstance;
     var soundLoaded = false;
 
     // load the sound
     var soundSrc = "sounds/card.ogg";
+    var queue = new createjs.LoadQueue();
     createjs.Sound.alternateExtensions = ["mp3"];
-    createjs.Sound.addEventListener("fileload", soundReady);
-    createjs.Sound.registerSound(soundSrc);
-    soundInstance = createjs.Sound.createInstance(soundSrc);
+    queue.installPlugin(createjs.Sound);
+    queue.addEventListener("complete", soundReady);
+    queue.loadFile({id:"card", src:soundSrc});
 
     function soundReady(event) {
         console.log('Sound loaded');
@@ -131,7 +132,7 @@ define(function (require) {
             createjs.Ticker.addEventListener("tick", this.stage);
 
             if (soundLoaded && this.game.audioEnabled) {
-                soundInstance.play();
+                createjs.Sound.play("card");
             };
 
             // startup the animation
@@ -150,8 +151,7 @@ define(function (require) {
             };
             if (this.boxes.length > 0) {
                 if (soundLoaded && this.game.audioEnabled) {
-                    soundInstance.stop();
-                    soundInstance.play();
+                    createjs.Sound.play("card");
                 };
                 createjs.Tween.get(this.boxes.pop()).to(
                     {y:this.cell_size * this.boxes.length + this.margin_y},
@@ -159,9 +159,6 @@ define(function (require) {
                     createjs.Ease.bounceOut).wait(300).call(
                     this.animateNextBox, [], this);
             } else {
-                if (soundLoaded && this.game.audioEnabled) {
-                    soundInstance.stop();
-                };
                 this.stage.removeAllChildren();
                 this.startGame();
             };
