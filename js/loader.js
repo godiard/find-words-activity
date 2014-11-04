@@ -19,6 +19,7 @@ requirejs.config({
         tween: "../lib/tweenjs-0.5.1.min",
         CSSPlugin: "../lib/CSSPlugin",
         sound: "../lib/soundjs-0.5.2.min",
+        preload: "../lib/preloadjs-0.4.1.min",
         wordfind: "../js/wordfind",
         wordlist: "../js/wordlist",
         wordmatrix: "../js/wordmatrix"

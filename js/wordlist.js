@@ -2,6 +2,7 @@ define(function (require) {
 
     require("easel");
     require("tween");
+    require("preload");
 
     wordlist = {};
 
@@ -13,6 +14,25 @@ define(function (require) {
         this.onAnimation = false;
 
         this.stage = new createjs.Stage(this.canvas);
+
+        this.handleComplete = function (event) {
+            var queue = event.target;
+            this.deleteButton = new createjs.Container();
+            var minus = queue.getResult("minus")
+
+            this.deleteButtonImg = new createjs.Bitmap(minus);
+            this.deleteButton.visible = false;
+            this.deleteButton.addChild(this.deleteButtonImg);
+            this.stage.addChild(this.deleteButton);
+
+            this.deleteButton.on('click', this.deleteButtonCb, this);
+
+        };
+
+        queue = new createjs.LoadQueue(false);
+        queue.on("complete", this.handleComplete, this);
+        queue.loadFile({id:"minus", src:"icons/minus.png"});
+
         createjs.Ticker.setFPS(10);
         createjs.Ticker.addEventListener("tick", this.stage);
 
@@ -36,12 +56,6 @@ define(function (require) {
 
         this.wordHeight = 50;
 
-        this.deleteButton = new createjs.Container();
-        this.deleteButtonImg = new createjs.Bitmap("icons/minus.svg");
-        this.deleteButton.visible = false;
-        this.deleteButton.addChild(this.deleteButtonImg);
-        this.stage.addChild(this.deleteButton);
-
         this.stage.on('click', function (event) {
             if (this.game.started) {
                 return;
@@ -53,7 +67,7 @@ define(function (require) {
             };
         }, this);
 
-        this.deleteButton.on('click', function (event) {
+        this.deleteButtonCb = function (event) {
             if (this.game.started) {
                 return;
             };
@@ -90,7 +104,7 @@ define(function (require) {
                 this.selectedWord = null;
 
             };
-        }, this);
+        };
 
         // the stage elements displaying every word in the word list
         this.wordElements = [];
