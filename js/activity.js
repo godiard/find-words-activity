@@ -190,7 +190,7 @@ define(function (require) {
         var addWordButton = document.getElementById("add-word-button");
 
         createjs.CSSPlugin.install(createjs.Tween);
-        createjs.Ticker.setFPS(20);
+        createjs.Ticker.setFPS(30);
 
         addWordButton.addEventListener('click', function (e) {
             addWord();

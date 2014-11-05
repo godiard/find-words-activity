@@ -128,7 +128,6 @@ define(function (require) {
                 this.stage.addChild(bar);
             };
 
-            createjs.Ticker.setFPS(10);
             createjs.Ticker.addEventListener("tick", this.stage);
 
             if (soundLoaded && this.game.audioEnabled) {

@@ -33,7 +33,6 @@ define(function (require) {
         queue.on("complete", this.handleComplete, this);
         queue.loadFile({id:"minus", src:"icons/minus.png"});
 
-        createjs.Ticker.setFPS(10);
         createjs.Ticker.addEventListener("tick", this.stage);
 
         var shadow_width = 10
