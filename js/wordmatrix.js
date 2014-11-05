@@ -389,12 +389,7 @@ define(function (require) {
         };
 
         this.restoreAnimatedWord = function() {
-            // restore the letters modified the last time
-            for (var i = 0; i < this.animatedLetters.length; i++) {
-                this.animatedLetters[i].visible = true;
-            }
             this.animatedLetters = []
-            this.container.updateCache();
             this.animationContainer.removeAllChildren();
         };
 
@@ -438,11 +433,6 @@ define(function (require) {
                 };
             };
 
-            // apply the effect over the selected letters
-            for (var i = 0; i < this.animatedLetters.length; i++) {
-                this.animatedLetters[i].visible = false;
-            };
-            this.container.updateCache();
         };
 
         this.showDancingLetters = function() {
