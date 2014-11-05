@@ -3,15 +3,15 @@
   background-image: url(../activity/icon.svg);
 }
 
-#main-toolbar #upperlower-button {
+#upperlower-button {
   background-image: url(../icons/uppercase-lowercase.svg);
 }
 
-#main-toolbar #back-button {
+#back-button {
   background-image: url(../icons/arrow.svg);
 }
 
-#main-toolbar #audio-button {
+#audio-button {
   background-image: url(../icons/audio.svg);
 }
 

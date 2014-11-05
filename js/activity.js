@@ -28,6 +28,34 @@ define(function (require) {
         var hardButton = document.getElementById("hard-button");
 
         // Initialize the activity.
+
+        console.log(navigator.userAgent);
+
+        var onAndroid = /Android/i.test(navigator.userAgent);
+        if (onAndroid) {
+            console.log('ON ANDROID, hide toolbar and move the canvas');
+            // hide the sugar toolbar
+            var toolbar = document.getElementById("main-toolbar");
+            toolbar.style.display = "none";
+            // move the toolbar at the top
+            var canvas = document.getElementById("canvas");
+            canvas.style.top = "0px";
+            // add a div and put the buttons
+            var fragment = document.createDocumentFragment();
+            var div = document.createElement('div');
+            div.className = 'toolbar';
+            div.id = 'floatingToolbar';
+            fragment.appendChild(div);
+            div.appendChild(backButton);
+            div.appendChild(upperLowerButton);
+            div.appendChild(audioButton);
+            document.body.appendChild(fragment.cloneNode(true));
+            // update the references to the buttons
+            upperLowerButton = document.getElementById("upperlower-button");
+            backButton = document.getElementById("back-button");
+            audioButton = document.getElementById("audio-button");
+        };
+
         activity.setup();
 
         // HERE GO YOUR CODE
@@ -41,6 +69,11 @@ define(function (require) {
             sugarCellSize = 55;
             sugarSubCellSize = 11;
         };
+
+        if (onAndroid) {
+            // set to the size of the bottom bar
+            sugarCellSize = 10;
+        }
 
         wordListCanvas.height = window.innerHeight - sugarCellSize;
         wordListCanvas.width = window.innerWidth / 3;

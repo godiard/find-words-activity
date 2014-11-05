@@ -90,3 +90,15 @@ table td {
   border-radius: 5px;
   /* left: 1200px; */
 }
+
+#floatingToolbar {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 0px;
+  background-color: transparent;
+  height: 55px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+
+}
