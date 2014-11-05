@@ -14,6 +14,19 @@ define(function (require) {
     // Manipulate the DOM only when it is ready.
     require(['domReady!'], function (doc) {
 
+        var wordListCanvas = document.getElementById("wordListCanvas");
+        var gameCanvas = document.getElementById("gameCanvas");
+        var startGameButton = document.getElementById("start-game-button");
+        var upperLowerButton = document.getElementById("upperlower-button");
+        var backButton = document.getElementById("back-button");
+        var audioButton = document.getElementById("audio-button");
+        var wordInput = document.getElementById("word-input");
+        var errorArea = document.getElementById("validation-error");
+        var addWordButton = document.getElementById("add-word-button");
+        var easyButton = document.getElementById("easy-button");
+        var mediumButton = document.getElementById("medium-button");
+        var hardButton = document.getElementById("hard-button");
+
         // Initialize the activity.
         activity.setup();
 
@@ -29,11 +42,9 @@ define(function (require) {
             sugarSubCellSize = 11;
         };
 
-        var wordListCanvas = document.getElementById("wordListCanvas");
         wordListCanvas.height = window.innerHeight - sugarCellSize;
         wordListCanvas.width = window.innerWidth / 3;
 
-        var gameCanvas = document.getElementById("gameCanvas");
 
         // game logic
 
@@ -131,25 +142,21 @@ define(function (require) {
 
         };
 
-        var startGameButton = document.getElementById("start-game-button");
         var game = new Game(wordListCanvas, gameCanvas, startGameButton);
 
         // toolbar
-        var upperLowerButton = document.getElementById("upperlower-button");
         upperLowerButton.onclick = function () {
             this.classList.toggle('active');
             var lowercase = this.classList.contains('active');
             game.setLowerCase(lowercase);
         };
 
-        var backButton = document.getElementById("back-button");
         backButton.addEventListener('click', function (e) {
             document.getElementById("firstPage").style.display = "block";
             document.getElementById("gameCanvas").style.display = "none";
             game.stop();
         });
 
-        var audioButton = document.getElementById("audio-button");
         audioButton.onclick = function () {
             this.classList.toggle('active');
             var enable = !this.classList.contains('active');
@@ -184,10 +191,6 @@ define(function (require) {
 
         // not allow input special characters, number or spaces in the words
         var iChars = "0123456789!¡~@#$%^&*()+=-[]\\\';,./{}|\":<>?¿ ";
-
-        var wordInput = document.getElementById("word-input");
-        var errorArea = document.getElementById("validation-error");
-        var addWordButton = document.getElementById("add-word-button");
 
         createjs.CSSPlugin.install(createjs.Tween);
         createjs.Ticker.setFPS(30);
@@ -268,9 +271,6 @@ define(function (require) {
         };
 
         // level buttons
-        var easyButton = document.getElementById("easy-button");
-        var mediumButton = document.getElementById("medium-button");
-        var hardButton = document.getElementById("hard-button");
 
         function getButton(level) {
             var button;
