@@ -19,7 +19,6 @@ define(function (require) {
         var startGameButton = document.getElementById("start-game-button");
         var upperLowerButton = document.getElementById("upperlower-button");
         var backButton = document.getElementById("back-button");
-        var audioButton = document.getElementById("audio-button");
         var wordInput = document.getElementById("word-input");
         var errorArea = document.getElementById("validation-error");
         var addWordButton = document.getElementById("add-word-button");
@@ -48,12 +47,10 @@ define(function (require) {
             fragment.appendChild(div);
             div.appendChild(backButton);
             div.appendChild(upperLowerButton);
-            div.appendChild(audioButton);
             document.body.appendChild(fragment.cloneNode(true));
             // update the references to the buttons
             upperLowerButton = document.getElementById("upperlower-button");
             backButton = document.getElementById("back-button");
-            audioButton = document.getElementById("audio-button");
         };
 
         activity.setup();
@@ -97,7 +94,6 @@ define(function (require) {
                            '#3f51b5', '#5677fc', '#03a9f4', '#00bcd4',
                            '#009688', '#259b24', '#8bc34a', '#cddc39',
                            '#ffc107', '#ff9800', '#ff5722'];
-            this.audioEnabled = true;
 
             this.wordListView = new wordlist.View(wordListCanvas, this);
             this.matrixView = new wordmatrix.View(gameCanvas, this);
@@ -110,10 +106,6 @@ define(function (require) {
                     // change the matrix
                     this.matrixView.changeCase();
                 };
-            };
-
-            this.enableAudio = function (enable) {
-                this.audioEnabled = enable;
             };
 
             this.addWords = function (words) {
@@ -195,14 +187,6 @@ define(function (require) {
             game.stop();
         });
 
-        audioButton.onclick = function () {
-            this.classList.toggle('active');
-            var enable = !this.classList.contains('active');
-            game.enableAudio(enable);
-            localStorage["audio-enabled"] = enable;
-            dictstore.save();
-        };
-
         // datastore
         var wordList = [];
 
@@ -212,10 +196,6 @@ define(function (require) {
                 var wordList = JSON.parse(jsonData);
                 game.addWords(wordList);
                 setLevel(localStorage["level"]);
-                game.enableAudio(localStorage["audio-enabled"] == 'true');
-                if (!game.audioEnabled){
-                    audioButton.classList.toggle('active');
-                };
             };
         };
 
