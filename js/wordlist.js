@@ -201,7 +201,9 @@ define(function (require) {
                 } else {
                     word.text = word.text.toUpperCase();
                 };
-                word.parent.updateCache();
+                if (word.parent != null) {
+                    word.parent.updateCache();
+                }
             };
         };
 
