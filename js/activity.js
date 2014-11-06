@@ -78,6 +78,11 @@ define(function (require) {
         wordListCanvas.height = window.innerHeight - sugarCellSize;
         wordListCanvas.width = window.innerWidth / 3;
 
+        gameCanvas.height = window.innerHeight - sugarCellSize;
+        var availableWidth = Math.min(window.innerWidth / 3 * 2,
+                                      gameCanvas.height);
+        // the matrix have 12 cells and a padding equeal to half a cell
+        gameCanvas.width = availableWidth / 13 * 12;
 
         // game logic
 

@@ -27,13 +27,13 @@ define(function (require) {
         this.canvas = canvas;
         this.game = game;
 
+        this.cell_size = canvas.width / 12;
+        this.margin_y = 40;
+
         this.stage = new createjs.Stage(canvas);
         // Enable touch interactions if supported on the current device
         createjs.Touch.enable(this.stage);
         this.stage.mouseChildren = false;
-
-        this.cell_size = 60;
-        this.margin_y = 40;
 
         this.start_cell = null;
         this.end_cell = null;
