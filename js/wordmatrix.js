@@ -92,22 +92,11 @@ define(function (require) {
 
         this.startup_animation = function () {
             this.animation_runnning = true;
-            // create boxes with letters for every row
-            this.boxes = []
+            var animatedLetters = [];
             for (var i = 0, height = this.puzzle.length; i < height; i++) {
                 var row = this.puzzle[i];
-                var y = 0;
-
-                var bar = new createjs.Container();
-                bar.x = 0;
-                bar.y = 0;
-
+                animatedLetters.push([]);
                 for (var j = 0, width = row.length; j < width; j++) {
-                    var v_box = new createjs.Shape();
-                    v_box.graphics.beginStroke("#000000").beginFill(
-                        "#eeeeee").drawRect(this.cell_size * j, 0,
-                                            this.cell_size, this.cell_size);
-                    bar.addChild(v_box);
 
                     var letter = this.puzzle[i][j];
                     if (this.game.lowerCase) {
@@ -118,50 +107,29 @@ define(function (require) {
                     var text = new createjs.Text(letter,
                                              "24px Arial", "#000000");
                     text.x = this.cell_size * j + this.cell_size / 2;
-                    text.y = y + this.cell_size / 3;
+                    text.y = this.margin_y + this.cell_size / 3;
                     text.textAlign = "center";
-                    bar.addChild(text);
+                    animatedLetters[animatedLetters.length -1].push(text);
+                    this.stage.addChild(text);
                 };
-                bar.cache(0, 0, this.cell_size * row.length, this.cell_size);
-
-                this.boxes.push(bar);
-                this.stage.addChild(bar);
             };
 
             createjs.Ticker.addEventListener("tick", this.stage);
 
-            if (soundLoaded && this.game.audioEnabled) {
-                createjs.Sound.play("card");
-            };
-
-            // startup the animation
-            createjs.Tween.get(this.boxes.pop()).to(
-                {y:this.cell_size * this.boxes.length + this.margin_y}, 1000,
-                createjs.Ease.bounceOut).wait(300).call(
-                this.animateNextBox, [], this);
-
-        };
-
-        this.animateNextBox = function () {
-            if (!this.animation_runnning) {
-                this.stage.removeAllChildren();
-                this.stage.update();
-                return;
-            };
-            if (this.boxes.length > 0) {
-                if (soundLoaded && this.game.audioEnabled) {
-                    createjs.Sound.play("card");
+            for (var i = 0, height = this.puzzle.length; i < height; i++) {
+                delay = Math.random() * 4000;
+                for (var j = 0, width = row.length; j < width; j++) {
+                    text = animatedLetters[j][i];
+                    endY = this.cell_size * j + this.cell_size / 3 + this.margin_y;
+                    createjs.Tween.get(text).wait(delay).to(
+                        {y:endY}, 1000);
                 };
-                createjs.Tween.get(this.boxes.pop()).to(
-                    {y:this.cell_size * this.boxes.length + this.margin_y},
-                    1000,
-                    createjs.Ease.bounceOut).wait(300).call(
-                    this.animateNextBox, [], this);
-            } else {
-                this.stage.removeAllChildren();
-                this.startGame();
             };
+            createjs.Tween.get(this.stage).wait(5000).call(
+                this.startGame, [], this);
+
         };
+
 
         this.getCell = function (x, y) {
             var cell_x = parseInt(x / this.cell_size);
@@ -170,6 +138,8 @@ define(function (require) {
         };
 
         this.startGame = function() {
+
+            this.stage.removeAllChildren();
 
             this.select_word_line = new createjs.Shape();
             this.animationContainer = new createjs.Container();
