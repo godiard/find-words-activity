@@ -2,23 +2,6 @@ define(function (require) {
 
     require("easel");
     require("tween");
-    require("sound");
-    require("preload");
-
-    var soundLoaded = false;
-
-    // load the sound
-    var soundSrc = "sounds/card.ogg";
-    var queue = new createjs.LoadQueue();
-    createjs.Sound.alternateExtensions = ["mp3"];
-    queue.installPlugin(createjs.Sound);
-    queue.addEventListener("complete", soundReady);
-    queue.loadFile({id:"card", src:soundSrc});
-
-    function soundReady(event) {
-        console.log('Sound loaded');
-        soundLoaded = true;
-    };
 
     wordmatrix = {};
 
