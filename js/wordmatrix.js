@@ -209,14 +209,6 @@ define(function (require) {
             this.end_cell = null;
         }, this);
 
-        this.stage.on('click', function (event) {
-            if (this.animation_runnning) {
-                // empty the list with the falling blocks
-                // to end the animation
-                this.boxes = [];
-            };
-        }, this);
-
         this.stage.on("pressmove", function (event) {
             if (!this.game.started) {
                 return;
@@ -243,15 +235,22 @@ define(function (require) {
             this.prepareWordAnimation(this.start_cell, this.end_cell);
             this.showDancingLetters();
 
-            // move the select word line to the top
-            /*
-            var topIndex = this.stage.getNumChildren() - 1;
-            var selectWordIndex = this.stage.getChildIndex(
-                this.select_word_line);
-            if (topIndex != selectWordIndex) {
-                this.stage.swapChildrenAt(topIndex, selectWordIndex);
-            };
-            */
+            this.stage.update();
+        }, this);
+
+        this.stage.on('mousedown', function (event) {
+            var cell = this.getCell(event.stageX, event.stageY);
+            this.select_word_line.graphics.clear();
+            var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
+            this.markWord(cell, cell,
+                          this.select_word_line, color, true);
+            this.prepareWordAnimation(cell, cell);
+            this.showDancingLetters();
+        }, this);
+
+        this.stage.on('pressup', function (event) {
+            this.hideDancingLetters();
+            this.select_word_line.graphics.clear();
             this.stage.update();
         }, this);
 
