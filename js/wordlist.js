@@ -14,6 +14,7 @@ define(function (require) {
         this.onAnimation = false;
 
         this.stage = new createjs.Stage(this.canvas);
+        this.stage.enableMouseOver(20);
 
         this.handleComplete = function (event) {
             var queue = event.target;
@@ -167,31 +168,35 @@ define(function (require) {
             cont.width = text.getMeasuredWidth() + padding * 2;
             cont.height = text.getMeasuredHeight()+ padding * 2;
 
-            cont.on('click', function (event) {
-                // if the game already started or the words are falling,
-                // do nothing
-                if (this.game.started || this.onAnimation) {
-                    return;
-                };
-
-                if (event.target != this.selectedWord) {
-                    cont = event.target;
-                    this.selectedWord = cont;
-                    // set the position of deleteButton and make visible
-                    this.deleteButton.y = cont.y;
-                    this.deleteButton.x = cont.x + cont.width + padding;
-
-                    rect = this.deleteButtonImg.getBounds();
-                    scale = cont.height / rect.height;
-                    this.deleteButtonImg.scaleX = scale;
-                    this.deleteButtonImg.scaleY = scale;
-
-                    this.deleteButton.visible = true;
-                };
-            }, this);
+            cont.on('click', this.selectWordCb, this);
+            cont.on('rollover', this.selectWordCb, this);
 
             return text;
-        }
+        };
+
+        this.selectWordCb = function (event) {
+            var padding = 10;
+            // if the game already started or the words are falling,
+            // do nothing
+            if (this.game.started || this.onAnimation) {
+                return;
+            };
+
+            if (event.target != this.selectedWord) {
+                cont = event.target;
+                this.selectedWord = cont;
+                // set the position of deleteButton and make visible
+                this.deleteButton.y = cont.y;
+                this.deleteButton.x = cont.x + cont.width + padding;
+
+                rect = this.deleteButtonImg.getBounds();
+                scale = cont.height / rect.height;
+                this.deleteButtonImg.scaleX = scale;
+                this.deleteButtonImg.scaleY = scale;
+
+                this.deleteButton.visible = true;
+            };
+        };
 
         this.changeCase = function () {
             for (var i = 0; i < this.wordElements.length; i++) {
