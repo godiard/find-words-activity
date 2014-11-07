@@ -401,11 +401,11 @@ define(function (require) {
                 text.regY = text.getMeasuredHeight() / 2;
                 text.scaleX = 1.5;
                 text.scaleY = 1.5;
+                text.rotation = 45;
 
                 createjs.Tween.get(text, {loop:true}).to(
-                    {rotation:45}, 300).to(
                     {rotation:-90}, 600).to(
-                    {rotation:45}, 300);
+                    {rotation:90}, 600);
 
                 this.animationContainer.addChild(text);
             };
