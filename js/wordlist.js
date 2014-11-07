@@ -115,30 +115,39 @@ define(function (require) {
                 return;
             };
             this.onAnimation = true;
-            var word = words.pop();
-            var cont = new createjs.Container();
-            cont.x = 20; // margin_x;
-            cont.y = 0;
-            cont.mouseChildren = false;
 
-            var alpha = 1.0;
-            if (this.game.found.indexOf(word.toUpperCase()) > -1) {
-                alpha = 0.25;
+            var delay = 0;
+            for (var n = 0; n < words.length; n++) {
+                var word = words[n];
+                var cont = new createjs.Container();
+                cont.x = 20; // margin_x;
+                cont.y = 0;
+                cont.mouseChildren = false;
+                cont.visible = false;
+
+                var alpha = 1.0;
+                if (this.game.found.indexOf(word.toUpperCase()) > -1) {
+                    alpha = 0.25;
+                };
+                var text = this.addRoundedLabel(cont, word, alpha);
+                cont.word = word.toUpperCase();
+
+                this.stage.addChild(cont);
+
+                this.wordElements.push(text);
+
+                var yFinalPosition = this.canvas.height - this.wordHeight * 
+                    (this.wordElements.length);
+
+                createjs.Tween.get(cont).wait(delay).call(function() {
+                    this.visible = true}).to(
+                    {y:yFinalPosition}, 1300,
+                    createjs.Ease.bounceOut);
+                delay = delay + 400;
             };
-            var text = this.addRoundedLabel(cont, word, alpha);
-            cont.word = word.toUpperCase();
 
-            this.stage.addChild(cont);
-
-            this.wordElements.push(text);
-
-            // startup the animation
-            var y_final_position = this.canvas.height - this.wordHeight *
-                this.wordElements.length;
-            createjs.Tween.get(cont).to(
-                {y:y_final_position}, 800,
-                createjs.Ease.bounceOut).wait(100).call(
-                this.addWords, [words], this);
+            createjs.Tween.get(this.stage).wait(3000).call(
+                function() {this.onAnimation = false}, [], this);
         };
 
         this.addRoundedLabel = function(cont, word, alpha) {
