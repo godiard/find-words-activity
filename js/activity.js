@@ -213,6 +213,9 @@ define(function (require) {
         createjs.CSSPlugin.install(createjs.Tween);
         createjs.Ticker.setFPS(30);
 
+        // set size in the addWordButton
+        addWordButton.style.height = wordInput.offsetHeight + 'px';
+
         addWordButton.addEventListener('click', function (e) {
             addWord();
         });
@@ -241,11 +244,14 @@ define(function (require) {
 
         function showError(msg) {
             var buttonPos = findPosition(addWordButton);
-            console.log('POSITION ' + buttonPos.left + ' ' + buttonPos.top);
             errorArea.innerHTML = '<div id="validation-error-msg">' + msg +
                 '</div>';
             errorArea.style.left = buttonPos.left + 'px';
-            errorArea.style.top = buttonPos.top + 'px';
+            var top = buttonPos.top;
+            if (onAndroid) {
+                top = buttonPos.top + addWordButton.offsetHeight;
+            };
+            errorArea.style.top = top + 'px';
             errorArea.style.opacity = "0.1";
             errorArea.style.display = "block";
 
