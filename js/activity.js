@@ -146,6 +146,7 @@ define(function (require) {
             this.start = function() {
                 this.started = true;
                 this.wordListView.gameStarted();
+                this.matrixView.init();
             };
 
             this.stop = function() {
@@ -204,7 +205,7 @@ define(function (require) {
         startGameButton.addEventListener('click', function (e) {
             document.getElementById("firstPage").style.display = "none";
             document.getElementById("gameCanvas").style.display = "block";
-            game.matrixView.init();
+            game.start();
         });
 
         // not allow input special characters, number or spaces in the words

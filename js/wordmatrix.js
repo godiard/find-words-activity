@@ -177,8 +177,6 @@ define(function (require) {
             this.stage.addChild(this.animationContainer);
 
             this.stage.update();
-
-            this.game.start();
         };
 
         this.stop = function() {
