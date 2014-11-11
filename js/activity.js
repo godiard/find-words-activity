@@ -225,7 +225,10 @@ define(function (require) {
         createjs.Ticker.setFPS(30);
 
         // set size in the addWordButton
-        addWordButton.style.height = wordInput.offsetHeight + 'px';
+        if (onAndroid) {
+            // in Sugar the background image is not properly resized
+            addWordButton.style.height = wordInput.offsetHeight + 'px';
+        };
 
         addWordButton.addEventListener('click', function (e) {
             addWord();
