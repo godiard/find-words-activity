@@ -206,6 +206,7 @@ define(function (require) {
             document.getElementById("firstPage").style.display = "none";
             document.getElementById("gameCanvas").style.display = "block";
             game.start();
+            hideError();
         });
 
         // not allow input special characters, number or spaces in the words
