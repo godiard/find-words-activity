@@ -98,6 +98,7 @@ define(function (require) {
             this.wordListView = new wordlist.View(wordListCanvas, this);
             this.matrixView = new wordmatrix.View(gameCanvas, this);
             this.startGameButton = startGameButton;
+            this.wordColors = {};
 
             this.setLowerCase = function (lowerCase) {
                 this.lowerCase = lowerCase;
@@ -131,16 +132,21 @@ define(function (require) {
             };
 
             this.getWordColor = function(word, alpha) {
-                var color = createjs.Graphics.getRGB(0xcccccc, alpha);
-                var index = this.words.indexOf(word);
-                if (index < this.colors.length) {
-                    var hexa_color = this.colors[index];
-                    r = parseInt(hexa_color.substr(1, 2), 16);
-                    g = parseInt(hexa_color.substr(3, 2), 16);
-                    b = parseInt(hexa_color.substr(5, 2), 16);
-                    color = createjs.Graphics.getRGB(r, g, b, alpha);
+                var word = word.toUpperCase();
+                var hexaColor = "#cccccc";
+                if (word in this.wordColors) {
+                    hexaColor = this.wordColors[word];
+                } else {
+                    if (this.colors.length > 0) {
+                        hexaColor = this.colors.pop();
+                        this.wordColors[word] = hexaColor;
+                    };
                 };
-                return color;
+
+                r = parseInt(hexaColor.substr(1, 2), 16);
+                g = parseInt(hexaColor.substr(3, 2), 16);
+                b = parseInt(hexaColor.substr(5, 2), 16);
+                return createjs.Graphics.getRGB(r, g, b, alpha);
             };
 
             this.start = function() {
@@ -161,10 +167,14 @@ define(function (require) {
             };
 
             this.removeWord = function(word) {
+                var word = word.toUpperCase();
                 if (this.words.indexOf(word) > -1) {
                     this.words.splice(this.words.indexOf(word), 1);
                     localStorage["word-list"] = JSON.stringify(this.words);
                     dictstore.save();
+                    // free the color
+                    this.colors.push(this.wordColors[word]);
+                    delete this.wordColors[word];
                 };
                 if (this.words.length == 0) {
                     this.startGameButton.disabled = true;
