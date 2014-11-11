@@ -59,7 +59,7 @@ define(function (require) {
 
         // initialize canvas size
 
-        var is_xo = ((window.innerWidth == 1200) && (window.innerHeight == 900));
+        var is_xo = ((window.innerWidth == 1200) && (window.innerHeight >= 900));
         var sugarCellSize = 75;
         var sugarSubCellSize = 15;
         if (!is_xo) {
@@ -71,7 +71,6 @@ define(function (require) {
             // set to the size of the bottom bar
             sugarCellSize = 10;
         }
-
         wordListCanvas.height = window.innerHeight - sugarCellSize;
         wordListCanvas.width = window.innerWidth / 3;
 
