@@ -239,6 +239,10 @@ define(function (require) {
                     return false;
                 };
             };
+            if (game.wordListView.noMoreSpace) {
+                showError('No more space for words!');
+                return false;
+            }
             hideError();
             return true;
         };

@@ -12,6 +12,8 @@ define(function (require) {
         this.game = game;
         this.selectedWord = null;
         this.onAnimation = false;
+        this.noMoreSpace = false;
+        var onAndroid = /Android/i.test(navigator.userAgent);
 
         this.stage = new createjs.Stage(this.canvas);
         this.stage.enableMouseOver(20);
@@ -55,6 +57,12 @@ define(function (require) {
         this.stage.addChild(this.rightBorder);
 
         this.wordHeight = 50;
+        this.minimalSpace = this.wordHeight;
+        if (onAndroid) {
+            // on android we need more space, because the buttons are not in
+            // the toolbar, but over the listview canvas
+            this.minimalSpace = this.wordHeight * 2;
+        }
 
         this.stage.on('click', function (event) {
             if (this.game.started) {
@@ -102,7 +110,7 @@ define(function (require) {
                     this.wordElements.splice(wordElementIndex, 1);
                 };
                 this.selectedWord = null;
-
+                this.noMoreSpace = false;
             };
         };
 
@@ -138,6 +146,10 @@ define(function (require) {
 
                 var yFinalPosition = this.canvas.height - this.wordHeight * 
                     (this.wordElements.length);
+
+                if (yFinalPosition < this.minimalSpace) {
+                    this.noMoreSpace = true;
+                }
 
                 createjs.Tween.get(cont).wait(delay).call(function() {
                     this.visible = true}).to(
