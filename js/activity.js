@@ -124,11 +124,11 @@ define(function (require) {
 
             this.addFoundWord = function (word) {
                 this.found.push(word);
-                this.wordListView.markFound(word);
+                this.wordListView.updateWord(word);
             };
 
             this.restartWordList = function() {
-                this.wordListView.unmarkAll();
+                this.wordListView.updateAll();
             };
 
             this.getWordColor = function(word, alpha) {

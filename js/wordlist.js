@@ -6,6 +6,8 @@ define(function (require) {
 
     wordlist = {};
 
+    var padding = 10;
+
     function WordListView(canvas, game) {
 
         this.canvas = canvas;
@@ -133,11 +135,7 @@ define(function (require) {
                 cont.mouseChildren = false;
                 cont.visible = false;
 
-                var alpha = 1.0;
-                if (this.game.found.indexOf(word.toUpperCase()) > -1) {
-                    alpha = 0.25;
-                };
-                var text = this.addRoundedLabel(cont, word, alpha);
+                var text = this.addRoundedLabel(cont, word);
                 cont.word = word.toUpperCase();
 
                 this.stage.addChild(cont);
@@ -162,14 +160,19 @@ define(function (require) {
                 function() {this.onAnimation = false}, [], this);
         };
 
-        this.addRoundedLabel = function(cont, word, alpha) {
-            var padding = 10;
+        this.addRoundedLabel = function(cont, word) {
             var label;
             if (this.game.lowerCase) {
                 label = word.toLowerCase();
             } else {
                 label = word.toUpperCase();
             };
+
+            var alpha = 1.0;
+            if (this.game.found.indexOf(word.toUpperCase()) > -1) {
+                alpha = 0.25;
+            };
+
             var text = new createjs.Text(label, "24px Arial", "#000000");
             text.x = text.getMeasuredWidth() / 2 + padding;
             text.y = padding;
@@ -196,7 +199,6 @@ define(function (require) {
         };
 
         this.selectWordCb = function (event) {
-            var padding = 10;
             // if the game already started or the words are falling,
             // do nothing
             if (this.game.started || this.onAnimation) {
@@ -220,27 +222,17 @@ define(function (require) {
         };
 
         this.changeCase = function () {
-            for (var i = 0; i < this.wordElements.length; i++) {
-                var word = this.wordElements[i];
-                if (this.game.lowerCase) {
-                    word.text = word.text.toLowerCase();
-                } else {
-                    word.text = word.text.toUpperCase();
-                };
-                if (word.parent != null) {
-                    word.parent.updateCache();
-                }
-            };
+            this.deleteButton.visible = false;
+            this.updateAll();
         };
 
-        this.markFound = function (foundWord) {
+        this.updateWord = function (foundWord) {
             for (var i = 0; i < this.wordElements.length; i++) {
                 var word = this.wordElements[i];
                 if (word.text.toUpperCase() == foundWord) {
-                    console.log('markFound ' + foundWord);
                     var cont = word.parent;
                     cont.removeAllChildren();
-                    var text = this.addRoundedLabel(cont, foundWord, 0.25);
+                    var text = this.addRoundedLabel(cont, foundWord);
                     // update the reference in wordList
                     this.wordElements[i] = text;
                     this.stage.update();
@@ -249,7 +241,7 @@ define(function (require) {
             };
         };
 
-        this.unmarkAll = function () {
+        this.updateAll = function () {
             for (var i = 0; i < this.wordElements.length; i++) {
                 var word = this.wordElements[i];
                 var text = word.text;
