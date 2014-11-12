@@ -209,15 +209,22 @@ define(function (require) {
             this.end_cell = null;
         }, this);
 
-        this.stage.on("pressmove", function (event) {
-            if (!this.game.started) {
-                return;
-            };
-
+        this.stage.on('mousedown', function (event) {
+            var cell = this.getCell(event.stageX, event.stageY);
+            this.select_word_line.graphics.clear();
+            var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
+            this.markWord(cell, cell,
+                          this.select_word_line, color, true);
+            this.prepareWordAnimation(cell, cell);
+            this.showDancingLetters();
             if (this.start_cell == null) {
-                var cell = this.getCell(event.stageX, event.stageY);
                 this.start_cell = [cell[0], cell[1]];
                 this.end_cell = null;
+            };
+        }, this);
+
+        this.stage.on("pressmove", function (event) {
+            if (!this.game.started) {
                 return;
             };
 
@@ -238,53 +245,35 @@ define(function (require) {
             this.stage.update();
         }, this);
 
-        this.stage.on('mousedown', function (event) {
-            var cell = this.getCell(event.stageX, event.stageY);
-            this.select_word_line.graphics.clear();
-            var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
-            this.markWord(cell, cell,
-                          this.select_word_line, color, true);
-            this.prepareWordAnimation(cell, cell);
-            this.showDancingLetters();
-        }, this);
-
-        this.stage.on('pressup', function (event) {
-            this.hideDancingLetters();
-            this.select_word_line.graphics.clear();
-            this.stage.update();
-        }, this);
-
         this.verifyWord = function(start_cell, end_cell) {
-            if ((start_cell == null) || (end_cell == null)) {
-                return;
-            };
-            for (var n = 0; n < this.wordLocations.length; n++) {
-                var word = this.wordLocations[n];
-                var nextFn = wordfind.orientations[word.orientation];
-                var end_word = nextFn(start_cell[0], start_cell[1],
-                                      word.word.length - 1);
-                if ((word.x == start_cell[0] && word.y == start_cell[1] &&
-                     word.end_x == end_cell[0] &&
-                     word.end_y == end_cell[1]) ||
-                    (word.end_x == start_cell[0] &&
-                     word.end_y == start_cell[1] &&
-                     word.x == end_cell[0] && word.y == end_cell[1])) {
-                    // verify if was already marked
-                    if (this.game.found.indexOf(word.word) > -1) {
-                        continue;
+            if ((start_cell != null) && (end_cell != null)) {
+                for (var n = 0; n < this.wordLocations.length; n++) {
+                    var word = this.wordLocations[n];
+                    var nextFn = wordfind.orientations[word.orientation];
+                    var end_word = nextFn(start_cell[0], start_cell[1],
+                                          word.word.length - 1);
+                    if ((word.x == start_cell[0] && word.y == start_cell[1] &&
+                         word.end_x == end_cell[0] &&
+                         word.end_y == end_cell[1]) ||
+                        (word.end_x == start_cell[0] &&
+                         word.end_y == start_cell[1] &&
+                         word.x == end_cell[0] && word.y == end_cell[1])) {
+                        // verify if was already marked
+                        if (this.game.found.indexOf(word.word) > -1) {
+                            continue;
+                        };
+
+                        var color = this.game.getWordColor(word.word, 1);
+                        var found_word_line = new createjs.Shape();
+                        this.markWord(start_cell, end_cell,
+                                      found_word_line, color, false);
+
+                        found_word_line.mouseEnabled = false;
+                        this.wordsFoundcontainer.addChild(found_word_line);
+
+                        // show in the word list
+                        this.game.addFoundWord(word.word);
                     };
-
-                    var color = this.game.getWordColor(word.word, 1);
-                    var found_word_line = new createjs.Shape();
-                    this.markWord(start_cell, end_cell,
-                                  found_word_line, color, false);
-
-                    found_word_line.mouseEnabled = false;
-                    this.wordsFoundcontainer.addChild(found_word_line);
-
-                    // show in the word list
-                    this.game.addFoundWord(word.word);
-
                 };
             };
             this.select_word_line.graphics.clear();
