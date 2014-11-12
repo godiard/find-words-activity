@@ -10,7 +10,6 @@ define(function (require) {
         this.canvas = canvas;
         this.game = game;
 
-        this.cell_size = canvas.width / 12;
         this.margin_y = 40;
 
         this.stage = new createjs.Stage(canvas);
@@ -50,6 +49,9 @@ define(function (require) {
                                          fillBlanks: true});
 
             this.puzzle = this.puzzleGame.matrix;
+            console.log('matrix size ' + this.puzzle.length);
+            this.cell_size = canvas.width / this.puzzle.length;
+
             this.wordLocations = this.puzzleGame.locations;
 
             // to debug, show the matrix in the console
