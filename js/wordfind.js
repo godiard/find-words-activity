@@ -350,6 +350,7 @@
         // since puzzles are random, attempt to create a valid one up to
         // maxAttempts and then increase the puzzle size and try again
         while (!puzzle) {
+          wordLocations = [];
           while (!puzzle && attempts++ < options.maxAttempts) {
             puzzle = fillPuzzle(wordList, options, wordLocations);
           }
