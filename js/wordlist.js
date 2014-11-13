@@ -116,6 +116,18 @@ define(function (require) {
             };
         };
 
+        this.deleteAllWords = function () {
+            for (var i = 0;i < this.wordElements.length; i++) {
+                var textElement = this.wordElements[i];
+                this.stage.removeChild(textElement.parent);
+            };
+            this.stage.update();
+            this.wordElements = [];
+            this.selectedWord = null;
+            this.noMoreSpace = false;
+            this.deleteButton.visible = false;
+        };
+
         // the stage elements displaying every word in the word list
         this.wordElements = [];
 

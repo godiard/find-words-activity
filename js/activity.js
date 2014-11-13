@@ -32,6 +32,11 @@ define(function (require) {
         introMatrix.style.display = "block";
     };
 
+    function hideIntro() {
+        document.getElementById("game").style.display = "block";
+        document.getElementById("intro").style.display = "none";
+    };
+
     // Manipulate the DOM only when it is ready.
     require(['domReady!'], function (doc) {
 
@@ -46,6 +51,8 @@ define(function (require) {
         var easyButton = document.getElementById("easy-button");
         var mediumButton = document.getElementById("medium-button");
         var hardButton = document.getElementById("hard-button");
+        var continueButton = document.getElementById("continue-button");
+        var newGameButton = document.getElementById("new-game-button");
 
         // Initialize the activity.
 
@@ -74,8 +81,7 @@ define(function (require) {
             upperLowerButton = document.getElementById("upperlower-button");
             backButton = document.getElementById("back-button");
         } else {
-            document.getElementById("game").style.display = "block";
-            document.getElementById("intro").style.display = "none";
+            hideIntro();
         };
 
         activity.setup();
@@ -205,6 +211,19 @@ define(function (require) {
                 };
             };
 
+            this.removeAllWords = function() {
+                // free the colors
+                for (var i = 0; i < this.words.length; i++) {
+                    var word = this.words[i];
+                    this.colors.push(this.wordColors[word]);
+                    delete this.wordColors[word];
+                };
+                this.words = [];
+                localStorage["word-list"] = JSON.stringify(this.words);
+                dictstore.save();
+                this.wordListView.deleteAllWords();
+            };
+
         };
 
         var game = new Game(wordListCanvas, gameCanvas, startGameButton);
@@ -230,11 +249,27 @@ define(function (require) {
                 var jsonData = localStorage["word-list"];
                 var wordList = JSON.parse(jsonData);
                 game.addWords(wordList);
+                if (wordList.length == 0) {
+                    continueButton.style.display = "none";
+                };
+            };
+            if (localStorage["level"]) {
                 setLevel(localStorage["level"]);
+            } else {
+                setLevel('easy');
             };
         };
 
         dictstore.init(onStoreReady);
+
+        continueButton.addEventListener('click', function (e) {
+            hideIntro();
+        });
+
+        newGameButton.addEventListener('click', function (e) {
+            game.removeAllWords();
+            hideIntro();
+        });
 
         startGameButton.addEventListener('click', function (e) {
             document.getElementById("firstPage").style.display = "none";
