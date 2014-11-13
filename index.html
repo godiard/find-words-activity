@@ -34,37 +34,56 @@
     </div>
     <div id="canvas">
         <div id="validation-error" style="display:none"></div>
-        <table width="100%">
-            <tr>
-                <td id="wordList">
-                    <canvas id="wordListCanvas">
-                    </canvas>
-                </td>
-                <td align="center">
-                    <div id="firstPage">
-                        Select Difficulty<br/><br/>
-                        <button class="level-button" id="easy-button">
-                        </button>
-                        <button class="level-button" id="medium-button">
-                        </button>
-                        <button class="level-button" id="hard-button">
-                        </button>
-                        <br/><br/>
-                        Add Word<br/><br/>
-                        <input type="text" id="word-input" maxlength="12">
-                        <button id="add-word-button"></button>
-                        <br/><br/>
-                        <button id="start-game-button" disabled>Start
-                        <img src="./icons/loupe.svg" height="30" style="vertical-align:middle"/>
-                        </button>
-                    </div>
+        <div id="intro">
+            <div id="introMatrix" style="display:none">
 
-                    <canvas id="gameCanvas" style="display:none">
+                <div id="introButtons">
+                    <button class="blueButton" id="find-words-button" disabled>Find Words
+                    <img src="./icons/loupe.svg" height="30"
+                        style="vertical-align:middle"/>
+                    </button>
+                    <br/><br/><br/>
+                    <button class="blueBorderButton" id="new-game-button">
+                    New Game</button>
+                    <br/><br/><br/>
+                    <button class="blueBorderButton" id="continue-game-button">
+                    Continue</button>
+                </div>
 
-                    </canvas>
-                </td>
-            </tr>
-        <table>
+            </div>
+        </div>
+        <div id="game" style="display:none">
+            <table width="100%">
+                <tr>
+                    <td id="wordList">
+                        <canvas id="wordListCanvas">
+                        </canvas>
+                    </td>
+                    <td align="center">
+                        <div id="firstPage">
+                            Select Difficulty<br/><br/>
+                            <button class="level-button" id="easy-button">
+                            </button>
+                            <button class="level-button" id="medium-button">
+                            </button>
+                            <button class="level-button" id="hard-button">
+                            </button>
+                            <br/><br/>
+                            Add Word<br/><br/>
+                            <input type="text" id="word-input" maxlength="12">
+                            <button id="add-word-button"></button>
+                            <br/><br/>
+                            <button class="blueButton" id="start-game-button" disabled>Start
+                            <img src="./icons/loupe.svg" height="30"
+                                style="vertical-align:middle"/>
+                            </button>
+                        </div>
+                        <canvas id="gameCanvas" style="display:none">
+                        </canvas>
+                    </td>
+                </tr>
+            <table>
+        </div>
     </div>
 
   </body>

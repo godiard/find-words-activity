@@ -63,18 +63,37 @@ table td {
   background-color: transparent;
 }
 
-#start-game-button {
+.blueButton {
   padding: 10px;
-  font: 1.2em sans-serif;
+  font: 1.5em sans-serif;
   background-color: #03a9f4;
 }
 
-#start-game-button:disabled {
+.blueButton:disabled {
   background-color: #7c7c7c;
 }
 
-#start-game-button:hover {
+.blueButton:hover {
   border-color: transparent;
+}
+
+.blueBorderButton {
+  padding: 10px;
+  font: 1.5em sans-serif;
+  background-color: #ffffff;
+  border-color: #03a9f4;
+  color: #222222;
+}
+
+.blueBorderButton:hover, .blueBorderButton:focus {
+  background-color: #ffffff;
+  border-color: #03a9f4;
+  border-width: 4px;
+}
+
+#find-words-button:disabled, #find-words-button:hover, #find-words-button:active {
+  background-color: #03a9f4;
+  color: white;
 }
 
 #validation-error {

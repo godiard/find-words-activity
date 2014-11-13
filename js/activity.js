@@ -11,6 +11,27 @@ define(function (require) {
     require("wordlist");
     require("wordmatrix");
 
+    function showIntroMatrix() {
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZ";
+        var fragment = document.createDocumentFragment();
+        var table = document.createElement('table');
+        fragment.appendChild(table);
+        for (var i = 0; i < 12;i++) {
+            var tr = document.createElement('tr');
+            table.appendChild(tr);
+            for (var j = 0; j < 12;j++) {
+                var td = document.createElement('td');
+                tr.appendChild(td);
+                td.className = 'introMatrixTd';
+                r =  Math.floor(Math.random() * chars.length);
+                td.innerHTML = chars.substring(r, r + 1);
+            };
+        };
+        var introMatrix = document.getElementById("introMatrix");
+        introMatrix.appendChild(fragment.cloneNode(true));
+        introMatrix.style.display = "block";
+    };
+
     // Manipulate the DOM only when it is ready.
     require(['domReady!'], function (doc) {
 
@@ -32,6 +53,7 @@ define(function (require) {
 
         var onAndroid = /Android/i.test(navigator.userAgent);
         if (onAndroid) {
+            showIntroMatrix();
             console.log('ON ANDROID, hide toolbar and move the canvas');
             // hide the sugar toolbar
             var toolbar = document.getElementById("main-toolbar");
@@ -51,6 +73,9 @@ define(function (require) {
             // update the references to the buttons
             upperLowerButton = document.getElementById("upperlower-button");
             backButton = document.getElementById("back-button");
+        } else {
+            document.getElementById("game").style.display = "block";
+            document.getElementById("intro").style.display = "none";
         };
 
         activity.setup();
