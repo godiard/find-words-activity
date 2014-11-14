@@ -11,6 +11,47 @@ define(function (require) {
     require("wordlist");
     require("wordmatrix");
 
+    var page = 0;
+    var game;
+    var onAndroid = /Android/i.test(navigator.userAgent);
+
+    function nextPage() {
+        if (page == 0) {
+            // intro
+            document.getElementById("game").style.display = "block";
+            document.getElementById("intro").style.display = "none";
+        } else if (page == 1) {
+            // load words
+            document.getElementById("firstPage").style.display = "none";
+            document.getElementById("gameCanvas").style.display = "block";
+        } else if (page == 2) {
+            // game
+            return;
+        }
+        page++;
+    };
+
+    function previousPage() {
+        console.log('page ' + page);
+        if (page == 0) {
+            // intro
+            if (onAndroid) {
+                navigator.app.exitApp();
+            };
+        } else if (page == 1) {
+            // load words
+            if (onAndroid) {
+                document.getElementById("game").style.display = "none";
+                document.getElementById("intro").style.display = "block";
+            };
+        } else if (page == 2) {
+            // game
+            document.getElementById("firstPage").style.display = "block";
+            document.getElementById("gameCanvas").style.display = "none";
+        }
+        page--;
+    };
+
     function showIntroMatrix() {
         var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZ";
         var fragment = document.createDocumentFragment();
@@ -33,16 +74,14 @@ define(function (require) {
     };
 
     function hideIntro() {
-        document.getElementById("game").style.display = "block";
-        document.getElementById("intro").style.display = "none";
+        nextPage();
     };
 
     document.addEventListener("deviceready", function () {
         console.log('deviceready EVENT');
         document.addEventListener("backbutton", function () {
             console.log('backbutton EVENT');
-            document.getElementById("firstPage").style.display = "block";
-            document.getElementById("gameCanvas").style.display = "none";
+            previousPage();
             game.stop();
         }, false);
     }, false);
@@ -68,7 +107,6 @@ define(function (require) {
 
         console.log(navigator.userAgent);
 
-        var onAndroid = /Android/i.test(navigator.userAgent);
         if (onAndroid) {
             showIntroMatrix();
             console.log('ON ANDROID, hide toolbar and move the canvas');
@@ -81,12 +119,10 @@ define(function (require) {
             div.className = 'toolbar';
             div.id = 'floatingToolbar';
             fragment.appendChild(div);
-            div.appendChild(backButton);
             div.appendChild(upperLowerButton);
             document.body.appendChild(fragment.cloneNode(true));
             // update the references to the buttons
             upperLowerButton = document.getElementById("upperlower-button");
-            backButton = document.getElementById("back-button");
         } else {
             // show the sugar toolbar
             var toolbar = document.getElementById("main-toolbar");
@@ -236,7 +272,7 @@ define(function (require) {
 
         };
 
-        var game = new Game(wordListCanvas, gameCanvas, startGameButton);
+        game = new Game(wordListCanvas, gameCanvas, startGameButton);
 
         // toolbar
         upperLowerButton.onclick = function () {
@@ -246,8 +282,7 @@ define(function (require) {
         };
 
         backButton.addEventListener('click', function (e) {
-            document.getElementById("firstPage").style.display = "block";
-            document.getElementById("gameCanvas").style.display = "none";
+            previousPage();
             game.stop();
         });
 
@@ -282,8 +317,7 @@ define(function (require) {
         });
 
         startGameButton.addEventListener('click', function (e) {
-            document.getElementById("firstPage").style.display = "none";
-            document.getElementById("gameCanvas").style.display = "block";
+            nextPage();
             game.start();
             hideError();
         });
