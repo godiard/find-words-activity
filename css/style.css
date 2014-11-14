@@ -5,6 +5,10 @@
 * For all details and documentation:
 *     http://github.com/bunkat/wordfind
 */
+body {
+  background-color: white;
+}
+
 table td {
   padding: 0px;
 }

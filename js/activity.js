@@ -72,9 +72,6 @@ define(function (require) {
         if (onAndroid) {
             showIntroMatrix();
             console.log('ON ANDROID, hide toolbar and move the canvas');
-            // hide the sugar toolbar
-            var toolbar = document.getElementById("main-toolbar");
-            toolbar.style.display = "none";
             // move the toolbar at the top
             var canvas = document.getElementById("canvas");
             canvas.style.top = "0px";
@@ -91,6 +88,9 @@ define(function (require) {
             upperLowerButton = document.getElementById("upperlower-button");
             backButton = document.getElementById("back-button");
         } else {
+            // show the sugar toolbar
+            var toolbar = document.getElementById("main-toolbar");
+            toolbar.style.display = "block";
             hideIntro();
         };
 
