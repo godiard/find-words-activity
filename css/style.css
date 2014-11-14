@@ -1,12 +1,9 @@
-/**
-* Wordfind.js 0.0.1
-* (c) 2012 Bill, BunKat LLC.
-* Wordfind is freely distributable under the MIT license.
-* For all details and documentation:
-*     http://github.com/bunkat/wordfind
-*/
 body {
   background-color: white;
+}
+
+input, button {
+    vertical-align:middle;
 }
 
 table td {
@@ -60,7 +57,6 @@ table td {
   border-radius: 0;
   border: 0px;
   padding: 11px; /* @subcell-size;  */
-  vertical-align: bottom;
 }
 
 #add-word-button:hover {

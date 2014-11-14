@@ -37,6 +37,7 @@ define(function (require) {
             // load words
             document.getElementById("firstPage").style.display = "none";
             document.getElementById("gameCanvas").style.display = "block";
+            setAddButtonSize();
         } else if (page == 2) {
             // game
             return;
@@ -320,6 +321,18 @@ define(function (require) {
              height: String(initSize) +"px"}, originalButton.style, 1000);
     };
 
+    function setAddButtonSize() {
+        var addWordButton = document.getElementById("add-word-button");
+        var wordInput = document.getElementById("word-input");
+        // set size in the addWordButton
+        if (onAndroid) {
+            // in Sugar the background image is not properly resized
+            console.log('resize addWordButton ' + wordInput.offsetHeight);
+            addWordButton.style.height = wordInput.offsetHeight + 'px';
+        };
+    };
+
+
     // Manipulate the DOM only when it is ready.
     require(['domReady!'], function (doc) {
 
@@ -428,12 +441,6 @@ define(function (require) {
 
         createjs.CSSPlugin.install(createjs.Tween);
         createjs.Ticker.setFPS(30);
-
-        // set size in the addWordButton
-        if (onAndroid) {
-            // in Sugar the background image is not properly resized
-            addWordButton.style.height = wordInput.offsetHeight + 'px';
-        };
 
         addWordButton.addEventListener('click', function (e) {
             addWord();
