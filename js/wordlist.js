@@ -172,6 +172,11 @@ define(function (require) {
                 function() {this.onAnimation = false}, [], this);
         };
 
+        this.maxNumberOfWords = function() {
+            return Math.round((this.canvas.height - this.minimalSpace) /
+                              this.wordHeight);
+        };
+
         this.addRoundedLabel = function(cont, word) {
             var label;
             if (this.game.lowerCase) {

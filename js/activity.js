@@ -14,6 +14,7 @@ define(function (require) {
     var page = 0;
     var game;
     var onAndroid = /Android/i.test(navigator.userAgent);
+    var categories = null;
 
     // initialize canvas size
     var is_xo = ((window.innerWidth == 1200) && (window.innerHeight >= 900));
@@ -100,6 +101,13 @@ define(function (require) {
         }, false);
     }, false);
 
+    function initColors() {
+        return ['#e51c23', '#e91e63', '#9c27b0', '#673ab7',
+               '#3f51b5', '#5677fc', '#03a9f4', '#00bcd4',
+               '#009688', '#259b24', '#8bc34a', '#cddc39',
+               '#ffc107', '#ff9800', '#ff5722'];
+    };
+
 
     function Game(wordListCanvas, gameCanvas, startGameButton) {
 
@@ -108,10 +116,7 @@ define(function (require) {
         this.found = [];
         this.started = false;
         this.lowerCase = false;
-        this.colors = ['#e51c23', '#e91e63', '#9c27b0', '#673ab7',
-                       '#3f51b5', '#5677fc', '#03a9f4', '#00bcd4',
-                       '#009688', '#259b24', '#8bc34a', '#cddc39',
-                       '#ffc107', '#ff9800', '#ff5722'];
+        this.colors = initColors();
 
         this.wordListView = new wordlist.View(wordListCanvas, this);
         this.matrixView = new wordmatrix.View(gameCanvas, this);
@@ -200,12 +205,7 @@ define(function (require) {
         };
 
         this.removeAllWords = function() {
-            // free the colors
-            for (var i = 0; i < this.words.length; i++) {
-                var word = this.words[i];
-                this.colors.push(this.wordColors[word]);
-                delete this.wordColors[word];
-            };
+            this.colors = initColors();
             this.words = [];
             localStorage["word-list"] = JSON.stringify(this.words);
             dictstore.save();
@@ -341,6 +341,7 @@ define(function (require) {
         var startGameButton = document.getElementById("start-game-button");
         var upperLowerButton = document.getElementById("upperlower-button");
         var backButton = document.getElementById("back-button");
+        var randomButton = document.getElementById("random-button");
         var wordInput = document.getElementById("word-input");
         var addWordButton = document.getElementById("add-word-button");
         var easyButton = document.getElementById("easy-button");
@@ -366,9 +367,11 @@ define(function (require) {
             div.id = 'floatingToolbar';
             fragment.appendChild(div);
             div.appendChild(upperLowerButton);
+            div.appendChild(randomButton);
             document.body.appendChild(fragment.cloneNode(true));
             // update the references to the buttons
             upperLowerButton = document.getElementById("upperlower-button");
+            randomButton = document.getElementById("random-button");
         } else {
             // show the sugar toolbar
             var toolbar = document.getElementById("main-toolbar");
@@ -401,6 +404,45 @@ define(function (require) {
         backButton.addEventListener('click', function (e) {
             previousPage();
             game.stop();
+        });
+
+        randomButton.addEventListener('click', function (e) {
+            if (game.started) {
+                return;
+            };
+            game.removeAllWords();
+            if (categories == null) {
+                categories = require("categories");
+            };
+            var categoryNames = ['actions', 'adjectives', 'animals',
+                'bodyparts', 'clothes', 'colors', 'constructions',
+                'emotions', 'food', 'fruits', 'furnitures',
+                'houseware', 'jobs', 'nature', 'objects', 'people',
+                'plants', 'sports', 'transports', 'tools', 'vegetables'];
+
+            var randomCategory = categoryNames[Math.floor(Math.random() *
+                                               categoryNames.length)];
+
+            var words = categories[randomCategory].slice(0);
+            var cant = game.wordListView.maxNumberOfWords();
+            var wordList = [];
+            for (var n = 0; n < cant; n++) {
+                if (words.length > 0) {
+                    var pos = Math.floor(Math.random() * words.length);
+                    var randomWord = words.splice(pos, 1)[0];
+                    if (randomWord.indexOf('_') > -1) {
+                        randomWord = randomWord.substring(0,
+                            randomWord.indexOf('_'));
+                    };
+                    if (randomWord.length > 2) {
+                        wordList.push(randomWord.toUpperCase());
+                    };
+                };
+            };
+            game.addWords(wordList);
+            // save in the journal
+            localStorage["word-list"] = JSON.stringify(game.words);
+            dictstore.save();
         });
 
         // datastore

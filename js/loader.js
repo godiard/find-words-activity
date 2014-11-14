@@ -17,7 +17,8 @@ requirejs.config({
         preload: "../lib/preloadjs-0.4.1.min",
         wordfind: "../js/wordfind",
         wordlist: "../js/wordlist",
-        wordmatrix: "../js/wordmatrix"
+        wordmatrix: "../js/wordmatrix",
+        categories: "../js/categories_words"
     }
 });
 
