@@ -37,6 +37,16 @@ define(function (require) {
         document.getElementById("intro").style.display = "none";
     };
 
+    document.addEventListener("deviceready", function () {
+        console.log('deviceready EVENT');
+        document.addEventListener("backbutton", function () {
+            console.log('backbutton EVENT');
+            document.getElementById("firstPage").style.display = "block";
+            document.getElementById("gameCanvas").style.display = "none";
+            game.stop();
+        }, false);
+    }, false);
+
     // Manipulate the DOM only when it is ready.
     require(['domReady!'], function (doc) {
 
