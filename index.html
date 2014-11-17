@@ -16,6 +16,7 @@
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
     <script data-main="js/loader" src="lib/require.js"></script>
+    <link rel="prefetch" type="application/l10n" href="./localization.ini" />
 
   </head>
   
@@ -47,11 +48,11 @@
                         style="vertical-align:middle"/>
                     </button>
                     <br/><br/><br/>
-                    <button class="blueBorderButton" id="new-game-button">
-                    New Game</button>
+                    <button class="blueBorderButton" id="new-game-button"
+                    data-l10n-id="NewGame">New Game</button>
                     <br/><br/><br/>
-                    <button class="blueBorderButton" id="continue-button">
-                    Continue</button>
+                    <button class="blueBorderButton" id="continue-button"
+                    data-l10n-id="Continue">Continue</button>
                 </div>
 
             </div>
@@ -65,7 +66,8 @@
                     </td>
                     <td align="center">
                         <div id="firstPage">
-                            Select Difficulty<br/><br/>
+                            <span data-l10n-id="SelectDifficulty">Select Difficulty</span>
+                            <br/><br/>
                             <button class="level-button" id="easy-button">
                             </button>
                             <button class="level-button" id="medium-button">
@@ -73,11 +75,12 @@
                             <button class="level-button" id="hard-button">
                             </button>
                             <br/><br/>
-                            Add Word<br/><br/>
+                            <span data-l10n-id="AddWord">Add Word</span><br/><br/>
                             <input type="text" id="word-input" maxlength="12">
                             <button id="add-word-button"></button>
                             <br/><br/>
-                            <button class="blueButton" id="start-game-button" disabled>Start
+                            <button class="blueButton" id="start-game-button"
+                             data-l10n-id="Start" disabled>Start
                             <img src="./icons/loupe.svg" height="30"
                                 style="vertical-align:middle"/>
                             </button>

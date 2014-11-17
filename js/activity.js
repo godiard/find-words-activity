@@ -2,6 +2,9 @@ define(function (require) {
     var activity = require("sugar-web/activity/activity");
     var icon = require("sugar-web/graphics/icon");
 
+    var l10n = require("webL10n");
+    var _ = l10n.get;
+
     var dictstore = require("sugar-web/dictstore");
 
     require("easel");
@@ -236,17 +239,17 @@ define(function (require) {
         // not allow input special characters, number or spaces in the words
         var iChars = "0123456789!¡~@#$%^&*()+=-[]\\\';,./{}|\":<>?¿ ";
         if (word.length < 3) {
-            showError('Must be at least 3 letters');
+            showError(_('MinimumLetters'));
             return false;
         };
         for (var i = 0; i < word.length; i++) {
             if (iChars.indexOf(word.charAt(i)) > -1) {
-                showError('Remove all punctuation');
+                showError(_('RemovePunctuation'));
                 return false;
             };
         };
         if (game.wordListView.noMoreSpace) {
-            showError('No more space for words!');
+            showError(_('NoMoreWords'));
             return false;
         }
         hideError();
