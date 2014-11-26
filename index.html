@@ -40,22 +40,8 @@
     <div id="canvas">
         <div id="validation-error" style="display:none"></div>
         <div id="intro">
-            <div id="introMatrix" style="display:none">
-
-                <div id="introButtons">
-                    <button class="blueButton" id="find-words-button" disabled>Find Words
-                    <img src="./icons/loupe.svg" height="30"
-                        style="vertical-align:middle"/>
-                    </button>
-                    <br/><br/><br/>
-                    <button class="blueBorderButton" id="new-game-button"
-                    data-l10n-id="NewGame">New Game</button>
-                    <br/><br/><br/>
-                    <button class="blueBorderButton" id="continue-button"
-                    data-l10n-id="Continue">Continue</button>
-                </div>
-
-            </div>
+            <canvas id="introCanvas">
+            </canvas>
         </div>
         <div id="game" style="display:none;width=100%">
             <table width="100%">

@@ -37,6 +37,26 @@ define(function (require) {
             // intro
             document.getElementById("game").style.display = "block";
             document.getElementById("intro").style.display = "none";
+
+            if (onAndroid) {
+                if (document.getElementById('floatingToolbar') == null) {
+                    // add a div and put the buttons
+                    var fragment = document.createDocumentFragment();
+                    var div = document.createElement('div');
+                    div.className = 'toolbar';
+                    div.id = 'floatingToolbar';
+                    fragment.appendChild(div);
+                    div.appendChild(upperLowerButton);
+                    div.appendChild(randomButton);
+                    document.body.appendChild(fragment.cloneNode(true));
+                    // update the references to the buttons
+                    upperLowerButton = document.getElementById("upperlower-button");
+                    randomButton = document.getElementById("random-button");
+                } else {
+                    document.getElementById('floatingToolbar').style.display = 'block';
+                };
+            };
+
         } else if (page == 1) {
             // load words
             document.getElementById("firstPage").style.display = "none";
@@ -61,6 +81,7 @@ define(function (require) {
             if (onAndroid) {
                 document.getElementById("game").style.display = "none";
                 document.getElementById("intro").style.display = "block";
+                document.getElementById('floatingToolbar').style.display = 'none';
             };
         } else if (page == 2) {
             // game
@@ -70,25 +91,77 @@ define(function (require) {
         page--;
     };
 
-    function showIntroMatrix() {
-        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZ";
-        var fragment = document.createDocumentFragment();
-        var table = document.createElement('table');
-        fragment.appendChild(table);
-        for (var i = 0; i < 12;i++) {
-            var tr = document.createElement('tr');
-            table.appendChild(tr);
-            for (var j = 0; j < 12;j++) {
-                var td = document.createElement('td');
-                tr.appendChild(td);
-                td.className = 'introMatrixTd';
-                r =  Math.floor(Math.random() * chars.length);
-                td.innerHTML = chars.substring(r, r + 1);
-            };
+    function createAsyncBitmap(stage, url, width, height, callback) {
+        // Async creation of bitmap from SVG data
+        // Works with Chrome, Safari, Firefox (untested on IE)
+        var img = new Image();
+        img.onload = function () {
+            bitmap = new createjs.Bitmap(img);
+            // HACK: if not set this size, the svg is displayed
+            // at a small size
+            bitmap.setBounds(0, 0, img.width, img.height);
+            callback(stage, bitmap);
         };
-        var introMatrix = document.getElementById("introMatrix");
-        introMatrix.appendChild(fragment.cloneNode(true));
-        introMatrix.style.display = "block";
+        img.src = url;
+        img.width = width;
+        img.height = height;
+    };
+
+    function showIntro() {
+        var introCanvas = document.getElementById("introCanvas");
+        introCanvas.height = window.innerHeight;
+        introCanvas.width = window.innerWidth;
+        console.log('canvas size ' + introCanvas.width + ' x ' +
+            introCanvas.height);
+        var introStage = new createjs.Stage(introCanvas);
+
+        createAsyncBitmap(introStage, "./images/big-letter-clouds.svg",
+            1199, 466, function(stage, bitmap) {
+            bounds = bitmap.getBounds();
+            var scale = introCanvas.width / bounds.width;
+            bitmap.scaleX = scale;
+            bitmap.scaleY = scale;
+            bounds = bitmap.getBounds();
+            bitmap.x = 0;
+            bitmap.y = introCanvas.height * 0.28;
+            stage.addChild(bitmap);
+
+            createAsyncBitmap(stage, "./images/hills.svg", 1200, 275,
+                              function(stage, bitmap) {
+                bounds = bitmap.getBounds();
+                var scale = introCanvas.width / bounds.width;
+                bitmap.scaleX = scale;
+                bitmap.scaleY = scale;
+                bitmap.x = 0;
+                bitmap.y = introCanvas.height - bounds.height * scale;
+                stage.addChild(bitmap);
+
+                createAsyncBitmap(stage, "./images/logo.svg", 620, 176,
+                                  function(stage, bitmap) {
+                    bounds = bitmap.getBounds();
+                    bounds = bitmap.getBounds();
+                    bitmap.x = (introCanvas.width - bounds.width) / 2;
+                    bitmap.y = introCanvas.height * 0.12;
+                    stage.addChild(bitmap);
+
+                    var continueText = new createjs.Text(_('Continue'),
+                                             "66px Arial", "#a0cb5d");
+                    continueText.x = (introCanvas.width -
+                                      continueText.getMeasuredWidth()) / 2;
+                    continueText.y = introCanvas.height * 0.72;
+                    stage.addChild(continueText);
+
+                    var newGameText = new createjs.Text(_('NewGame'),
+                                             "66px Arial", "#ffffff");
+                    newGameText.x = (introCanvas.width -
+                                     newGameText.getMeasuredWidth()) / 2;
+                    newGameText.y = introCanvas.height * 0.82;
+                    stage.addChild(newGameText);
+
+                    stage.update();
+                });
+            });
+        });
     };
 
     function hideIntro() {
@@ -358,23 +431,11 @@ define(function (require) {
         console.log(navigator.userAgent);
 
         if (onAndroid) {
-            showIntroMatrix();
+            showIntro();
             console.log('ON ANDROID, hide toolbar and move the canvas');
             // move the toolbar at the top
             var canvas = document.getElementById("canvas");
             canvas.style.top = "0px";
-            // add a div and put the buttons
-            var fragment = document.createDocumentFragment();
-            var div = document.createElement('div');
-            div.className = 'toolbar';
-            div.id = 'floatingToolbar';
-            fragment.appendChild(div);
-            div.appendChild(upperLowerButton);
-            div.appendChild(randomButton);
-            document.body.appendChild(fragment.cloneNode(true));
-            // update the references to the buttons
-            upperLowerButton = document.getElementById("upperlower-button");
-            randomButton = document.getElementById("random-button");
         } else {
             // show the sugar toolbar
             var toolbar = document.getElementById("main-toolbar");
