@@ -103,7 +103,7 @@ define(function (require) {
         page--;
     };
 
-    function createAsyncBitmap(stage, url, width, height, callback) {
+    function createAsyncBitmap(stage, url, callback) {
         // Async creation of bitmap from SVG data
         // Works with Chrome, Safari, Firefox (untested on IE)
         var img = new Image();
@@ -113,8 +113,6 @@ define(function (require) {
             callback(stage, bitmap);
         };
         img.src = url;
-        img.width = width;
-        img.height = height;
     };
 
     function createIntroButtons(text, alpha, y, canvas, stage) {
@@ -168,7 +166,7 @@ define(function (require) {
         var introStage = new createjs.Stage(introCanvas);
 
         createAsyncBitmap(introStage, "./images/big-letter-clouds.svg",
-            1199, 466, function(stage, bitmap) {
+            function(stage, bitmap) {
             bounds = bitmap.getBounds();
             var scale = introCanvas.width / bounds.width;
             bitmap.scaleX = scale;
@@ -178,7 +176,7 @@ define(function (require) {
             bitmap.y = introCanvas.height * 0.28;
             stage.addChild(bitmap);
 
-            createAsyncBitmap(stage, "./images/hills.svg", 1200, 275,
+            createAsyncBitmap(stage, "./images/hills.svg",
                               function(stage, bitmap) {
                 bounds = bitmap.getBounds();
                 var scale = introCanvas.width / bounds.width;
@@ -188,7 +186,7 @@ define(function (require) {
                 bitmap.y = introCanvas.height - bounds.height * scale;
                 stage.addChild(bitmap);
 
-                createAsyncBitmap(stage, "./images/logo.svg", 620, 176,
+                createAsyncBitmap(stage, "./images/logo.svg",
                                   function(stage, bitmap) {
                     bounds = bitmap.getBounds();
                     bounds = bitmap.getBounds();

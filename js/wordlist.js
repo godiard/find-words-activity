@@ -8,7 +8,7 @@ define(function (require) {
 
     var padding = 10;
 
-    function createAsyncBitmap(stage, url, width, height, callback) {
+    function createAsyncBitmap(stage, url, callback) {
         // Async creation of bitmap from SVG data
         // Works with Chrome, Safari, Firefox (untested on IE)
         var img = new Image();
@@ -18,8 +18,6 @@ define(function (require) {
             callback(stage, bitmap);
         };
         img.src = url;
-        img.width = width;
-        img.height = height;
     };
 
     function WordListView(canvas, game) {
@@ -58,8 +56,7 @@ define(function (require) {
         // add a background
         this.background = new createjs.Shape();
         this.background.graphics.beginFill(
-            createjs.Graphics.getRGB(0x038a4dd)
-            ).drawRect(
+            createjs.Graphics.getRGB(0x038a4dd)).drawRect(
             0, 0, this.canvas.width - shadow_width, this.canvas.height);
         this.stage.addChild(this.background);
 
@@ -73,7 +70,7 @@ define(function (require) {
         this.stage.addChild(this.rightBorder);
 
         createAsyncBitmap(this.stage, "./images/sidebar-cloud.svg",
-            321, 100, function(stage, bitmap) {
+            function(stage, bitmap) {
             bounds = bitmap.getBounds();
             var scale = (stage.canvas.width - shadow_width) / bounds.width;
             bitmap.scaleX = scale;
@@ -84,7 +81,7 @@ define(function (require) {
         });
 
         createAsyncBitmap(this.stage, "./images/sidebar-hill.svg",
-            321, 276, function(stage, bitmap) {
+            function(stage, bitmap) {
             bounds = bitmap.getBounds();
             var scale = (stage.canvas.width - shadow_width) / bounds.width;
             bitmap.scaleX = scale;
