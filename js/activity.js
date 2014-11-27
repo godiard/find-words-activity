@@ -109,8 +109,6 @@ define(function (require) {
         var img = new Image();
         img.onload = function () {
             bitmap = new createjs.Bitmap(img);
-            // HACK: if not set this size, the svg is displayed
-            // at a small size
             bitmap.setBounds(0, 0, img.width, img.height);
             callback(stage, bitmap);
         };

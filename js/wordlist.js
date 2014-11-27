@@ -8,6 +8,20 @@ define(function (require) {
 
     var padding = 10;
 
+    function createAsyncBitmap(stage, url, width, height, callback) {
+        // Async creation of bitmap from SVG data
+        // Works with Chrome, Safari, Firefox (untested on IE)
+        var img = new Image();
+        img.onload = function () {
+            bitmap = new createjs.Bitmap(img);
+            bitmap.setBounds(0, 0, img.width, img.height);
+            callback(stage, bitmap);
+        };
+        img.src = url;
+        img.width = width;
+        img.height = height;
+    };
+
     function WordListView(canvas, game) {
 
         this.canvas = canvas;
@@ -44,7 +58,7 @@ define(function (require) {
         // add a background
         this.background = new createjs.Shape();
         this.background.graphics.beginFill(
-            createjs.Graphics.getRGB(0xe0e0e0)
+            createjs.Graphics.getRGB(0x038a4dd)
             ).drawRect(
             0, 0, this.canvas.width - shadow_width, this.canvas.height);
         this.stage.addChild(this.background);
@@ -57,6 +71,30 @@ define(function (require) {
             this.canvas.width - shadow_width, 0,
             this.canvas.width, this.canvas.height);
         this.stage.addChild(this.rightBorder);
+
+        createAsyncBitmap(this.stage, "./images/sidebar-cloud.svg",
+            321, 100, function(stage, bitmap) {
+            bounds = bitmap.getBounds();
+            var scale = (stage.canvas.width - shadow_width) / bounds.width;
+            bitmap.scaleX = scale;
+            bitmap.scaleY = scale;
+            bitmap.x = 0;
+            bitmap.y = 0;
+            stage.addChild(bitmap);
+        });
+
+        createAsyncBitmap(this.stage, "./images/sidebar-hill.svg",
+            321, 276, function(stage, bitmap) {
+            bounds = bitmap.getBounds();
+            var scale = (stage.canvas.width - shadow_width) / bounds.width;
+            bitmap.scaleX = scale;
+            bitmap.scaleY = scale;
+            bounds = bitmap.getBounds();
+            bitmap.x = 0;
+            bitmap.y = stage.canvas.height - bounds.height;
+            stage.addChildAt(bitmap, 1);
+            stage
+        });
 
         this.wordHeight = 50;
         this.minimalSpace = this.wordHeight;
