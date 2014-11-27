@@ -15,6 +15,7 @@ define(function (require) {
         img.onload = function () {
             bitmap = new createjs.Bitmap(img);
             bitmap.setBounds(0, 0, img.width, img.height);
+            bitmap.mouseEnabled = false;
             callback(stage, bitmap);
         };
         img.src = url;
@@ -28,6 +29,7 @@ define(function (require) {
         this.onAnimation = false;
         this.noMoreSpace = false;
         var onAndroid = /Android/i.test(navigator.userAgent);
+        this.wordHeight = 50;
 
         this.stage = new createjs.Stage(this.canvas);
         this.stage.enableMouseOver(20);
@@ -40,6 +42,11 @@ define(function (require) {
             this.deleteButtonImg = new createjs.Bitmap(minus);
             this.deleteButton.visible = false;
             this.deleteButton.addChild(this.deleteButtonImg);
+            var hitArea = new createjs.Shape();
+            var r = this.wordHeight / 2;
+            hitArea.graphics.beginFill("#000").drawCircle(r, r, r);
+            this.deleteButton.hitArea = hitArea;
+
             this.stage.addChild(this.deleteButton);
 
             this.deleteButton.on('click', this.deleteButtonCb, this);
@@ -88,12 +95,12 @@ define(function (require) {
             bitmap.scaleY = scale;
             bounds = bitmap.getBounds();
             bitmap.x = 0;
-            bitmap.y = stage.canvas.height - bounds.height;
+            bitmap.y = stage.canvas.height - bounds.height + 10; // fix vertical
+                                                                 // position
             stage.addChildAt(bitmap, 1);
             stage
         });
 
-        this.wordHeight = 50;
         this.minimalSpace = this.wordHeight;
         if (onAndroid) {
             // on android we need more space, because the buttons are not in
@@ -243,6 +250,12 @@ define(function (require) {
                            text.getMeasuredHeight()+ padding * 2);
             cont.width = text.getMeasuredWidth() + padding * 2;
             cont.height = text.getMeasuredHeight()+ padding * 2;
+
+            var hitArea = new createjs.Shape();
+            hitArea.graphics.beginFill("#000").drawRoundRect(0, 0,
+                           text.getMeasuredWidth() + padding * 2,
+                           text.getMeasuredHeight()+ padding * 2, 20);
+            cont.hitArea = hitArea;
 
             cont.on('click', this.selectWordCb, this);
             cont.on('rollover', this.selectWordCb, this);

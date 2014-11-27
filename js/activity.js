@@ -41,7 +41,7 @@ define(function (require) {
     };
     if (onAndroid) {
         // set to the size of the bottom bar
-        sugarCellSize = 10;
+        sugarCellSize = 0;
     }
 
     function nextPage() {
@@ -110,6 +110,7 @@ define(function (require) {
         img.onload = function () {
             bitmap = new createjs.Bitmap(img);
             bitmap.setBounds(0, 0, img.width, img.height);
+            bitmap.mouseEnabled = false;
             callback(stage, bitmap);
         };
         img.src = url;
