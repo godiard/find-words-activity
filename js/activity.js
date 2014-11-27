@@ -3,7 +3,17 @@ define(function (require) {
     var icon = require("sugar-web/graphics/icon");
 
     var l10n = require("webL10n");
-    var _ = l10n.get;
+
+    function _(text) {
+        // this function add a fallback for the case of translation not found
+        // can be removed when we find how to read the localization.ini
+        // file in the case of local html file opened in the browser
+        translation = l10n.get(text);
+        if (translation == '') {
+            translation = text;
+        };
+        return translation;
+    };
 
     var dictstore = require("sugar-web/dictstore");
 
@@ -15,9 +25,11 @@ define(function (require) {
     require("wordmatrix");
 
     var page = 0;
-    var game;
+    var game = null;
     var onAndroid = /Android/i.test(navigator.userAgent);
     var categories = null;
+    var continueBtn;
+    var upperLowerButton;
 
     // initialize canvas size
     var is_xo = ((window.innerWidth == 1200) && (window.innerHeight >= 900));
@@ -47,11 +59,11 @@ define(function (require) {
                     div.id = 'floatingToolbar';
                     fragment.appendChild(div);
                     div.appendChild(upperLowerButton);
-                    div.appendChild(randomButton);
+                    //div.appendChild(randomButton);
                     document.body.appendChild(fragment.cloneNode(true));
                     // update the references to the buttons
                     upperLowerButton = document.getElementById("upperlower-button");
-                    randomButton = document.getElementById("random-button");
+                    //randomButton = document.getElementById("random-button");
                 } else {
                     document.getElementById('floatingToolbar').style.display = 'block';
                 };
@@ -107,6 +119,48 @@ define(function (require) {
         img.height = height;
     };
 
+    function createIntroButtons(text, alpha, y, canvas, stage) {
+        // show a centered text with the parameters specified
+        var container = new createjs.Container();
+        var text = new createjs.Text(text, "66px Arial", "#ffffff");
+        text.alpha = alpha;
+        text.name = 'text';
+        container.x = (canvas.width - text.getMeasuredWidth())
+                               / 2;
+        container.y = y;
+        var hitArea = new createjs.Shape();
+        hitArea.graphics.beginFill("#000").drawRect(0, 0,
+            text.getMeasuredWidth(),
+            text.getMeasuredHeight());
+        container.hitArea = hitArea;
+        container.addChild(text);
+        stage.addChild(container);
+        return container;
+    };
+
+    function enableContinueBtn() {
+        // change the alpha on the continue btn in th intro
+        // to show is enable the event. Can be called two times
+        // depending on what finished first, creating the intro
+        // or read the storage
+        if (continueBtn == null) {
+            // the btn was nocreated yet
+            return;
+        };
+        if (continueBtn.getChildByName('text').alpha == 1) {
+            // the btn is already enabled
+            return;
+        };
+        if (game == null || game.words.length == 0) {
+            return;
+        };
+        continueBtn.getChildByName('text').alpha = 1;
+        continueBtn.on('click', function (e) {
+            console.log('Continue clicked');
+            hideIntro();
+        });
+    };
+
     function showIntro() {
         var introCanvas = document.getElementById("introCanvas");
         introCanvas.height = window.innerHeight;
@@ -144,19 +198,19 @@ define(function (require) {
                     bitmap.y = introCanvas.height * 0.12;
                     stage.addChild(bitmap);
 
-                    var continueText = new createjs.Text(_('Continue'),
-                                             "66px Arial", "#a0cb5d");
-                    continueText.x = (introCanvas.width -
-                                      continueText.getMeasuredWidth()) / 2;
-                    continueText.y = introCanvas.height * 0.72;
-                    stage.addChild(continueText);
+                    continueBtn = createIntroButtons(_('Continue'),
+                        0.2, introCanvas.height * 0.72,
+                        introCanvas, introStage);
+                    enableContinueBtn();
 
-                    var newGameText = new createjs.Text(_('NewGame'),
-                                             "66px Arial", "#ffffff");
-                    newGameText.x = (introCanvas.width -
-                                     newGameText.getMeasuredWidth()) / 2;
-                    newGameText.y = introCanvas.height * 0.82;
-                    stage.addChild(newGameText);
+                    var newGameBtn = createIntroButtons(_('NewGame'),
+                        1, introCanvas.height * 0.82,
+                        introCanvas, introStage);
+
+                    newGameBtn.on('click', function (e) {
+                        game.removeAllWords();
+                        hideIntro();
+                    });
 
                     stage.update();
                 });
@@ -415,7 +469,7 @@ define(function (require) {
         var wordListCanvas = document.getElementById("wordListCanvas");
         var gameCanvas = document.getElementById("gameCanvas");
         var startGameButton = document.getElementById("start-game-button");
-        var upperLowerButton = document.getElementById("upperlower-button");
+        upperLowerButton = document.getElementById("upperlower-button");
         var backButton = document.getElementById("back-button");
         var randomButton = document.getElementById("random-button");
         var wordInput = document.getElementById("word-input");
@@ -423,8 +477,6 @@ define(function (require) {
         var easyButton = document.getElementById("easy-button");
         var mediumButton = document.getElementById("medium-button");
         var hardButton = document.getElementById("hard-button");
-        var continueButton = document.getElementById("continue-button");
-        var newGameButton = document.getElementById("new-game-button");
 
         // Initialize the activity.
 
@@ -518,7 +570,7 @@ define(function (require) {
                 var wordList = JSON.parse(jsonData);
                 game.addWords(wordList);
                 if (wordList.length == 0) {
-                    continueButton.style.display = "none";
+                    enableContinueBtn();
                 };
             };
             if (localStorage["level"]) {
@@ -529,15 +581,6 @@ define(function (require) {
         };
 
         dictstore.init(onStoreReady);
-
-        continueButton.addEventListener('click', function (e) {
-            hideIntro();
-        });
-
-        newGameButton.addEventListener('click', function (e) {
-            game.removeAllWords();
-            hideIntro();
-        });
 
         startGameButton.addEventListener('click', function (e) {
             nextPage();
