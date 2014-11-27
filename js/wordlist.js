@@ -84,7 +84,7 @@ define(function (require) {
             bitmap.scaleY = scale;
             bitmap.x = 0;
             bitmap.y = 0;
-            stage.addChild(bitmap);
+            stage.addChildAt(bitmap, 1);
         });
 
         createAsyncBitmap(this.stage, "./images/sidebar-hill.svg",
