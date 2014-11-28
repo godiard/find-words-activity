@@ -67,6 +67,14 @@ table td {
   width: 300px; /* screen / 4 ?? */
 }
 
+#rightPanel {
+  background: -webkit-gradient(radial, 100% 100%, 0, 100% 100%, 700,
+        from(#AECFEE), to(#ffffff));
+
+  background: radial-gradient(at bottom right, #AECFEE, #ffffff 70%);
+  color: #03a9f4;
+}
+
 .level-button {
   vertical-align:middle;
   background-size: 100%;
@@ -111,8 +119,6 @@ table td {
 }
 
 .blueButton {
-  padding: 10px;
-  font: 1.5em sans-serif;
   background-color: #03a9f4;
 }
 

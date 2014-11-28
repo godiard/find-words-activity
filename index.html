@@ -9,7 +9,12 @@
           href="lib/sugar-web/graphics/css/sugar-96dpi.css">
     <link rel="stylesheet" media="screen and (device-width: 1200px) and (device-height: 900px)"
           href="lib/sugar-web/graphics/css/sugar-200dpi.css">
+
     <link rel="stylesheet" type="text/css" href="css/activity.css">
+    <link rel="stylesheet" media="not screen and (device-width: 1200px) and (device-height: 900px)"
+          href="css/activity-96dpi.css">
+    <link rel="stylesheet" media="screen and (device-width: 1200px) and (device-height: 900px)"
+          href="css/activity-200dpi.css">
 
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
@@ -48,7 +53,7 @@
                         <canvas id="wordListCanvas">
                         </canvas>
                     </td>
-                    <td align="center">
+                    <td align="center" id="rightPanel">
                         <div id="firstPage">
                             <span data-l10n-id="SelectDifficulty">Select Difficulty</span>
                             <br/><br/>
