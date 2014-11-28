@@ -32,10 +32,10 @@ define(function (require) {
     var upperLowerButton;
 
     // initialize canvas size
-    var is_xo = ((window.innerWidth == 1200) && (window.innerHeight >= 900));
+    var onXo = ((window.innerWidth == 1200) && (window.innerHeight >= 900));
     var sugarCellSize = 75;
     var sugarSubCellSize = 15;
-    if (!is_xo) {
+    if (!onXo && !onAndroid) {
         sugarCellSize = 55;
         sugarSubCellSize = 11;
     };
@@ -73,7 +73,6 @@ define(function (require) {
             // load words
             document.getElementById("firstPage").style.display = "none";
             document.getElementById("gameCanvas").style.display = "block";
-            setAddButtonSize();
         } else if (page == 2) {
             // game
             return;
@@ -431,7 +430,7 @@ define(function (require) {
             dictstore.save();
         };
 
-        var initSize = sugarSubCellSize * 6;
+        var initSize = sugarSubCellSize * 7;
         console.log('button ' + button + ' width ' + initSize);
         createjs.Tween.get(button).set(
             {webkitTransform: "rotate(30deg)"}, button.style, 500).wait(100).set(
@@ -447,18 +446,6 @@ define(function (require) {
             {width: String(initSize) +"px",
              height: String(initSize) +"px"}, originalButton.style, 1000);
     };
-
-    function setAddButtonSize() {
-        var addWordButton = document.getElementById("add-word-button");
-        var wordInput = document.getElementById("word-input");
-        // set size in the addWordButton
-        if (onAndroid) {
-            // in Sugar the background image is not properly resized
-            console.log('resize addWordButton ' + wordInput.offsetHeight);
-            addWordButton.style.height = wordInput.offsetHeight + 'px';
-        };
-    };
-
 
     // Manipulate the DOM only when it is ready.
     require(['domReady!'], function (doc) {

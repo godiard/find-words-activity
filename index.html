@@ -55,24 +55,30 @@
                     </td>
                     <td align="center" id="rightPanel">
                         <div id="firstPage">
-                            <span data-l10n-id="SelectDifficulty">Select Difficulty</span>
-                            <br/><br/>
-                            <button class="level-button" id="easy-button">
-                            </button>
-                            <button class="level-button" id="medium-button">
-                            </button>
-                            <button class="level-button" id="hard-button">
-                            </button>
-                            <br/><br/>
-                            <span data-l10n-id="AddWord">Add Word</span><br/><br/>
-                            <input type="text" id="word-input" maxlength="12">
-                            <button id="add-word-button"></button>
-                            <br/><br/>
-                            <button class="blueButton" id="start-game-button"
-                             data-l10n-id="Start" disabled>Start
-                            <img src="./icons/loupe.svg" height="30"
-                                style="vertical-align:middle"/>
-                            </button>
+                            <table class="loadData"><tr><td>
+                                <span data-l10n-id="SelectDifficulty">
+                                Select Difficulty
+                                </span>
+                            </td></tr><tr><td style="text-align:center">
+                                <button class="level-button" id="easy-button">
+                                </button>
+                                <button class="level-button" id="medium-button">
+                                </button>
+                                <button class="level-button" id="hard-button">
+                                </button>
+                            </td></tr><tr><td>
+                            <span data-l10n-id="AddWord">Add Word</span>
+                            </td></tr><tr><td>
+                                <input type="text" id="word-input" maxlength="12">
+                                <button id="add-word-button"></button>
+                                <button id="random-words-button"></button>
+                            </td></tr><tr><td style="text-align:center">
+                                <button class="blueButton" id="start-game-button"
+                                 data-l10n-id="Start" disabled>Start
+                                <img src="./icons/loupe.svg" height="60"
+                                    style="vertical-align:middle;padding-left:20px"/>
+                                </button>
+                            </td></tr></table>
                         </div>
                         <canvas id="gameCanvas" style="display:none">
                         </canvas>

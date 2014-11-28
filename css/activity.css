@@ -79,8 +79,6 @@ table td {
   vertical-align:middle;
   background-size: 100%;
   background-color: transparent;
-  height: 66px;  /* 6 * @subcell-size;  */
-  width: 66px;
   border-radius: 0;
   border: 0px;
   padding: 11px; /* @subcell-size;  */
@@ -107,11 +105,20 @@ table td {
   background-image: url('../icons/plus.svg');
   background-size: 100%;
   background-color: transparent;
-  height: 33px;  /* 4 * @subcell-size;  */
-  width: 33px;
   border-radius: 0;
   border: 0px;
   padding: 11px; /* @subcell-size;  */
+}
+
+#random-words-button {
+  background-image: url('../images/dice-random.svg');
+  background-size: 100%;
+  background-color: transparent;
+  height: 85px;
+  width: 85px;
+  border-radius: 0;
+  border: 0px;
+  padding: 11px;
 }
 
 #add-word-button:hover {
@@ -173,5 +180,21 @@ table td {
   height: 55px;
   -moz-user-select: none;
   -webkit-user-select: none;
+}
 
+table.loadData {
+  margin-top: 10px;
+  margin-left:auto;
+  margin-right:auto;
+  text-align: left;
+}
+
+table.loadData td {
+  padding: 10px;
+}
+
+table.loadData input {
+  font-size: 40px;
+  width: 300px;
+  padding: 20px;
 }

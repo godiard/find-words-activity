@@ -4,5 +4,20 @@
 
 .blueButton {
   padding: 10px;
-  font-size: 36px;
+  font-size: 55px;
+}
+
+.level-button {
+  height: 105px;
+  width: 105px;
+}
+
+#add-word-button {
+  height: 95px;
+  width: 95px;
+}
+
+#random-words-button {
+  height: 90px;
+  width: 90px;
 }
