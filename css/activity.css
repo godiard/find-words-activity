@@ -11,10 +11,6 @@
   background-image: url(../icons/arrow.svg);
 }
 
-#random-button {
-  background-image: url(../icons/dice.svg);
-}
-
 #canvas p {
   margin-top: 25%;
   text-align: center;

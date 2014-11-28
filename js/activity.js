@@ -59,11 +59,9 @@ define(function (require) {
                     div.id = 'floatingToolbar';
                     fragment.appendChild(div);
                     div.appendChild(upperLowerButton);
-                    //div.appendChild(randomButton);
                     document.body.appendChild(fragment.cloneNode(true));
                     // update the references to the buttons
                     upperLowerButton = document.getElementById("upperlower-button");
-                    //randomButton = document.getElementById("random-button");
                 } else {
                     document.getElementById('floatingToolbar').style.display = 'block';
                 };
@@ -455,7 +453,7 @@ define(function (require) {
         var startGameButton = document.getElementById("start-game-button");
         upperLowerButton = document.getElementById("upperlower-button");
         var backButton = document.getElementById("back-button");
-        var randomButton = document.getElementById("random-button");
+        var randomButton = document.getElementById("random-words-button");
         var wordInput = document.getElementById("word-input");
         var addWordButton = document.getElementById("add-word-button");
         var easyButton = document.getElementById("easy-button");
