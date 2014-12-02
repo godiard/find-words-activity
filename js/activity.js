@@ -49,24 +49,6 @@ define(function (require) {
             // intro
             document.getElementById("game").style.display = "block";
             document.getElementById("intro").style.display = "none";
-
-            if (onAndroid) {
-                if (document.getElementById('floatingToolbar') == null) {
-                    // add a div and put the buttons
-                    var fragment = document.createDocumentFragment();
-                    var div = document.createElement('div');
-                    div.className = 'toolbar';
-                    div.id = 'floatingToolbar';
-                    fragment.appendChild(div);
-                    div.appendChild(upperLowerButton);
-                    document.body.appendChild(fragment.cloneNode(true));
-                    // update the references to the buttons
-                    upperLowerButton = document.getElementById("upperlower-button");
-                } else {
-                    document.getElementById('floatingToolbar').style.display = 'block';
-                };
-            };
-
         } else if (page == 1) {
             // load words
             document.getElementById("firstPage").style.display = "none";
@@ -90,7 +72,6 @@ define(function (require) {
             if (onAndroid) {
                 document.getElementById("game").style.display = "none";
                 document.getElementById("intro").style.display = "block";
-                document.getElementById('floatingToolbar').style.display = 'none';
             };
         } else if (page == 2) {
             // game
@@ -236,7 +217,7 @@ define(function (require) {
     };
 
 
-    function Game(wordListCanvas, gameCanvas, startGameButton) {
+    function Game(wordListCanvas, gameCanvas, startGameButton, previousPage) {
 
         this.words = [];
         this.level = 'easy';
@@ -244,6 +225,7 @@ define(function (require) {
         this.started = false;
         this.lowerCase = false;
         this.colors = initColors();
+        this.previousPage = previousPage;
 
         this.wordListView = new wordlist.View(wordListCanvas, this);
         this.matrixView = new wordmatrix.View(gameCanvas, this);
@@ -493,7 +475,8 @@ define(function (require) {
         // the matrix have 12 cells and a padding equeal to half a cell
         gameCanvas.width = availableWidth / 13 * 12;
 
-        game = new Game(wordListCanvas, gameCanvas, startGameButton);
+        game = new Game(wordListCanvas, gameCanvas, startGameButton,
+                        previousPage);
 
         // toolbar
         upperLowerButton.onclick = function () {

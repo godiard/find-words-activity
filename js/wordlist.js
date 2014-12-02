@@ -7,6 +7,7 @@ define(function (require) {
     wordlist = {};
 
     var padding = 10;
+    var shadow_width = 10;
 
     function createAsyncBitmap(stage, url, callback) {
         // Async creation of bitmap from SVG data
@@ -17,6 +18,43 @@ define(function (require) {
             bitmap.setBounds(0, 0, img.width, img.height);
             bitmap.mouseEnabled = false;
             callback(stage, bitmap);
+        };
+        img.src = url;
+    };
+
+    function createAsyncBitmapButton(stage, url, align, callback) {
+        var img = new Image();
+        img.onload = function () {
+            var bitmap = new createjs.Bitmap(img);
+            bitmap.setBounds(0, 0, img.width, img.height);
+            bitmap.mouseEnabled = false;
+            bounds = bitmap.getBounds();
+            var scale = (stage.canvas.height * 0.05) / bounds.height;
+            bitmap.scaleX = scale;
+            bitmap.scaleY = scale;
+
+            var container = new createjs.Container();
+            var hitArea = new createjs.Shape();
+            hitArea.graphics.beginFill("#000").drawRect(0, 0,
+                bounds.width, bounds.height);
+            container.hitArea = hitArea;
+            container.width = bounds.width;
+            container.height = bounds.height;
+            container.addChild(bitmap);
+
+            container.y = 10;
+            if (align == 'left') {
+                container.x = 30;
+            } else if (align == 'center') {
+                container.x = (stage.canvas.width - shadow_width -
+                            (bounds.width * scale)) / 2;
+            } else if (align == 'right') {
+                container.x = stage.canvas.width - shadow_width -
+                    (bounds.width * scale) - 30;
+            };
+
+            stage.addChild(container);
+            callback(container);
         };
         img.src = url;
     };
@@ -59,7 +97,6 @@ define(function (require) {
 
         createjs.Ticker.addEventListener("tick", this.stage);
 
-        var shadow_width = 10
         // add a background
         this.background = new createjs.Shape();
         this.background.graphics.beginFill(
@@ -85,6 +122,29 @@ define(function (require) {
             bitmap.x = 0;
             bitmap.y = 0;
             stage.addChildAt(bitmap, 1);
+
+            if (onAndroid) {
+                createAsyncBitmapButton(stage, "./images/arrow-black.svg", 'left',
+                function(button) {
+                    button.on('click', function() {
+                        game.stop();
+                        game.previousPage();
+                    });
+                });
+
+                createAsyncBitmapButton(stage, "./images/uppercase-lowercase.svg",
+                'center', function(button) {
+                    button.on('click', function() {
+                        game.setLowerCase(!game.lowerCase);
+                    });
+                });
+
+                createAsyncBitmapButton(stage, "./images/audio.svg", 'right',
+                    function(button) {
+                    //
+                });
+            };
+
         });
 
         createAsyncBitmap(this.stage, "./images/sidebar-hill.svg",
@@ -98,7 +158,6 @@ define(function (require) {
             bitmap.y = stage.canvas.height - bounds.height + 10; // fix vertical
                                                                  // position
             stage.addChildAt(bitmap, 1);
-            stage
         });
 
         this.minimalSpace = this.wordHeight;
