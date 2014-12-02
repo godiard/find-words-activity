@@ -368,10 +368,15 @@ define(function (require) {
         var buttonPos = findPosition(addWordButton);
         errorArea.innerHTML = '<div id="validation-error-msg">' + msg +
             '</div>';
-        errorArea.style.left = buttonPos.left + 'px';
+        errorArea.style.left = (buttonPos.left +
+                                addWordButton.offsetWidth / 2 - 20)
+                                + 'px';
         var top = buttonPos.top;
         if (onAndroid) {
             top = buttonPos.top + addWordButton.offsetHeight;
+        } else {
+            // HACK: this number don't have sense, but set the right position
+            top = buttonPos.top + 25;
         };
         errorArea.style.top = top + 'px';
         errorArea.style.opacity = "0.1";
