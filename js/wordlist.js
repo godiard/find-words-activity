@@ -295,6 +295,7 @@ define(function (require) {
             text.x = text.getMeasuredWidth() / 2 + padding;
             text.y = padding;
             text.textAlign = "center";
+            text.alpha = alpha;
 
             var box = new createjs.Shape();
             box.graphics.beginFill(this.game.getWordColor(word, alpha)
