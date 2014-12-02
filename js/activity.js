@@ -116,7 +116,7 @@ define(function (require) {
     function createIntroButtons(text, alpha, y, canvas, stage) {
         // show a centered text with the parameters specified
         var container = new createjs.Container();
-        var text = new createjs.Text(text, "66px Arial", "#ffffff");
+        var text = new createjs.Text(text, "60px Arial", "#ffffff");
         text.alpha = alpha;
         text.name = 'text';
         container.x = (canvas.width - text.getMeasuredWidth())
@@ -171,7 +171,7 @@ define(function (require) {
             bitmap.scaleY = scale;
             bounds = bitmap.getBounds();
             bitmap.x = 0;
-            bitmap.y = introCanvas.height * 0.28;
+            bitmap.y = introCanvas.height * 0.34;
             stage.addChild(bitmap);
 
             createAsyncBitmap(stage, "./images/hills.svg",
@@ -187,18 +187,21 @@ define(function (require) {
                 createAsyncBitmap(stage, "./images/logo.svg",
                                   function(stage, bitmap) {
                     bounds = bitmap.getBounds();
-                    bounds = bitmap.getBounds();
-                    bitmap.x = (introCanvas.width - bounds.width) / 2;
+                    scale = introCanvas.width * 0.52 / bounds.width;
+                    console.log('LOGO SCALE ' + scale)
+                    bitmap.scaleX = scale;
+                    bitmap.scaleY = scale;
+                    bitmap.x = (introCanvas.width - (bounds.width * scale)) / 2;
                     bitmap.y = introCanvas.height * 0.12;
                     stage.addChild(bitmap);
 
                     continueBtn = createIntroButtons(_('Continue'),
-                        0.2, introCanvas.height * 0.72,
+                        0.2, introCanvas.height * 0.74,
                         introCanvas, introStage);
                     enableContinueBtn();
 
                     var newGameBtn = createIntroButtons(_('NewGame'),
-                        1, introCanvas.height * 0.82,
+                        1, introCanvas.height * 0.84,
                         introCanvas, introStage);
 
                     newGameBtn.on('click', function (e) {
