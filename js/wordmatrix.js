@@ -146,7 +146,21 @@ define(function (require) {
                 0, 0,
                 this.cell_size * this.puzzle.length,
                 this.cell_size * this.puzzle.length);
-            this.container.addChild(background);
+            this.container.hitArea = background;
+
+            // HACK: the webkit version we use in android have a bug and don't
+            // update properly the screen after the animation,
+            // and the first line in the matrix is corrupted, showing
+            // all the letter superimposed. Now we are using a transparent
+            // background and a gradient in the div containing the canvas
+            // this bandaid is a white rectangle over that letters,
+            // just to hide it.
+            var bandaid = new createjs.Shape();
+            bandaid.graphics.beginFill(
+                "#ffffff").drawRect(
+                0, 0,
+                this.cell_size * this.puzzle.length, this.cell_size);
+            this.container.addChild(bandaid);
 
             for (var i = 0, height = this.puzzle.length; i < height; i++) {
                 var row = this.puzzle[i];
