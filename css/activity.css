@@ -64,10 +64,10 @@ table td {
 }
 
 #rightPanel {
-  background: -webkit-gradient(radial, 100% 100%, 0, 100% 100%, 700,
-        from(#AECFEE), to(#ffffff));
+  background: -webkit-gradient(linear, right bottom, 50% 50%, from(#AECFEE),
+                               to(#ffffff));
 
-  background: radial-gradient(at bottom right, #AECFEE, #ffffff 70%);
+  background: linear-gradient(to top left, #AECFEE, #ffffff 50%);
   color: #03a9f4;
 }
 
