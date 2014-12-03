@@ -159,7 +159,7 @@ define(function (require) {
             bandaid.graphics.beginFill(
                 "#ffffff").drawRect(
                 0, 0,
-                this.cell_size * this.puzzle.length, this.cell_size);
+                this.cell_size * this.puzzle.length, this.cell_size * 2);
             this.container.addChild(bandaid);
 
             for (var i = 0, height = this.puzzle.length; i < height; i++) {

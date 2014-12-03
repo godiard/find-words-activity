@@ -64,7 +64,7 @@ table td {
 }
 
 #rightPanel {
-  background: -webkit-gradient(linear, right bottom, 50% 50%, from(#AECFEE),
+  background: -webkit-gradient(linear, right bottom, 55% 55%, from(#AECFEE),
                                to(#ffffff));
 
   background: linear-gradient(to top left, #AECFEE, #ffffff 50%);
