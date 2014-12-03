@@ -47,17 +47,14 @@ define(function (require) {
     function nextPage() {
         if (page == 0) {
             // intro
-            document.getElementById("game").style.display = "block";
-            document.getElementById("intro").style.display = "none";
+            showLoadPage();
         } else if (page == 1) {
             // load words
-            document.getElementById("firstPage").style.display = "none";
-            document.getElementById("gameCanvas").style.display = "block";
+            showMatrixPage();
         } else if (page == 2) {
             // game
             return;
         }
-        page++;
     };
 
     function previousPage() {
@@ -70,15 +67,34 @@ define(function (require) {
         } else if (page == 1) {
             // load words
             if (onAndroid) {
-                document.getElementById("game").style.display = "none";
-                document.getElementById("intro").style.display = "block";
+                showIntroPage();
             };
         } else if (page == 2) {
             // game
-            document.getElementById("firstPage").style.display = "block";
-            document.getElementById("gameCanvas").style.display = "none";
+            showLoadPage();
         }
-        page--;
+    };
+
+    function showIntroPage() {
+        document.getElementById("intro").style.display = "block";
+        document.getElementById("game").style.display = "none";
+        page = 0;
+    };
+
+    function showLoadPage() {
+        document.getElementById("intro").style.display = "none";
+        document.getElementById("game").style.display = "block";
+        document.getElementById("firstPage").style.display = "block";
+        document.getElementById("gameCanvas").style.display = "none";
+        page = 1;
+    };
+
+    function showMatrixPage() {
+        document.getElementById("intro").style.display = "none";
+        document.getElementById("game").style.display = "block";
+        document.getElementById("firstPage").style.display = "none";
+        document.getElementById("gameCanvas").style.display = "block";
+        page = 2;
     };
 
     function createAsyncBitmap(stage, url, callback) {
@@ -134,6 +150,45 @@ define(function (require) {
             console.log('Continue clicked');
             hideIntro();
         });
+    };
+
+    function addRandomWords() {
+        if (game.started) {
+            return;
+        };
+        game.removeAllWords();
+        if (categories == null) {
+            categories = require("categories");
+        };
+        var categoryNames = ['actions', 'adjectives', 'animals',
+            'bodyparts', 'clothes', 'colors', 'constructions',
+            'emotions', 'food', 'fruits', 'furnitures',
+            'houseware', 'jobs', 'nature', 'objects', 'people',
+            'plants', 'sports', 'transports', 'tools', 'vegetables'];
+
+        var randomCategory = categoryNames[Math.floor(Math.random() *
+                                           categoryNames.length)];
+
+        var words = categories[randomCategory].slice(0);
+        var cant = game.wordListView.maxNumberOfWords();
+        var wordList = [];
+        for (var n = 0; n < cant; n++) {
+            if (words.length > 0) {
+                var pos = Math.floor(Math.random() * words.length);
+                var randomWord = words.splice(pos, 1)[0];
+                if (randomWord.indexOf('_') > -1) {
+                    randomWord = randomWord.substring(0,
+                        randomWord.indexOf('_'));
+                };
+                if (randomWord.length > 2) {
+                    wordList.push(randomWord.toUpperCase());
+                };
+            };
+        };
+        game.addWords(wordList);
+        // save in the journal
+        localStorage["word-list"] = JSON.stringify(game.words);
+        dictstore.save();
     };
 
     function showIntro() {
@@ -196,6 +251,118 @@ define(function (require) {
         });
     };
 
+    function createWinButton(text, color, size, y, stage) {
+        // show a centered text with the parameters specified
+        var container = new createjs.Container();
+
+        var text = new createjs.Text(text, size + "px Arial", "#ffffff");
+        text.name = 'text';
+        container.x = (stage.canvas.width - text.getMeasuredWidth())
+                               / 2;
+        container.y = y;
+        var background = new createjs.Shape();
+        background.graphics.beginFill(color).drawRoundRect(-10, -10,
+            text.getMeasuredWidth() + 20, text.getMeasuredHeight() + 20, 10);
+
+        var hitArea = new createjs.Shape();
+        hitArea.graphics.beginFill("#000").drawRect(0, 0,
+            text.getMeasuredWidth(),
+            text.getMeasuredHeight());
+        container.hitArea = hitArea;
+        container.addChild(background);
+        container.addChild(text);
+        stage.addChild(container);
+        return container;
+    };
+
+    function showWin(game) {
+        //change to the first page
+        showIntroPage();
+        page = 0;
+
+        var introCanvas = document.getElementById("introCanvas");
+        introCanvas.height = window.innerHeight;
+        introCanvas.width = window.innerWidth;
+        console.log('canvas size ' + introCanvas.width + ' x ' +
+            introCanvas.height);
+        var introStage = new createjs.Stage(introCanvas);
+
+        createAsyncBitmap(introStage, "./images/win-screen-cloud.svg",
+            function(stage, bitmap) {
+            bitmap.x = 0;
+            bitmap.y = 0;
+            stage.addChild(bitmap);
+
+            createAsyncBitmap(stage, "./images/hills.svg",
+                              function(stage, bitmap) {
+                bounds = bitmap.getBounds();
+                var scale = introCanvas.width / bounds.width;
+                bitmap.scaleX = scale;
+                bitmap.scaleY = scale;
+                bitmap.x = 0;
+                bitmap.y = introCanvas.height - bounds.height * scale / 2;
+                stage.addChild(bitmap);
+
+                createAsyncBitmap(stage, "./images/trophy.svg",
+                                  function(stage, bitmap) {
+                    var y = introCanvas.height * 0.06;
+                    bounds = bitmap.getBounds();
+                    scale = introCanvas.height * 0.2 / bounds.height;
+                    console.log('TROPY SCALE ' + scale)
+                    bitmap.scaleX = scale;
+                    bitmap.scaleY = scale;
+                    bitmap.x = (introCanvas.width - (bounds.width * scale)) / 2;
+                    bitmap.y = y;
+                    stage.addChild(bitmap);
+                    y = y + bounds.height * scale + 15;
+
+                    var text = new createjs.Text(_('YouWin!'), "85px Arial",
+                                                 "#ffffff");
+                    text.x = (introCanvas.width - text.getMeasuredWidth()) / 2;
+                    text.y = y;
+                    stage.addChild(text);
+                    y = y + text.getMeasuredHeight() + 10;
+
+                    // format the time
+                    minutes = Math.floor(game.elapsedTime / 60);
+                    seconds = Math.floor(game.elapsedTime - minutes * 60);
+                    var time = seconds + 's';
+                    if (minutes > 0) {
+                        time = minutes + 'm ' + seconds + 's';
+                    };
+
+                    var text = new createjs.Text(time, "65px Arial",
+                                                 "#ffffff");
+                    text.x = (introCanvas.width - text.getMeasuredWidth()) / 2;
+                    text.y = y;
+                    stage.addChild(text);
+                    y = y + text.getMeasuredHeight() + 40;
+
+
+                    var newGameBtn = createWinButton(_('NewGame'),
+                        '#80ba27', 50, y, introStage);
+
+                    y = y + 90;
+
+                    var randomGameBtn = createWinButton(_('RandomGame'),
+                        '#72a624', 40, y, introStage);
+
+                    newGameBtn.on('click', function (e) {
+                        game.removeAllWords();
+                        showLoadPage();
+                    });
+
+                    randomGameBtn.on('click', function (e) {
+                        addRandomWords();
+                        showLoadPage();
+                    });
+
+                    stage.update();
+                });
+            });
+        });
+    };
+
     function hideIntro() {
         nextPage();
     };
@@ -217,7 +384,7 @@ define(function (require) {
     };
 
 
-    function Game(wordListCanvas, gameCanvas, startGameButton, previousPage) {
+    function Game(wordListCanvas, gameCanvas, startGameButton) {
 
         this.words = [];
         this.level = 'easy';
@@ -257,6 +424,13 @@ define(function (require) {
         this.addFoundWord = function (word) {
             this.found.push(word);
             this.wordListView.updateWord(word);
+            // check if the game finished
+            if (this.words.length == this.found.length) {
+                console.log('game.finished!!!!!!');
+                this.elapsedTime = (new Date().getTime() - this.initTime) / 1000;
+                showWin(this);
+                this.stop();
+            };
         };
 
         this.restartWordList = function() {
@@ -285,15 +459,13 @@ define(function (require) {
             this.started = true;
             this.wordListView.gameStarted();
             this.matrixView.init();
+            this.initTime = new Date().getTime();
         };
 
         this.stop = function() {
-            if (this.started) {
-                this.started = false;
-            } else {
-                // stop the animation
-                this.matrixView.stop();
-            };
+            this.started = false;
+            // stop the animation
+            this.matrixView.stop();
             this.found = [];
             this.restartWordList();
         };
@@ -480,8 +652,7 @@ define(function (require) {
         // the matrix have 12 cells and a padding equeal to half a cell
         gameCanvas.width = availableWidth / 13 * 12;
 
-        game = new Game(wordListCanvas, gameCanvas, startGameButton,
-                        previousPage);
+        game = new Game(wordListCanvas, gameCanvas, startGameButton);
 
         // toolbar
         upperLowerButton.onclick = function () {
@@ -495,44 +666,7 @@ define(function (require) {
             game.stop();
         });
 
-        randomButton.addEventListener('click', function (e) {
-            if (game.started) {
-                return;
-            };
-            game.removeAllWords();
-            if (categories == null) {
-                categories = require("categories");
-            };
-            var categoryNames = ['actions', 'adjectives', 'animals',
-                'bodyparts', 'clothes', 'colors', 'constructions',
-                'emotions', 'food', 'fruits', 'furnitures',
-                'houseware', 'jobs', 'nature', 'objects', 'people',
-                'plants', 'sports', 'transports', 'tools', 'vegetables'];
-
-            var randomCategory = categoryNames[Math.floor(Math.random() *
-                                               categoryNames.length)];
-
-            var words = categories[randomCategory].slice(0);
-            var cant = game.wordListView.maxNumberOfWords();
-            var wordList = [];
-            for (var n = 0; n < cant; n++) {
-                if (words.length > 0) {
-                    var pos = Math.floor(Math.random() * words.length);
-                    var randomWord = words.splice(pos, 1)[0];
-                    if (randomWord.indexOf('_') > -1) {
-                        randomWord = randomWord.substring(0,
-                            randomWord.indexOf('_'));
-                    };
-                    if (randomWord.length > 2) {
-                        wordList.push(randomWord.toUpperCase());
-                    };
-                };
-            };
-            game.addWords(wordList);
-            // save in the journal
-            localStorage["word-list"] = JSON.stringify(game.words);
-            dictstore.save();
-        });
+        randomButton.addEventListener('click', addRandomWords);
 
         // datastore
         var wordList = [];
