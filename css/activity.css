@@ -34,15 +34,19 @@
 }
 
 #intro {
-    width: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0px;
 }
 
 #introCanvas {
   background-color: #38a4dd;
+  width:960px;
+  height:672px;
 }
 
 body {
-  background-color: white;
+  background-color: #38a4dd;
 }
 
 input, button {
