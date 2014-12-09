@@ -418,7 +418,7 @@ define(function (require) {
                 };
             };
             this.wordListView.addWords(wordsAdded);
-            this.startGameButton.disabled = false;
+            this.startGameButton.disabled = (this.words.length == 0);
         };
 
         this.addFoundWord = function (word) {
@@ -491,6 +491,7 @@ define(function (require) {
             localStorage["word-list"] = JSON.stringify(this.words);
             dictstore.save();
             this.wordListView.deleteAllWords();
+            this.startGameButton.disabled = true;
         };
 
     };
