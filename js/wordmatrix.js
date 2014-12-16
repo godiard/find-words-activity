@@ -2,6 +2,57 @@ define(function (require) {
 
     require("easel");
     require("tween");
+    require("sound");
+
+    var soundLoaded = false;
+    var onAndroid = /Android/i.test(navigator.userAgent);
+    var soundsPath = 'sounds/';
+    var soundManifest = [
+        {id:"rain", src: "light_rain_on_porch_without_wind.ogg"},
+        {id:"bell", src: "small_bell.ogg"}];
+
+    // load the sound
+    createjs.Sound.alternateExtensions = ["mp3"];
+    createjs.Sound.addEventListener("fileload", soundReady);
+    createjs.Sound.registerManifest(soundManifest, soundsPath);
+
+    function soundReady(event) {
+        console.log('Sound loaded!!!!!!!!!!');
+        soundLoaded = true;
+    };
+
+    function playAudio(id) {
+        var src = null;
+        for (var i in soundManifest) {
+            var mediaInfo = soundManifest[i];
+            if (mediaInfo['id'] == id) {
+                src = soundsPath + mediaInfo['src']
+            }
+        }
+        if (src == null) {
+            return;
+        };
+
+        if (onAndroid) {
+            // Android needs the search path explicitly specified
+            console.log("Using Phonegap media on Android");
+            src = '/android_asset/www/' + src;
+            // and use the mp3 files
+            src = src.replace(".ogg", ".mp3");
+            var mediaRes = new Media(src,
+                function onSuccess() {
+                    // release the media resource once finished playing
+                    mediaRes.release();
+                },
+                function onError(e){
+                    console.log("error playing sound: " + JSON.stringify(e));
+                });
+            mediaRes.play();
+            return mediaRes;
+        } else {
+            return createjs.Sound.play(id);
+        }
+    }
 
     wordmatrix = {};
 
@@ -27,6 +78,7 @@ define(function (require) {
         this.animationContainer = null;
 
         this.animation_runnning = false;
+        this.soundInstance = null;
 
         this.init = function () {
             var orientations;
@@ -76,6 +128,10 @@ define(function (require) {
         };
 
         this.startup_animation = function () {
+            if (this.game.audioEnabled) {
+                this.soundInstance = playAudio('rain');
+            };
+
             this.animation_runnning = true;
             var animatedLetters = [];
             for (var i = 0, height = this.puzzle.length; i < height; i++) {
@@ -123,6 +179,9 @@ define(function (require) {
         };
 
         this.startGame = function() {
+            if (this.soundInstance != null) {
+                this.soundInstance.stop();
+            }
 
             this.stage.removeAllChildren();
 
@@ -287,6 +346,9 @@ define(function (require) {
 
                         // show in the word list
                         this.game.addFoundWord(word.word);
+                        if (this.game.audioEnabled) {
+                            playAudio('bell');
+                        };
                     };
                 };
             };

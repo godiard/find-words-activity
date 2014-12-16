@@ -391,6 +391,7 @@ define(function (require) {
         this.found = [];
         this.started = false;
         this.lowerCase = false;
+        this.audioEnabled = true;
         this.colors = initColors();
         this.previousPage = previousPage;
 
@@ -492,6 +493,10 @@ define(function (require) {
             dictstore.save();
             this.wordListView.deleteAllWords();
             this.startGameButton.disabled = true;
+        };
+
+        this.enableAudio = function (enable) {
+            this.audioEnabled = enable;
         };
 
     };
@@ -616,6 +621,7 @@ define(function (require) {
         var startGameButton = document.getElementById("start-game-button");
         upperLowerButton = document.getElementById("upperlower-button");
         var backButton = document.getElementById("back-button");
+        var audioButton = document.getElementById("audio-button");
         var randomButton = document.getElementById("random-words-button");
         var wordInput = document.getElementById("word-input");
         var addWordButton = document.getElementById("add-word-button");
@@ -686,6 +692,14 @@ define(function (require) {
             } else {
                 setLevel('easy');
             };
+
+            if (localStorage["audio-enabled"]) {
+                game.enableAudio(localStorage["audio-enabled"] == 'true');
+                if (!game.audioEnabled){
+                    audioButton.classList.toggle('active');
+                };
+            };
+
         };
 
         dictstore.init(onStoreReady);
