@@ -86,6 +86,8 @@ define(function (require) {
 
     function createAsyncBitmapButton(stage, url, align, callback) {
         var img = new Image();
+        img.container = null;
+
         img.onload = function () {
             var bitmap = new createjs.Bitmap(img);
             bitmap.setBounds(0, 0, img.width, img.height);
@@ -95,30 +97,36 @@ define(function (require) {
             bitmap.scaleX = scale;
             bitmap.scaleY = scale;
 
-            var container = new createjs.Container();
-            var hitArea = new createjs.Shape();
-            hitArea.graphics.beginFill("#000").drawRect(0, 0,
-                bounds.width, bounds.height);
-            container.hitArea = hitArea;
-            container.width = bounds.width;
-            container.height = bounds.height;
-            container.addChild(bitmap);
+            if (this.container == null) {
+                this.container = new createjs.Container();
+                var hitArea = new createjs.Shape();
+                hitArea.graphics.beginFill("#000").drawRect(0, 0,
+                    bounds.width, bounds.height);
+                this.container.hitArea = hitArea;
+                this.container.width = bounds.width;
+                this.container.height = bounds.height;
+                this.container.addChild(bitmap);
 
-            container.y = 10;
-            if (align == 'left') {
-                container.x = 30;
-            } else if (align == 'center') {
-                container.x = (stage.canvas.width - shadow_width -
-                            (bounds.width * scale)) / 2;
-            } else if (align == 'right') {
-                container.x = stage.canvas.width - shadow_width -
-                    (bounds.width * scale) - 30;
+                this.container.y = 10;
+                if (align == 'left') {
+                    this.container.x = 30;
+                } else if (align == 'center') {
+                    this.container.x = (stage.canvas.width - shadow_width -
+                                (bounds.width * scale)) / 2;
+                } else if (align == 'right') {
+                    this.container.x = stage.canvas.width - shadow_width -
+                        (bounds.width * scale) - 30;
+                };
+
+                stage.addChild(this.container);
+                callback(this.container);
+            } else {
+                this.container.removeAllChildren();
+                this.container.addChild(bitmap);
             };
-
-            stage.addChild(container);
-            callback(container);
         };
         img.src = url;
+        return img;
     };
 
     function WordListView(canvas, game) {
@@ -200,10 +208,23 @@ define(function (require) {
                     });
                 });
 
-                createAsyncBitmapButton(stage, "./images/audio.svg", 'right',
+                var audioImgSrc = "./images/audio.svg";
+                if (!game.audioEnabled) {
+                    audioImgSrc = "./images/audio-no.svg";
+                };
+
+                audioImg = createAsyncBitmapButton(
+                    stage, audioImgSrc, 'right',
                     function(button) {
-                    //
-                });
+                        button.on('click', function() {
+                            game.enableAudio(!game.audioEnabled);
+                            if (game.audioEnabled) {
+                                audioImg.src = "./images/audio.svg";
+                            } else {
+                                audioImg.src = "./images/audio-no.svg";
+                            };
+                        });
+                    });
             };
 
         });
