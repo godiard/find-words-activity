@@ -146,8 +146,13 @@ define(function (require) {
             return;
         };
         continueBtn.getChildByName('text').alpha = 1;
+        continueBtn.getStage().update();
+
         continueBtn.on('click', function (e) {
             console.log('Continue clicked');
+            var jsonData = localStorage["word-list"];
+            var wordList = JSON.parse(jsonData);
+            game.addWords(wordList);
             hideIntro();
         });
     };
@@ -420,6 +425,10 @@ define(function (require) {
             };
             this.wordListView.addWords(wordsAdded);
             this.startGameButton.disabled = (this.words.length == 0);
+            // save in the journal
+            localStorage["word-list"] = JSON.stringify(this.words);
+            dictstore.save();
+            enableContinueBtn();
         };
 
         this.addFoundWord = function (word) {
@@ -682,10 +691,11 @@ define(function (require) {
             if (localStorage["word-list"]) {
                 var jsonData = localStorage["word-list"];
                 var wordList = JSON.parse(jsonData);
-                game.addWords(wordList);
-                if (wordList.length == 0) {
-                    enableContinueBtn();
+                if (!onAndroid) {
+                    // in android we show a intro screen do not load the words
+                    game.addWords(wordList);
                 };
+                enableContinueBtn();
             };
             if (localStorage["level"]) {
                 setLevel(localStorage["level"]);
@@ -731,9 +741,6 @@ define(function (require) {
             game.addWords([wordInput.value.toUpperCase()]);
             wordInput.value = '';
             wordInput.focus();
-            // save in the journal
-            localStorage["word-list"] = JSON.stringify(game.words);
-            dictstore.save();
         };
 
         // level buttons
