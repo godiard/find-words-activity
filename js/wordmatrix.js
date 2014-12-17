@@ -11,10 +11,12 @@ define(function (require) {
         {id:"rain", src: "light_rain_on_porch_without_wind.ogg"},
         {id:"bell", src: "small_bell.ogg"}];
 
-    // load the sound
-    createjs.Sound.alternateExtensions = ["mp3"];
-    createjs.Sound.addEventListener("fileload", soundReady);
-    createjs.Sound.registerManifest(soundManifest, soundsPath);
+    if (!onAndroid) {
+        // load the sound
+        createjs.Sound.alternateExtensions = ["mp3"];
+        createjs.Sound.addEventListener("fileload", soundReady);
+        createjs.Sound.registerManifest(soundManifest, soundsPath);
+    };
 
     function soundReady(event) {
         console.log('Sound loaded!!!!!!!!!!');

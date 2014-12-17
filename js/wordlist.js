@@ -3,6 +3,68 @@ define(function (require) {
     require("easel");
     require("tween");
     require("preload");
+    require("sound");
+
+    var soundLoaded = false;
+    var onAndroid = /Android/i.test(navigator.userAgent);
+    console.log('WORDLIST onAndroid ' + onAndroid+ ' - ' + navigator.userAgent);
+    var soundsPath = 'sounds/';
+    var drips = ['water_drip', 'water_drip_007', 'water_drip_009'];
+    var soundManifest = [
+        {id:"water_drip", src: "water_drip.ogg"},
+        {id:"water_drip_007", src: "water_drip_007.ogg"},
+        {id:"water_drip_009", src: "water_drip_009.ogg"}];
+
+    if (!onAndroid) {
+        // load the sound
+        createjs.Sound.alternateExtensions = ["mp3"];
+        createjs.Sound.addEventListener("fileload", soundReady);
+        createjs.Sound.registerManifest(soundManifest, soundsPath);
+    };
+
+    function soundReady(event) {
+        console.log('Sound loaded!!!!!!!!!!');
+        soundLoaded = true;
+    };
+
+    function playAudio(id) {
+        var src = null;
+        for (var i in soundManifest) {
+            var mediaInfo = soundManifest[i];
+            if (mediaInfo['id'] == id) {
+                src = soundsPath + mediaInfo['src']
+            }
+        }
+        if (src == null) {
+            return;
+        };
+
+        if (onAndroid) {
+            // Android needs the search path explicitly specified
+            console.log("Using Phonegap media on Android");
+            src = '/android_asset/www/' + src;
+            // and use the mp3 files
+            src = src.replace(".ogg", ".mp3");
+            var mediaRes = new Media(src,
+                function onSuccess() {
+                    // release the media resource once finished playing
+                    mediaRes.release();
+                },
+                function onError(e){
+                    console.log("error playing sound: " + JSON.stringify(e));
+                });
+            mediaRes.play();
+            return mediaRes;
+        } else {
+            return createjs.Sound.play(id);
+        }
+    }
+
+    function playRandomDrip() {
+        var r = Math.floor((Math.random() * drips.length));
+        var drip = drips[r];
+        playAudio(drip);
+    };
 
     wordlist = {};
 
@@ -66,7 +128,6 @@ define(function (require) {
         this.selectedWord = null;
         this.onAnimation = false;
         this.noMoreSpace = false;
-        var onAndroid = /Android/i.test(navigator.userAgent);
         this.wordHeight = 50;
 
         this.stage = new createjs.Stage(this.canvas);
@@ -262,9 +323,13 @@ define(function (require) {
                     this.noMoreSpace = true;
                 }
 
+                var game = this.game;
                 createjs.Tween.get(cont).wait(delay).call(function() {
-                    this.visible = true}).to(
-                    {y:yFinalPosition}, 1300,
+                        this.visible = true;
+                        if (game.audioEnabled) {
+                            playRandomDrip();
+                        };
+                    }).to({y:yFinalPosition}, 1300,
                     createjs.Ease.bounceOut);
                 delay = delay + 400;
             };
