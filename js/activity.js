@@ -432,15 +432,20 @@ define(function (require) {
         };
 
         this.addFoundWord = function (word) {
+            // return true if the game finished
             this.found.push(word);
             this.wordListView.updateWord(word);
             // check if the game finished
             if (this.words.length == this.found.length) {
                 console.log('game.finished!!!!!!');
                 this.elapsedTime = (new Date().getTime() - this.initTime) / 1000;
-                showWin(this);
+                // delay show the end window until the end of the sound
+                var game = this;
+                setTimeout(function() {showWin(game);}, 2500);
                 this.stop();
+                return true;
             };
+            return false;
         };
 
         this.restartWordList = function() {

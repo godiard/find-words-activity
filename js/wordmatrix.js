@@ -9,7 +9,8 @@ define(function (require) {
     var soundsPath = 'sounds/';
     var soundManifest = [
         {id:"rain", src: "light_rain_on_porch_without_wind.ogg"},
-        {id:"bell", src: "small_bell.ogg"}];
+        {id:"bell", src: "small_bell.ogg"},
+        {id:"trumpet", src: "bugle_music_chargel.ogg"}];
 
     if (!onAndroid) {
         // load the sound
@@ -347,9 +348,13 @@ define(function (require) {
                         this.wordsFoundcontainer.addChild(found_word_line);
 
                         // show in the word list
-                        this.game.addFoundWord(word.word);
+                        var finished = this.game.addFoundWord(word.word);
                         if (this.game.audioEnabled) {
-                            playAudio('bell');
+                            if (finished) {
+                                playAudio('trumpet');
+                            } else {
+                                playAudio('bell');
+                            };
                         };
                     };
                 };
