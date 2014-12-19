@@ -142,7 +142,18 @@ define(function (require) {
             // the btn is already enabled
             return;
         };
-        if (game == null || game.words.length == 0) {
+
+        var wordList = [];
+        if (onAndroid) {
+            // on android we don load the list in the game
+            // until after the intro screen
+            var jsonData = localStorage["word-list"];
+            wordList = JSON.parse(jsonData);
+        } else {
+            wordList = game.words;
+        };
+
+        if (game == null || wordList.length == 0) {
             return;
         };
         continueBtn.getChildByName('text').alpha = 1;
@@ -696,6 +707,7 @@ define(function (require) {
             if (localStorage["word-list"]) {
                 var jsonData = localStorage["word-list"];
                 var wordList = JSON.parse(jsonData);
+                console.log('onStoreReady ' + jsonData);
                 if (!onAndroid) {
                     // in android we show a intro screen do not load the words
                     game.addWords(wordList);
