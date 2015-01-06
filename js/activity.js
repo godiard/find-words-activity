@@ -148,7 +148,9 @@ define(function (require) {
             // on android we don load the list in the game
             // until after the intro screen
             var jsonData = localStorage["word-list"];
-            wordList = JSON.parse(jsonData);
+            if (jsonData != undefined) {
+                wordList = JSON.parse(jsonData);
+            };
         } else {
             wordList = game.words;
         };
