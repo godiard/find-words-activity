@@ -27,6 +27,9 @@ define(function (require) {
     var page = 0;
     var game = null;
     var onAndroid = /Android/i.test(navigator.userAgent);
+    if (window.location.search.indexOf('onAndroid') > -1) {
+        onAndroid = true;
+    };
     var categories = null;
     var continueBtn;
     var upperLowerButton;
