@@ -119,7 +119,11 @@ define(function (require) {
     function createIntroButtons(text, alpha, y, stage) {
         // show a centered text with the parameters specified
         var container = new createjs.Container();
-        var text = new createjs.Text(text, "60px Arial", "#ffffff");
+        var font = "60px Arial";
+        if (stage.canvas.width < 700) {
+            font = "32px Arial";
+        };
+        var text = new createjs.Text(text, font, "#ffffff");
         text.alpha = alpha;
         text.name = 'text';
         container.x = (stage.canvas.width - text.getMeasuredWidth())
@@ -277,6 +281,10 @@ define(function (require) {
         // show a centered text with the parameters specified
         var container = new createjs.Container();
 
+        if (stage.canvas.width < 700) {
+            size = size / 2;
+        };
+
         var text = new createjs.Text(text, size + "px Arial", "#ffffff");
         text.name = 'text';
         container.x = (stage.canvas.width - text.getMeasuredWidth())
@@ -313,6 +321,10 @@ define(function (require) {
             function(stage, bitmap) {
             bitmap.x = 0;
             bitmap.y = 0;
+            bounds = bitmap.getBounds();
+            scale = introCanvas.width * 0.5 / bounds.width;
+            bitmap.scaleX = scale;
+            bitmap.scaleY = scale;
             stage.addChild(bitmap);
 
             createAsyncBitmap(stage, "./images/hills.svg",
@@ -338,7 +350,10 @@ define(function (require) {
                     stage.addChild(bitmap);
                     y = y + bounds.height * scale + 15;
 
-                    var text = new createjs.Text(_('YouWin!'), "85px Arial",
+                    var smallScreen = (stage.canvas.width < 700);
+
+                    var font = smallScreen ? "45px Arial" : "85px Arial";
+                    var text = new createjs.Text(_('YouWin!'), font,
                                                  "#ffffff");
                     text.x = (introCanvas.width - text.getMeasuredWidth()) / 2;
                     text.y = y;
@@ -353,18 +368,20 @@ define(function (require) {
                         time = minutes + 'm ' + seconds + 's';
                     };
 
+                    font = smallScreen ? "32px Arial" : "65px Arial";
                     var text = new createjs.Text(time, "65px Arial",
                                                  "#ffffff");
                     text.x = (introCanvas.width - text.getMeasuredWidth()) / 2;
                     text.y = y;
                     stage.addChild(text);
-                    y = y + text.getMeasuredHeight() + 40;
+
+                    y = y + text.getMeasuredHeight() + (smallScreen ? 20 : 40);
 
 
                     var newGameBtn = createWinButton(_('NewGame'),
                         '#80ba27', 50, y, introStage);
 
-                    y = y + 90;
+                    y = y +  (smallScreen ? 60 : 90);
 
                     var randomGameBtn = createWinButton(_('RandomGame'),
                         '#72a624', 40, y, introStage);
