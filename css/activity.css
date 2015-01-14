@@ -28,7 +28,7 @@
   */
   overflow-y: visible;
 
-  background-color: white;
+  background-color: #38a4dd;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -45,8 +45,6 @@
 
 #introCanvas {
   background-color: #38a4dd;
-  width:960px;
-  height:672px;
 }
 
 body {

@@ -76,12 +76,14 @@ define(function (require) {
     };
 
     function showIntroPage() {
+        document.getElementById("canvas").style.backgroundColor = "#38a4dd";
         document.getElementById("intro").style.display = "block";
         document.getElementById("game").style.display = "none";
         page = 0;
     };
 
     function showLoadPage() {
+        document.getElementById("canvas").style.backgroundColor = "white";
         document.getElementById("intro").style.display = "none";
         document.getElementById("game").style.display = "block";
         document.getElementById("firstPage").style.display = "block";
@@ -90,6 +92,7 @@ define(function (require) {
     };
 
     function showMatrixPage() {
+        document.getElementById("canvas").style.backgroundColor = "white";
         document.getElementById("intro").style.display = "none";
         document.getElementById("game").style.display = "block";
         document.getElementById("firstPage").style.display = "none";
