@@ -116,13 +116,13 @@ define(function (require) {
         img.src = url;
     };
 
-    function createIntroButtons(text, alpha, y, canvas, stage) {
+    function createIntroButtons(text, alpha, y, stage) {
         // show a centered text with the parameters specified
         var container = new createjs.Container();
         var text = new createjs.Text(text, "60px Arial", "#ffffff");
         text.alpha = alpha;
         text.name = 'text';
-        container.x = (canvas.width - text.getMeasuredWidth())
+        container.x = (stage.canvas.width - text.getMeasuredWidth())
                                / 2;
         container.y = y;
         var hitArea = new createjs.Shape();
@@ -256,13 +256,11 @@ define(function (require) {
                     stage.addChild(bitmap);
 
                     continueBtn = createIntroButtons(_('Continue'),
-                        0.2, introCanvas.height * 0.74,
-                        introCanvas, introStage);
+                        0.2, introCanvas.height * 0.74, introStage);
                     enableContinueBtn();
 
                     var newGameBtn = createIntroButtons(_('NewGame'),
-                        1, introCanvas.height * 0.84,
-                        introCanvas, introStage);
+                        1, introCanvas.height * 0.84, introStage);
 
                     newGameBtn.on('click', function (e) {
                         game.removeAllWords();
