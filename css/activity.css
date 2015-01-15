@@ -65,10 +65,6 @@ table td {
   font: 2em sans-serif;
 }
 
-#wordList {
-  width: 300px; /* screen / 4 ?? */
-}
-
 #rightPanel {
   background: -webkit-gradient(linear, right bottom, 55% 55%, from(#AECFEE),
                                to(#ffffff));
