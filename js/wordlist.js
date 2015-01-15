@@ -74,7 +74,7 @@ define(function (require) {
 
     wordlist = {};
 
-    var padding = 10;
+    var padding = smallScreen ? 6 : 10;
     var shadow_width = 10;
 
     function createAsyncBitmap(stage, url, callback) {
@@ -142,7 +142,7 @@ define(function (require) {
         this.selectedWord = null;
         this.onAnimation = false;
         this.noMoreSpace = false;
-        this.wordHeight = 50;
+        this.wordHeight = smallScreen ? 35 : 50;
 
         this.stage = new createjs.Stage(this.canvas);
         this.stage.enableMouseOver(20);
