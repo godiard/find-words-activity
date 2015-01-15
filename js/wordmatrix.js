@@ -6,6 +6,9 @@ define(function (require) {
 
     var soundLoaded = false;
     var onAndroid = /Android/i.test(navigator.userAgent);
+    var smallScreen = (window.innerWidth < 700);
+    var font = smallScreen ? "16px Arial" : "24px Arial";
+
     var soundsPath = 'sounds/';
     var soundManifest = [
         {id:"rain", src: "light_rain_on_porch_without_wind.ogg"},
@@ -64,7 +67,7 @@ define(function (require) {
         this.canvas = canvas;
         this.game = game;
 
-        this.margin_y = 40;
+        this.margin_y = smallScreen ? 15 : 40;
 
         this.stage = new createjs.Stage(canvas);
         // Enable touch interactions if supported on the current device
@@ -149,7 +152,7 @@ define(function (require) {
                         letter = letter.toUpperCase();
                     };
                     var text = new createjs.Text(letter,
-                                             "24px Arial", "#000000");
+                                             font, "#000000");
                     text.x = this.cell_size * j + this.cell_size / 2;
                     text.y = this.margin_y + this.cell_size / 3;
                     text.textAlign = "center";
@@ -237,7 +240,7 @@ define(function (require) {
                         letter = letter.toUpperCase();
                     };
                     var text = new createjs.Text(letter,
-                                             "24px Arial", "#000000");
+                                             font, "#000000");
                     text.x = this.cell_size * j + this.cell_size / 2;
                     text.y = y + this.cell_size / 3;
                     text.textAlign = "center";
@@ -465,7 +468,7 @@ define(function (require) {
                 matrixLetter = this.animatedLetters[i];
                 // add another letter to animate
                 var text = new createjs.Text(matrixLetter.text,
-                                         "24px Arial", "#FFFFFF");
+                                         font, "#FFFFFF");
                 text.x = matrixLetter.x;
                 text.y = matrixLetter.y + text.getMeasuredHeight() / 2;
                 text.textAlign = "center";
