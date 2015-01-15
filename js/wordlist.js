@@ -7,6 +7,10 @@ define(function (require) {
 
     var soundLoaded = false;
     var onAndroid = /Android/i.test(navigator.userAgent);
+    if (window.location.search.indexOf('onAndroid') > -1) {
+        onAndroid = true;
+    };
+
     console.log('WORDLIST onAndroid ' + onAndroid+ ' - ' + navigator.userAgent);
     var soundsPath = 'sounds/';
     var drips = ['water_drip', 'water_drip_007', 'water_drip_009'];
