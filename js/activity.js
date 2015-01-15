@@ -30,6 +30,8 @@ define(function (require) {
     if (window.location.search.indexOf('onAndroid') > -1) {
         onAndroid = true;
     };
+    var smallScreen = (window.innerWidth < 700);
+
     var categories = null;
     var continueBtn;
     var upperLowerButton;
@@ -120,7 +122,7 @@ define(function (require) {
         // show a centered text with the parameters specified
         var container = new createjs.Container();
         var font = "60px Arial";
-        if (stage.canvas.width < 700) {
+        if (smallScreen) {
             font = "32px Arial";
         };
         var text = new createjs.Text(text, font, "#ffffff");
@@ -281,7 +283,7 @@ define(function (require) {
         // show a centered text with the parameters specified
         var container = new createjs.Container();
 
-        if (stage.canvas.width < 700) {
+        if (smallScreen) {
             size = size / 2;
         };
 
@@ -349,8 +351,6 @@ define(function (require) {
                     bitmap.y = y;
                     stage.addChild(bitmap);
                     y = y + bounds.height * scale + 15;
-
-                    var smallScreen = (stage.canvas.width < 700);
 
                     var font = smallScreen ? "45px Arial" : "85px Arial";
                     var text = new createjs.Text(_('YouWin!'), font,
@@ -644,7 +644,8 @@ define(function (require) {
             dictstore.save();
         };
 
-        var initSize = sugarSubCellSize * 7;
+        var initSize = smallScreen ? 45 : sugarSubCellSize * 7;
+
         console.log('button ' + button + ' width ' + initSize);
         createjs.Tween.get(button).set(
             {webkitTransform: "rotate(30deg)"}, button.style, 500).wait(100).set(

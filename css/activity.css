@@ -116,8 +116,6 @@ table td {
   background-image: url('../images/dice-random.svg');
   background-size: 100%;
   background-color: transparent;
-  height: 85px;
-  width: 85px;
   border-radius: 0;
   border: 0px;
   padding: 11px;
@@ -129,6 +127,8 @@ table td {
 
 .blueButton {
   background-color: #03a9f4;
+  padding: 10px;
+  font-size: 55px;
 }
 
 .blueButton:disabled {
@@ -138,6 +138,13 @@ table td {
 .blueButton:hover {
   border-color: transparent;
 }
+
+.blueButton img {
+  height: 60px;
+  vertical-align:middle;
+  padding-left:20px;
+}
+
 
 .blueBorderButton {
   padding: 10px;
@@ -180,12 +187,12 @@ table.loadData {
   text-align: left;
 }
 
-table.loadData td {
-  padding: 10px;
-}
-
 table.loadData input {
   font-size: 40px;
   width: 300px;
   padding: 20px;
+}
+
+table.loadData td {
+  padding: 10px;
 }
