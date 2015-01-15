@@ -11,6 +11,8 @@ define(function (require) {
         onAndroid = true;
     };
 
+    var smallScreen = (window.innerWidth < 700);
+
     console.log('WORDLIST onAndroid ' + onAndroid+ ' - ' + navigator.userAgent);
     var soundsPath = 'sounds/';
     var drips = ['water_drip', 'water_drip_007', 'water_drip_009'];
@@ -241,7 +243,7 @@ define(function (require) {
             bitmap.scaleY = scale;
             bounds = bitmap.getBounds();
             bitmap.x = 0;
-            bitmap.y = stage.canvas.height - bounds.height + 10; // fix vertical
+            bitmap.y = stage.canvas.height - bounds.height * scale; // fix vertical
                                                                  // position
             stage.addChildAt(bitmap, 1);
         });
@@ -329,7 +331,7 @@ define(function (require) {
             for (var n = 0; n < words.length; n++) {
                 var word = words[n];
                 var cont = new createjs.Container();
-                cont.x = 20; // margin_x;
+                cont.x = smallScreen ? 10 : 20; // margin_x;
                 cont.y = 0;
                 cont.mouseChildren = false;
                 cont.visible = false;
@@ -381,7 +383,8 @@ define(function (require) {
                 alpha = 0.25;
             };
 
-            var text = new createjs.Text(label, "24px Arial", "#000000");
+            var font = smallScreen ? "16px Arial" : "24px Arial";
+            var text = new createjs.Text(label, font, "#000000");
             text.x = text.getMeasuredWidth() / 2 + padding;
             text.y = padding;
             text.textAlign = "center";
