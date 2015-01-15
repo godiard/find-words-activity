@@ -67,8 +67,6 @@ define(function (require) {
         this.canvas = canvas;
         this.game = game;
 
-        this.margin_y = smallScreen ? 15 : 40;
-
         this.stage = new createjs.Stage(canvas);
         // Enable touch interactions if supported on the current device
         createjs.Touch.enable(this.stage);
@@ -109,6 +107,8 @@ define(function (require) {
             this.puzzle = this.puzzleGame.matrix;
             console.log('matrix size ' + this.puzzle.length);
             this.cell_size = canvas.width / this.puzzle.length;
+            this.margin_y = (canvas.height - this.cell_size *
+                             this.puzzle.length) / 2;
 
             this.wordLocations = this.puzzleGame.locations;
 
