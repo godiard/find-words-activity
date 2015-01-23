@@ -11,7 +11,7 @@ define(function (require) {
         onAndroid = true;
     };
 
-    var smallScreen = (window.innerWidth < 700);
+    var smallScreen = (window.innerWidth < 700) || (window.innerHeight < 600);
 
     console.log('WORDLIST onAndroid ' + onAndroid+ ' - ' + navigator.userAgent);
     var soundsPath = 'sounds/';

@@ -30,7 +30,7 @@ define(function (require) {
     if (window.location.search.indexOf('onAndroid') > -1) {
         onAndroid = true;
     };
-    var smallScreen = (window.innerWidth < 700);
+    var smallScreen = (window.innerWidth < 700) || (window.innerHeight < 600);
 
     var categories = null;
     var continueBtn;
@@ -644,7 +644,7 @@ define(function (require) {
             dictstore.save();
         };
 
-        var initSize = smallScreen ? 45 : sugarSubCellSize * 7;
+        var initSize = smallScreen ? 60 : sugarSubCellSize * 7;
 
         console.log('button ' + button + ' width ' + initSize);
         createjs.Tween.get(button).set(

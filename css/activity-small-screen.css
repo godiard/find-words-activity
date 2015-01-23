@@ -18,19 +18,19 @@
 }
 
 .level-button {
-  height: 45px;
-  width: 45px;
+  height: 60px;
+  width: 60px;
   margin: 11px;
 }
 
 #add-word-button {
-  height: 40px;
-  width: 40px;
+  height: 60px;
+  width: 60px;
 }
 
 #random-words-button {
-  height: 42px;
-  width: 42px;
+  height: 62px;
+  width: 62px;
 }
 
 table.loadData {
@@ -38,7 +38,7 @@ table.loadData {
 }
 
 table.loadData input {
-  font-size: 24px;
+  font-size: 32px;
   width: 150px;
   padding: 10px;
 }

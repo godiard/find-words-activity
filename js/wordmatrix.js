@@ -6,7 +6,7 @@ define(function (require) {
 
     var soundLoaded = false;
     var onAndroid = /Android/i.test(navigator.userAgent);
-    var smallScreen = (window.innerWidth < 700);
+    var smallScreen = (window.innerWidth < 700) || (window.innerHeight < 600);
     var font = smallScreen ? "16px Arial" : "24px Arial";
 
     var soundsPath = 'sounds/';
