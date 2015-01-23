@@ -55,6 +55,14 @@ input, button {
     vertical-align:middle;
 }
 
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 0px solid black;
+}
+
 table td {
   padding: 0px;
 }
