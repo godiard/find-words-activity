@@ -82,6 +82,11 @@ table td {
 
   background: linear-gradient(to top left, #AECFEE, #ffffff 50%);
   color: #03a9f4;
+  outline: 0;
+}
+
+*:focus {
+    outline: 0;
 }
 
 .level-button {
