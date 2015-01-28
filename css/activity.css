@@ -49,6 +49,9 @@
 
 body {
   background-color: #38a4dd;
+  position: fixed;
+  overflow-y: hidden;
+  width: 100%;
 }
 
 input, button {
