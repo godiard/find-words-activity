@@ -574,6 +574,10 @@ define(function (require) {
             showError(_('MinimumLetters'));
             return false;
         };
+        if (word.length > 12) {
+            showError(_('MaximumLetters'));
+            return false;
+        };
         for (var i = 0; i < word.length; i++) {
             if (iChars.indexOf(word.charAt(i)) > -1) {
                 showError(_('RemovePunctuation'));
