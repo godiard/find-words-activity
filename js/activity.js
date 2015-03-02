@@ -250,7 +250,7 @@ define(function (require) {
                 bitmap.y = introCanvas.height - bounds.height * scale;
                 stage.addChild(bitmap);
 
-                createAsyncBitmap(stage, "./images/logo.svg",
+                createAsyncBitmap(stage, "./images/logo-es.svg",
                                   function(stage, bitmap) {
                     bounds = bitmap.getBounds();
                     scale = introCanvas.width * 0.52 / bounds.width;
