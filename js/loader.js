@@ -23,7 +23,10 @@ requirejs.config({
         wordfind: "../js/wordfind",
         wordlist: "../js/wordlist",
         wordmatrix: "../js/wordmatrix",
-        categories: "../js/categories_words"
+        categories: "../js/categories_words",
+        words_es: "../js/words_es",
+        words_fr: "../js/words_fr",
+        words_ht: "../js/words_ht"
     }
 });
 

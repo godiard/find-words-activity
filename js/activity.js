@@ -3,6 +3,8 @@ define(function (require) {
     var icon = require("sugar-web/graphics/icon");
 
     var l10n = require("webL10n");
+    var lang = navigator.language.substr(0, 2)
+    console.log('LANG ' + lang);
 
     function _(text) {
         // this function add a fallback for the case of translation not found
@@ -33,6 +35,7 @@ define(function (require) {
     var smallScreen = (window.innerWidth < 700) || (window.innerHeight < 600);
 
     var categories = null;
+    var word_translations = null;
     var continueBtn;
     var upperLowerButton;
 
@@ -190,6 +193,19 @@ define(function (require) {
         if (categories == null) {
             categories = require("categories");
         };
+        if (word_translations == null) {
+            switch(lang) {
+                case 'es':
+                    word_translations = require("words_es");
+                    break;
+                case 'fr':
+                    word_translations = require("words_fr");
+                    break;
+                case 'ht':
+                    word_translations = require("words_ht");
+                    break;
+            };
+        };
         var categoryNames = ['actions', 'adjectives', 'animals',
             'bodyparts', 'clothes', 'colors', 'constructions',
             'emotions', 'food', 'fruits', 'furnitures',
@@ -206,11 +222,15 @@ define(function (require) {
             if (words.length > 0) {
                 var pos = Math.floor(Math.random() * words.length);
                 var randomWord = words.splice(pos, 1)[0];
+                if (word_translations != null) {
+                    randomWord = word_translations[randomWord];
+                };
                 if (randomWord.indexOf('_') > -1) {
                     randomWord = randomWord.substring(0,
                         randomWord.indexOf('_'));
                 };
-                if (randomWord.length > 2) {
+                if ((randomWord.length > 2) &&
+                    (randomWord.indexOf(' ') == -1)) {
                     wordList.push(randomWord.toUpperCase());
                 };
             };
