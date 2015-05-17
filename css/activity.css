@@ -208,3 +208,7 @@ table.loadData input {
 table.loadData td {
   padding: 10px;
 }
+
+@font-face {
+    font-family: 'Comfortaa'; src: url('../fonts/Comfortaa-Bold.ttf');
+};

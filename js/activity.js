@@ -270,15 +270,22 @@ define(function (require) {
                 bitmap.y = introCanvas.height - bounds.height * scale;
                 stage.addChild(bitmap);
 
-                createAsyncBitmap(stage, "./images/logo.svg",
+                var font = smallScreen ? "80px Comfortaa" : "120px Comfortaa";
+                var text = new createjs.Text(_('FindAWord'), font, "#ffffff");
+                text.x = (introCanvas.width) / 2;
+                text.y = introCanvas.height * 0.12;
+                text.textAlign = "center";
+                stage.addChild(text);
+
+                createAsyncBitmap(stage, "./images/lens.svg",
                                   function(stage, bitmap) {
                     bounds = bitmap.getBounds();
-                    scale = introCanvas.width * 0.52 / bounds.width;
-                    console.log('LOGO SCALE ' + scale)
+                    scale = introCanvas.width * 0.1 / bounds.width;
+                    console.log('LENS SCALE ' + scale)
                     bitmap.scaleX = scale;
                     bitmap.scaleY = scale;
-                    bitmap.x = (introCanvas.width - (bounds.width * scale)) / 2;
-                    bitmap.y = introCanvas.height * 0.12;
+                    bitmap.x = (introCanvas.width - (bounds.width * scale)) / 3 * 2;
+                    bitmap.y = introCanvas.height * 0.15;
                     stage.addChild(bitmap);
 
                     continueBtn = createIntroButtons(_('Continue'),
