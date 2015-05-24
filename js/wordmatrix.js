@@ -6,14 +6,22 @@ define(function (require) {
 
     var soundLoaded = false;
     var onAndroid = /Android/i.test(navigator.userAgent);
+    // xo-1 is too slow to load the sound files
+    var loadSounds = (navigator.userAgent.indexOf("Linux i586") == -1);
+
     var smallScreen = (window.innerWidth < 700) || (window.innerHeight < 600);
     var font = smallScreen ? "16px Arial" : "24px Arial";
 
     var soundsPath = 'sounds/';
-    var soundManifest = [
-        {id:"rain", src: "light_rain_on_porch_without_wind.ogg"},
-        {id:"bell", src: "small_bell.ogg"},
-        {id:"trumpet", src: "bugle_music_chargel.ogg"}];
+
+    if (loadSounds) {
+        var soundManifest = [
+            {id:"rain", src: "light_rain_on_porch_without_wind.ogg"},
+            {id:"bell", src: "small_bell.ogg"},
+            {id:"trumpet", src: "bugle_music_chargel.ogg"}];
+    } else {
+        var soundManifest = [];
+    };
 
     if (!onAndroid) {
         // load the sound

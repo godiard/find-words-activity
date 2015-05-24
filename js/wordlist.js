@@ -7,6 +7,9 @@ define(function (require) {
 
     var soundLoaded = false;
     var onAndroid = /Android/i.test(navigator.userAgent);
+    // xo-1 is too slow to load the sound files
+    var loadSounds = (navigator.userAgent.indexOf("Linux i586") == -1);
+
     if (window.location.search.indexOf('onAndroid') > -1) {
         onAndroid = true;
     };
@@ -16,10 +19,14 @@ define(function (require) {
     console.log('WORDLIST onAndroid ' + onAndroid+ ' - ' + navigator.userAgent);
     var soundsPath = 'sounds/';
     var drips = ['water_drip', 'water_drip_007', 'water_drip_009'];
-    var soundManifest = [
-        {id:"water_drip", src: "water_drip.ogg"},
-        {id:"water_drip_007", src: "water_drip_007.ogg"},
-        {id:"water_drip_009", src: "water_drip_009.ogg"}];
+    if (loadSounds) {
+        var soundManifest = [
+            {id:"water_drip", src: "water_drip.ogg"},
+            {id:"water_drip_007", src: "water_drip_007.ogg"},
+            {id:"water_drip_009", src: "water_drip_009.ogg"}];
+    } else {
+        var soundManifest = [];
+    };
 
     if (!onAndroid) {
         // load the sound

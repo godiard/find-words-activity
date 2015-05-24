@@ -726,6 +726,13 @@ define(function (require) {
             hideIntro();
         };
 
+        // xo-1 is too slow to load the sound files
+        var loadSounds = (navigator.userAgent.indexOf("Linux i586") == -1);
+        console.log('loadSounds ' + loadSounds);
+        if (! loadSounds) {
+            audioButton.style.display = "none";
+        };
+
         activity.setup();
 
         // HERE GO YOUR CODE
