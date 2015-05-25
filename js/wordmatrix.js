@@ -8,6 +8,8 @@ define(function (require) {
     var onAndroid = /Android/i.test(navigator.userAgent);
     // xo-1 is too slow to load the sound files
     var loadSounds = (navigator.userAgent.indexOf("Linux i586") == -1);
+    // the xo-1 is too slow to show the dancing letters
+    var enableAnimations = loadSounds;
 
     var smallScreen = (window.innerWidth < 700) || (window.innerHeight < 600);
     var font = smallScreen ? "16px Arial" : "24px Arial";
@@ -289,8 +291,10 @@ define(function (require) {
         };
 
         this.stage.on("pressup", function (event) {
-            this.restoreAnimatedWord();
-            this.hideDancingLetters();
+            if (enableAnimations) {
+                this.restoreAnimatedWord();
+                this.hideDancingLetters();
+            };
             this.verifyWord(this.start_cell, this.end_cell);
             this.start_cell = null;
             this.end_cell = null;
@@ -302,8 +306,10 @@ define(function (require) {
             var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
             this.markWord(cell, cell,
                           this.select_word_line, color, true);
-            this.prepareWordAnimation(cell, cell);
-            this.showDancingLetters();
+            if (enableAnimations) {
+                this.prepareWordAnimation(cell, cell);
+                this.showDancingLetters();
+            };
             if (this.start_cell == null) {
                 this.start_cell = [cell[0], cell[1]];
                 this.end_cell = null;
@@ -326,9 +332,10 @@ define(function (require) {
             var color = createjs.Graphics.getRGB(0xe0e0e0, 1.0);
             this.markWord(this.start_cell, this.end_cell,
                           this.select_word_line, color, true);
-            this.prepareWordAnimation(this.start_cell, this.end_cell);
-            this.showDancingLetters();
-
+            if (enableAnimations) {
+                this.prepareWordAnimation(this.start_cell, this.end_cell);
+                this.showDancingLetters();
+            };
             this.stage.update();
         }, this);
 
@@ -406,7 +413,7 @@ define(function (require) {
 
             var line_width = this.cell_size / 10;
             shape.graphics.setStrokeStyle(line_width, "round");
-            if (fill) {
+            if (fill && enableAnimations) {
                 shape.graphics.beginFill(color);
             } else {
                 shape.graphics.beginStroke(color);
