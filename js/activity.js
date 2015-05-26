@@ -458,6 +458,10 @@ define(function (require) {
         this.started = false;
         this.lowerCase = false;
         this.audioEnabled = true;
+        // xo-1 is too slow to load the sound files
+        if (navigator.userAgent.indexOf("Linux i586") != -1) {
+            this.audioEnabled = false;
+        };
         this.colors = initColors();
         this.previousPage = previousPage;
 
@@ -731,6 +735,9 @@ define(function (require) {
         console.log('loadSounds ' + loadSounds);
         if (! loadSounds) {
             audioButton.style.display = "none";
+            // remove the gradient in the right panel background too
+            rightPanel = document.getElementById("rightPanel");
+            rightPanel.style.background = "#ffffff";
         };
 
         activity.setup();

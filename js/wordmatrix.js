@@ -93,6 +93,7 @@ define(function (require) {
 
         this.animation_runnning = false;
         this.soundInstance = null;
+        this.tick_listener = null;
 
         this.init = function () {
             var orientations;
@@ -171,7 +172,8 @@ define(function (require) {
                 };
             };
 
-            createjs.Ticker.addEventListener("tick", this.stage);
+            this.tick_listener = createjs.Ticker.addEventListener("tick",
+                                                                  this.stage);
 
             for (var i = 0, height = this.puzzle.length; i < height; i++) {
                 delay = Math.random() * 4000;
@@ -198,6 +200,7 @@ define(function (require) {
             if (this.soundInstance != null) {
                 this.soundInstance.stop();
             }
+            createjs.Ticker.off('tick', this.tick_listener);
 
             this.stage.removeAllChildren();
 
@@ -288,6 +291,7 @@ define(function (require) {
                 };
             };
             this.container.updateCache();
+            this.stage.update();
         };
 
         this.stage.on("pressup", function (event) {
@@ -309,6 +313,8 @@ define(function (require) {
             if (enableAnimations) {
                 this.prepareWordAnimation(cell, cell);
                 this.showDancingLetters();
+            } else {
+                this.stage.update();
             };
             if (this.start_cell == null) {
                 this.start_cell = [cell[0], cell[1]];
@@ -391,24 +397,27 @@ define(function (require) {
 
             var start_cell_x = start_cell[0];
             var start_cell_y = start_cell[1];
-
-            var end_cell_x = end_cell[0];
-            var end_cell_y = end_cell[1];
-
             var x1 = start_cell_x * this.cell_size + this.cell_size / 2;
             var y1 = this.margin_y + start_cell_y * this.cell_size +
                 this.cell_size / 2;
-            var x2 = end_cell_x * this.cell_size + this.cell_size / 2;
-            var y2 = this.margin_y + end_cell_y * this.cell_size +
-                this.cell_size / 2;
 
-            var diff_x = x2 - x1;
-            var diff_y = y2 - y1;
-            var angle_rad = Math.atan2(diff_y, diff_x);
-            var angle_deg = angle_rad * 180 / Math.PI;
-            var distance = diff_x / Math.cos(angle_rad);
-            if (Math.abs(angle_deg) == 90) {
-                distance = Math.abs(diff_y);
+            if (start_cell != end_cell) {
+                var end_cell_x = end_cell[0];
+                var end_cell_y = end_cell[1];
+                var x2 = end_cell_x * this.cell_size + this.cell_size / 2;
+                var y2 = this.margin_y + end_cell_y * this.cell_size +
+                    this.cell_size / 2;
+                var diff_x = x2 - x1;
+                var diff_y = y2 - y1;
+                var angle_rad = Math.atan2(diff_y, diff_x);
+                var angle_deg = angle_rad * 180 / Math.PI;
+                var distance = diff_x / Math.cos(angle_rad);
+                if (Math.abs(angle_deg) == 90) {
+                    distance = Math.abs(diff_y);
+                };
+            } else {
+                var angle_deg = 0;
+                var distance = 0;
             };
 
             var line_width = this.cell_size / 10;
