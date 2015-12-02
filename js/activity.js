@@ -469,6 +469,8 @@ define(function (require) {
         this.matrixView = new wordmatrix.View(gameCanvas, this);
         this.startGameButton = startGameButton;
         this.wordColors = {};
+        this.backgroundMusic = document.getElementById("background-music");
+        this.backgroundMusic.volume = 0.5;
 
         this.setLowerCase = function (lowerCase) {
             this.lowerCase = lowerCase;
@@ -576,6 +578,11 @@ define(function (require) {
 
         this.enableAudio = function (enable) {
             this.audioEnabled = enable;
+            if (enable) {
+                this.backgroundMusic.play();
+            } else {
+                this.backgroundMusic.pause();
+            };
         };
 
     };
@@ -770,6 +777,15 @@ define(function (require) {
         backButton.addEventListener('click', function (e) {
             previousPage();
             game.stop();
+        });
+
+        audioButton.addEventListener('click', function (e) {
+            game.enableAudio(!game.audioEnabled);
+            if (game.audioEnabled) {
+                audioButton.style.backgroundImage = "url(./images/audio.svg)";
+            } else {
+                audioButton.style.backgroundImage = "url(./images/audio-no.svg)";
+            };
         });
 
         randomButton.addEventListener('click', addRandomWords);
