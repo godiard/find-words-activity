@@ -712,6 +712,8 @@ define(function (require) {
         var easyButton = document.getElementById("easy-button");
         var mediumButton = document.getElementById("medium-button");
         var hardButton = document.getElementById("hard-button");
+        var helpButton = document.getElementById("help-button");
+        var helpDisplay = document.getElementById("help-display");
 
         // Initialize the activity.
 
@@ -768,6 +770,19 @@ define(function (require) {
         });
 
         randomButton.addEventListener('click', addRandomWords);
+
+        // HELP
+        helpButton.addEventListener('click', function (e) {
+            if (helpDisplay.style.display == 'block') {
+                helpDisplay.style.display = 'none';
+            } else {
+                helpDisplay.style.display = 'block';
+            };
+        });
+
+        helpDisplay.addEventListener('click', function (e) {
+            helpDisplay.style.display = 'none';
+        });
 
         // datastore
         var wordList = [];
