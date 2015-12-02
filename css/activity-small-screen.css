@@ -33,6 +33,10 @@
   width: 62px;
 }
 
+#help-button {
+  height: 42px;
+  width: 42px;
+}
 table.loadData {
   margin-top: 5px;
 }
