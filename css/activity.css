@@ -158,6 +158,10 @@ table td {
   border-radius: 5px;
 }
 
+#help-display li {
+  text-align: left;
+  margin: 10px;
+}
 
 #add-word-button {
   background-image: url('../icons/plus.svg');

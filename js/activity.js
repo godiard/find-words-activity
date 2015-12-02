@@ -714,6 +714,9 @@ define(function (require) {
         var hardButton = document.getElementById("hard-button");
         var helpButton = document.getElementById("help-button");
         var helpDisplay = document.getElementById("help-display");
+        var helpContent = document.getElementById("help-content");
+        var aboutButton = document.getElementById("about-button");
+        var aboutContent = document.getElementById("about-content");
 
         // Initialize the activity.
 
@@ -776,12 +779,15 @@ define(function (require) {
             if (helpDisplay.style.display == 'block') {
                 helpDisplay.style.display = 'none';
             } else {
+                helpContent.style.display = 'block';
+                aboutContent.style.display = 'none';
                 helpDisplay.style.display = 'block';
             };
         });
 
-        helpDisplay.addEventListener('click', function (e) {
-            helpDisplay.style.display = 'none';
+        aboutButton.addEventListener('click', function (e) {
+            helpContent.style.display = 'none';
+            aboutContent.style.display = 'block';
         });
 
         // datastore
