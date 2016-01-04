@@ -436,10 +436,18 @@ define(function (require) {
     document.addEventListener("deviceready", function () {
         console.log('deviceready EVENT');
         document.addEventListener("backbutton", function () {
-            console.log('backbutton EVENT');
             previousPage();
             game.stop();
         }, false);
+
+        document.addEventListener("pause", function () {
+            game.pause();
+        }, false);
+
+        document.addEventListener("resume", function () {
+            game.resume();
+        }, false);
+
     }, false);
 
     function initColors() {
@@ -582,6 +590,18 @@ define(function (require) {
                 this.backgroundMusic.play();
             } else {
                 this.backgroundMusic.pause();
+            };
+        };
+
+        this.pause = function () {
+            if (this.audioEnabled) {
+                this.backgroundMusic.pause();
+            };
+        };
+
+        this.resume = function () {
+            if (this.audioEnabled) {
+                this.backgroundMusic.play();
             };
         };
 
