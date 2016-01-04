@@ -864,7 +864,7 @@ define(function (require) {
         });
 
         createjs.CSSPlugin.install(createjs.Tween);
-        createjs.Ticker.setFPS(30);
+        createjs.Ticker.setFPS(10);
 
         addWordButton.addEventListener('click', function (e) {
             addWord();

@@ -9,7 +9,8 @@ define(function (require) {
     // xo-1 is too slow to load the sound files
     var loadSounds = (navigator.userAgent.indexOf("Linux i586") == -1);
     // the xo-1 is too slow to show the dancing letters
-    var enableAnimations = loadSounds;
+    // the xo-4 on android too, then disable them at all
+    var enableAnimations = false;
 
     var smallScreen = (window.innerWidth < 700) || (window.innerHeight < 600);
     var font = smallScreen ? "16px Arial" : "24px Arial";
