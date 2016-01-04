@@ -96,6 +96,7 @@ define(function (require) {
         document.getElementById("game").style.display = "block";
         document.getElementById("firstPage").style.display = "block";
         document.getElementById("gameCanvas").style.display = "none";
+        document.getElementById("help-button").style.display = "block";
         page = 1;
     };
 
@@ -105,6 +106,7 @@ define(function (require) {
         document.getElementById("game").style.display = "block";
         document.getElementById("firstPage").style.display = "none";
         document.getElementById("gameCanvas").style.display = "block";
+        document.getElementById("help-button").style.display = "none";
         page = 2;
     };
 
