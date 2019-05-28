@@ -8,3 +8,4 @@ show_launcher = yes
 max_participants = 1
 summary = Find words in a fun puzzle or use your own words to create new puzzles.
 repository = https://github.com/godiard/find-words-activity.git
+license = MIT
